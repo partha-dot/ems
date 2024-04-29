@@ -1,0 +1,88 @@
+import { OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { LayoutService } from './service/app.layout.service';
+
+@Component({
+    selector: 'app-menu',
+    templateUrl: './app.menu.component.html'
+})
+export class AppMenuComponent implements OnInit {
+    u_type:any
+    model: any[] = [];
+
+    constructor(public layoutService: LayoutService) { }
+
+    ngOnInit() {
+        this.u_type=localStorage.getItem("u_type");
+        
+            this.model = [
+                {
+                    label: 'Master',
+                    items: [
+                       {
+                            label: 'Master',
+                            icon: 'pi pi-spin pi-cog',
+                            items: [
+                                {
+                                    label: 'Add Organization',
+                                    icon: 'pi pi-building',
+                                    routerLink: ['/app/outlet/org'] 
+                                },
+                                {
+                                    label: 'Add User',
+                                    icon: 'pi pi-users',
+                                    routerLink: ['/app/outlet/usr'] 
+                                },
+                                
+                                // {
+                                //     label: 'Model',
+                                //     icon: 'pi pi-box',
+                                //     routerLink: ['/app/outlet/model'] 
+                                // },
+                                // { label: 'Barcode Generate', 
+                                // icon: 'pi pi-qrcode', 
+                                // routerLink: ['/app/outlet/barcode'] },
+                            ]
+                        }
+                    ]
+                },
+                
+                {
+                    label: 'Device',
+                    items: [
+                        { label: 'Overview',
+                        icon: 'pi pi-th-large',
+                        items: [
+                                {
+                                    label: 'Energy',
+                                    icon: 'pi pi-bolt',
+                                    routerLink: ['/app/outlet/energy'] 
+                                },
+                                // {
+                                //     label: 'UPS',
+                                //     icon: 'pi pi-server',
+                                //     routerLink: ['/app/outlet/UPS'] 
+                                // },
+                                // {
+                                //     label: 'DG',
+                                //     icon: 'pi pi-exclamation-triangle',
+                                //     routerLink: ['/app/outlet/DG'] 
+                                // }
+                            ]
+                        },
+                       
+                    ]
+                },
+                {
+                    label: 'Management',
+                    items: [
+                        { label: 'Device Management', icon: 'pi pi-sitemap', routerLink: ['/app/outlet/device_m'], permission:'N' },
+                        { label: 'User Management', icon: 'pi pi-users', routerLink: ['/app/outlet/device_s'] , permission:'N'},
+                    ]
+                }]
+        
+          
+                
+        
+    }
+}

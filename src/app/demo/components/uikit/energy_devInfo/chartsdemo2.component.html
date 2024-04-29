@@ -1,0 +1,86 @@
+
+            <div class="col-12 md:col-12" >
+                <div style="float: right;">
+                    <p-autoComplete [(ngModel)]="selectedDealer" [ngModelOptions]="{standalone: true}" placeholder="ABCDE01001" (onSelect)="setDevice()" [suggestions]="filteredDealer" (completeMethod)="filterDealer($event)" field="device" [dropdown]="true">
+                    </p-autoComplete>
+                </div>
+            </div>
+    
+            <div class="col-12 lg:col-6 xl:col-12">
+                <h6>Map View</h6>
+                <div class="card">
+                    <div id="map"></div>
+                </div>
+                
+            </div>
+            <div class="row">
+                <div class="col-12 lg:col-6 xl:col-12">
+                    <div class="card" style="height: 360px!important;background-color: white;">
+                        <h4>Description</h4><br><br>
+                <b>Model</b><p style="float: right;"> ABCDE01001 </p><hr>
+                <b>Site Name </b><p style="float: right;"> NOIDA </p><hr>
+                <b>Specifications </b><p style="float: right;">Energy Meter </p><hr>
+                <b>Last Maintenance </b><p style="float: right;"> 23-02-2024  12:23:24 </p>
+                    </div>
+                    
+                        
+                </div>
+                
+                <div class="col-12 lg:col-6 xl:col-12">
+                    <div class="card" >
+                        <h4>Alert Information</h4>
+                        <div >
+                            <div class="field">
+                                <p-dropdown [(ngModel)]="selectedAlert" (onChange)="abc()" [options]="cities2" optionLabel="unit_name" placeholder="Select alert type" ></p-dropdown>
+                            </div>
+                            <div class="flex justify-content-between mb-3" >
+                                <table >
+            
+                                    <tr > 
+                                    <th style="text-align: left;"><i class="pi pi-info-circle text-yellow-500 text-xl">&nbsp;&nbsp;</i> High{{alert_type}} Alert</th>
+                                    <th>0</th>
+                                    </tr>
+                                    
+                                    <tr > 
+                                    <th style="text-align: left;"><i class="pi pi-info-circle text-red-500 text-xl">&nbsp;&nbsp;</i>Cretical High{{alert_type}} Alert</th>
+                                    <th>1</th>
+                                    </tr>
+                                    <tr > 
+                                        <th style="text-align: left;"><i class="pi pi-info-circle text-yellow-500 text-xl">&nbsp;&nbsp;</i> Low{{alert_type}} Alert</th>
+                                        <th>0</th>
+                                    </tr>
+                                    <tr > 
+                                        <th style="text-align: left;"><i class="pi pi-info-circle text-red-500 text-xl">&nbsp;&nbsp;</i> Cretical Low{{alert_type}} Alert</th>
+                                        <th>1</th>
+                                    </tr>
+                                    
+                                    </table>
+                                    <br>
+                                <!-- <div>
+                                    <span class="block mb-3 customeX">Alert Type</span>
+                                    <div class="text-900 font-medium text-xl">
+                                        High<hr>
+                                        Low<hr>
+                                        Cretical High<hr>
+                                        Cretical Low<hr>
+                                    </div>
+                                </div>
+                                <div>
+                                    <span class="block mb-3 customeX">Value</span>
+                                    <div class="text-900 font-medium text-xl">
+                                        0 <hr>
+                                        0 <hr>
+                                        0<hr>
+                                        0<hr>
+                                    </div>
+                                </div> -->
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+           
+        
+            
+    
