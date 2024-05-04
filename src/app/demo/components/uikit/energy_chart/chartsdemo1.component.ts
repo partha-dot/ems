@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { Observable, Subscription, switchMap, timer } from 'rxjs';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { map, Observable, pipe, pluck, Subscription, switchMap, timer } from 'rxjs';
 import { ApiService } from 'src/app/demo/service/api.service';
 import { ProductService } from 'src/app/demo/service/product.service';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
@@ -25,10 +25,18 @@ import {
     ApexStroke,
     ApexLegend,
     ApexPlotOptions,
-    
+
   } from "ng-apexcharts";
 import { MessagesDemoComponent } from '../alert/messagesdemo.component';
-  
+import { api_name } from 'src/app/demo/constants/apiName';
+import { IEnergyUsed } from './energy_chart.model';
+
+
+  export enum RANGE_TYPE{
+      MAX="E", // end date
+      MIN="S", // start date
+  }
+
   export type ChartOptions = {
     series: ApexNonAxisChartSeries;
     chart: ApexChart;
@@ -393,12 +401,13 @@ import { MessagesDemoComponent } from '../alert/messagesdemo.component';
     [1361833200000, 38.59],
     [1361919600000, 39.6]
   ];
-  
+
+
 @Component({
     selector:"app-chartsdemo1",
     templateUrl: './chartsdemo1.component.html',
-    styleUrls:['./chartsdemo1.component.css'],
-    
+    styleUrls:['./chartsdemo1.component.scss'],
+
   providers: [MessageService, ConfirmationService, DatePipe]
 })
 export class ChartsDemo1Component implements OnInit, OnDestroy {
@@ -494,11 +503,18 @@ export class ChartsDemo1Component implements OnInit, OnDestroy {
     }
   };
 
+  energy_filter = new FormGroup({
+      voltage_date_time:new FormControl([new Date(),new Date()]),
+      current_date_time:new FormControl([new Date(),new Date()]),
+      power_date_time:new FormControl([new Date(),new Date()]),
+
+  })
+
   defaultDate:Date;
     title = 'My first AGM project';
     lat = 51.678418;
     lng = 7.809007;
-    
+
     rpm: any;
     flow: any;
     flow2: any;
@@ -576,10 +592,10 @@ export class ChartsDemo1Component implements OnInit, OnDestroy {
 
     loginType:string=localStorage.getItem('loginType')
     constructor(private datePipe: DatePipe,public layoutService: LayoutService, private authservice:AuthenticationService,
-        private fb: FormBuilder,private http:HttpClient ,private productService: ProductService, 
+        private fb: FormBuilder,private http:HttpClient ,private productService: ProductService,
         private messageService: MessageService, private confirmationService: ConfirmationService,private api:ApiService) {
         this.subscription = this.layoutService.configUpdate$.subscribe(config => {
-            this.initCharts();
+            // this.initCharts();
         });
         this.defaultDate = new Date();
     }
@@ -589,12 +605,12 @@ export class ChartsDemo1Component implements OnInit, OnDestroy {
         return istTime || '';
       }
    ggg(){
-    debugger
+    // debugger
    }
     ngOnInit() {
-      
+
     // console.log(new Date("28 Jan 2013").getTime());
-    
+
       this.items = [
         { label: 'Live', icon: 'pi pi-fw pi-home',routerLink: ['/app/outlet/alert']  },
         { label: 'device Info', icon: 'pi pi-fw pi-calendar',routerLink: ['/app/outlet/alert']  },
@@ -603,29 +619,321 @@ export class ChartsDemo1Component implements OnInit, OnDestroy {
         { label: 'Historic Data', icon: 'pi pi-fw pi-cog',routerLink: ['/app/outlet/alert']  }
       ];
       this.activeItem = this.items[0];
-        debugger
+        // debugger
         this.initCharts();
         this.getDevice();
 
+        setTimeout(() => {
+            this.getEnergyUsedByFilter('1yd');
+            this.getVoltagechartDataByFilterDate(this.energy_filter.value.voltage_date_time);
+            this.getCurrentchartDataByFilterDate(this.energy_filter.value.current_date_time)
+            this.getPowerchartDataByFilterDate(this.energy_filter.value.current_date_time)
+
+        },1000);
+
+
         // setInterval(()=>{
         //     this.currTm= ' '+ '| '+ new Date().toString().substring(16,24)+ ' '
-        //     this.currDt= new Date().toString().substring(0,15)   
+        //     this.currDt= new Date().toString().substring(0,15)
         //   ,1000})
 
         //   setInterval(() => {
         //     this.selectedDealer?.device_name ? this.getDeviceLiveData(this.selectedDealer?.device_name) : console.log('hii');
         //     this.getDevice();
         //   }, 20000);
-          
-         
-      
+
+
+
     }
+
+
+    /** Get Voltage Data by filtered Date
+     * @param data: array of search Date
+    */
+    getVoltagechartDataByFilterDate = (data:Date[] | null = [new Date(), new Date()]) =>{
+    const dt:Partial<IEnergyVoltagePowerUsedPayLoad> ={
+            "client_id": 1,
+            "device_id": 1,
+            "device": "123456789",
+            "start_date_time": data[0],
+            "end_date_time":data[1]
+        }
+
+        this.api.call_api(1,api_name.VOLTAGE_USED,dt)
+        .pipe(map((x:any) => x.data))
+        .subscribe(res =>{
+            if(res.length > 0){
+            let arr :Required<{name:string,type:string,data:number[]}>[] =
+            [
+                    {name: "R",type: "line",data: []},
+                    {name: "Y",type: "line",data: []},
+                    {name: "B",type: "line",data: []},
+                    {name: "R-Y",type: "line",data: []},
+                    {name: "Y-B",type: "line",data: []},
+                    {name: "B-Y",type: "line",data: []}
+                ]
+                let date = [];
+                res.forEach(el =>{
+                    date.push(this.datePipe.transform(el.created_at,'hh:mm'));
+                    Object.keys(el).forEach(item =>{
+                        arr = arr.filter(element =>{
+                            if(element.name.toLowerCase().replace('-','_') === item.toLowerCase()){
+                                element.data.push(el[item])
+                            }
+                            return arr
+                        })
+                    })
+                    })
+                    this.chartOptions6 = {
+                        series:arr,
+                        chart: {
+                        height: 350,
+                        type: "line"
+                        },
+                        stroke: {
+                        curve: "smooth"
+                        },
+                        fill: {
+                        type: "solid",
+                        opacity: [0.35, 1]
+                        },
+                        labels: date,
+                        markers: {
+                        size: 0
+                        },
+                        xaxis: {
+                        labels: {
+                            formatter: function(y) {
+                            if (typeof y !== "undefined") {
+                                return y + " ";
+                            }
+                            return y;
+                            }
+                        }
+                        },
+                        tooltip: {
+                        shared: true,
+                        intersect: false,
+                        y: {
+                            formatter: function(y) {
+                            if (typeof y !== "undefined") {
+                                return y.toFixed(2) + " ";
+                            }
+                            return y;
+                            }
+                        }
+                        }
+                    };
+                }
+        })
+    }
+    /** End */
+
+     /** Get Voltage Data by filtered Date
+     * @param data: array of search Date
+    */
+      getCurrentchartDataByFilterDate = (data:Date[] | null = [new Date(), new Date()]) =>{
+        const dt:Partial<IEnergyVoltagePowerUsedPayLoad> ={
+                "client_id": 1,
+                "device_id": 1,
+                "device": "123456789",
+                "start_date_time": data[0],
+                "end_date_time":data[1]
+            }
+
+            this.api.call_api(1,api_name.CURRENT_USED,dt)
+            .pipe(map((x:any) => x.data))
+            .subscribe(res =>{
+                if(res.length > 0){
+                let arr :Required<{name:string,type:string,data:number[],filteredBy:string}>[] =
+                [
+                        {name: "Current Phase-1",type: "line",data: [],filteredBy:'curr1'},
+                        {name: "Current Phase-2",type: "line",data: [],filteredBy:'curr2'},
+                        {name: "Current Phase-3",type: "line",data: [],filteredBy:'curr3'}
+                    ]
+                    let date = [];
+                    res.forEach(el =>{
+                        date.push(this.datePipe.transform(el.created_at,'hh:mm'));
+                        Object.keys(el).forEach(item =>{
+                            arr = arr.filter(element =>{
+                                if(element.filteredBy.toLowerCase().replace('-','_') === item.toLowerCase()){
+                                    element.data.push(el[item])
+                                }
+                                return arr
+                            })
+                        })
+                        })
+                        this.chartOptions7 = {
+                            series: arr,
+                            chart: {
+                              height: 350,
+                              type: "line"
+                            },
+                            stroke: {
+                              curve: "smooth"
+                            },
+                            fill: {
+                              type: "solid",
+                              opacity: [0.35, 1]
+                            },
+                            labels: date,
+                            markers: {
+                              size: 0
+                            },
+                            xaxis: {
+                              labels: {
+                                trim: false
+                              }
+                            },
+                            tooltip: {
+                              shared: true,
+                              intersect: false,
+                              y: {
+                                formatter: function(y) {
+                                  if (typeof y !== "undefined") {
+                                    return y.toFixed(2) + " ";
+                                  }
+                                  return y;
+                                }
+                              }
+                            }
+                        }
+                    }
+            })
+        }
+        /** End */
+
+
+        /** Get Voltage Data by filtered Date
+     * @param data: array of search Date
+    */
+        getPowerchartDataByFilterDate = (data:Date[] | null = [new Date(), new Date()]) =>{
+            const dt:Partial<IEnergyVoltagePowerUsedPayLoad> ={
+                    "client_id": 1,
+                    "device_id": 1,
+                    "device": "123456789",
+                    "start_date_time": data[0],
+                    "end_date_time":data[1]
+                }
+
+                this.api.call_api(1,api_name.POWER_USED,dt)
+                .pipe(map((x:any) => x.data))
+                .subscribe(res =>{
+                    if(res.length > 0){
+                    let arr :Required<{name:string,type:string,data:number[],filtered:string}>[] =
+                    [
+                            {name: "Active Power-1",type: "line",data: [],filtered:'activep1'},
+                            {name: "Active Power-2",type: "line",data: [],filtered:'activep2'},
+                            {name: "Active Power-3",type: "line",data: [],filtered:'activep3'},
+                            {name: "Apparent-1",type: "line",data: [],filtered:'apparentp1'},
+                            {name: "Apparent-2",type: "line",data: [],filtered:'apparentp2'},
+                            {name: "Apparent-3",type: "line",data: [],filtered:'apparentp3'},
+                            {name: "Power Factor-1",type: "line",data: [],filtered:'pf1'},
+                            {name: "Power Factor-2",type: "line",data: [],filtered:'pf2'},
+                            {name: "Power Factor-3",type: "line",data: [],filtered:'pf3'}
+                        ]
+                        let date = [];
+                        res.forEach(el =>{
+                            date.push(this.datePipe.transform(el.created_at,'hh:mm'));
+                            Object.keys(el).forEach(item =>{
+                                arr = arr.filter(element =>{
+                                    if(element.filtered.toLowerCase().replace('-','_') === item.toLowerCase()){
+                                        element.data.push(el[item])
+                                    }
+                                    return arr
+                                })
+                            })
+                            })
+                            this.chartOptions8 = {
+                                series: arr,
+                                chart: {
+                                  height: 350,
+                                  type: "line"
+                                },
+                                stroke: {
+                                  curve: "smooth"
+                                },
+                                fill: {
+                                  type: "solid",
+                                  opacity: [0.35, 1]
+                                },
+                                labels: date,
+                                markers: {
+                                  size: 0
+                                },
+                                xaxis: {
+                                  labels: {
+                                    trim: false
+                                  }
+                                },
+                                yaxis:[
+                                    {
+                                        title: {
+                                          text: "Active Power-1"
+                                        }
+                                    },
+                                    {
+                                        opposite: true,
+                                        title: {
+                                          text: "Power Factor"
+                                        }
+                                      }
+                                ],
+                                tooltip: {
+                                  shared: true,
+                                  intersect: false,
+                                  y: {
+                                    formatter: function(y) {
+                                      if (typeof y !== "undefined") {
+                                        return y.toFixed(2) + " ";
+                                      }
+                                      return y;
+                                    }
+                                  }
+                                }
+
+                              };
+                        }
+                })
+            }
+            /** End */
+
+    ngAfterViewInit(){
+
+        /** Event Fired when Voltage Date change event occured */
+        this.energy_filter.get('voltage_date_time')
+        .valueChanges.subscribe(res =>{
+                if(res && res.filter(el => el== null).length == 0){
+                        console.log(res);
+                        this.getVoltagechartDataByFilterDate(res);
+                }
+        })
+        /* End*/
+
+        /** Event Fired when Cuurrent Date change event occured */
+        this.energy_filter.get('current_date_time')
+        .valueChanges.subscribe(res =>{
+            if(res && res.filter(el => el== null).length == 0){
+                this.getCurrentchartDataByFilterDate(res);
+         }
+        })
+        /*End*/
+
+        this.energy_filter.get('power_date_time')
+        .valueChanges.subscribe(res =>{
+                console.log(res)
+                if(res && res.filter(el => el== null).length == 0){
+                    this.getPowerchartDataByFilterDate(res);
+                }
+        })
+    }
+
     abc(){
         this.alert_type=''
         console.log(this.selectedAlert);
         this.alert_type=this.selectedAlert?.unit_name
         this.alert_type=' '+this.alert_type;
-        debugger
+        // debugger
       }
     getDevice(){
         const credentials = {
@@ -638,13 +946,13 @@ export class ChartsDemo1Component implements OnInit, OnDestroy {
   this.http.post(apiUrl+'/client/devices/list', credentials,{ headers }).subscribe(
       (response) => {
         console.log(response);
-        
+
         this.data1=response
-        this.cities=this.data1.data 
-        
+        this.cities=this.data1.data
+
       },
       (error) => {
-        
+
         console.error(error);
       }
     );
@@ -660,30 +968,30 @@ const day = String(dateObject.getDate()).padStart(2, '0');
 // Create the desired format
 const result = `${month}/${day}`;
 
-console.log(result); 
+console.log(result);
 return result
 }
 getDeviceLiveData(name:any){
     // const apiUrl = this.api.baseUrl;
 //   baseUrl = 'https://iot.wrongcode.in/backend/api';
 
-  
+
          if(name){
             const token = localStorage.getItem('token');
             const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
-            
+
             this.liveData=[];
             this.liveData2=null;
-    
+
             const credentials = {
                 device_id:name
             };
-            
+
             this.http.post(this.api.baseUrl+'/device-data/last', credentials, { headers }).subscribe(
                 (response) => {
-                    
+
                     console.log(response);
-                    
+
                     this.data1=response
                     this.data1=this.data1.data
                     if(this.data1) {
@@ -694,53 +1002,53 @@ getDeviceLiveData(name:any){
                         this.liveData=this.data1.chart_data_list
                         this.liveData2=this.data1.device_data_list
                         this.liveData.forEach(e => {
-                            
+
                             this.flowDate.push(this.dateConvt(e.created_at))
                             this.flowData.push(e.flow)
                             this.rpmDate.push(this.dateConvt(e.created_at))
                             this.rpmData.push(e.rpm.toString())
 
-                            
+
                             console.log(this.flowDate);
                             console.log(this.flowData);
                             console.log(this.rpmDate);
                             console.log(this.rpmData);
-                            
+
                         });
-                        
+
                         if(this.flowDate && this.flowData && this.rpmDate && this.rpmData){
                             this.lastUpdateTime=''
                             this.lastUpdateTime=this.convertToISTDateTime(this.liveData2.created_at)
                             console.log(this.lastUpdateTime);
-                            var currentdate = new Date(); 
+                            var currentdate = new Date();
                             var datetime = currentdate.getDate() + "-"
-                                + (currentdate.getMonth()+1)  + "-" 
-                                + currentdate.getFullYear() + " "  
-                                + currentdate.getHours() + ":"  
-                                + currentdate.getMinutes() + ":" 
+                                + (currentdate.getMonth()+1)  + "-"
+                                + currentdate.getFullYear() + " "
+                                + currentdate.getHours() + ":"
+                                + currentdate.getMinutes() + ":"
                                 + currentdate.getSeconds();
                                 console.log(datetime);
-                                
-                            
+
+
                             // this.flowDate = this.flowDate.map(value => JSON.stringify(value).replace(/[{}]/g, ''));
                             // this.flowData = this.flowData.map(value => JSON.stringify(value).replace(/[{}]/g, ''));
                             // this.rpmDate = this.rpmDate.map(value => JSON.stringify(value).replace(/[{}]/g, ''));
                             // this.rpmData = this.rpmData.map(value => JSON.stringify(value).replace(/[{}]/g, ''));
-                            
+
                             this.initCharts();
-                            
+
                         }
-                        
+
                     }
-                   
-                    
+
+
                 },
                 (error) => {
                     console.error(error);
                 }
                 );
          }
-  
+
 }
         dateChange(i:any){
             const utcTimestamp = i;
@@ -766,12 +1074,12 @@ getDeviceLiveData(name:any){
             // Format the date
             const formattedDate = date.toLocaleString('en-US', options);
 
-            console.log(formattedDate); 
+            console.log(formattedDate);
             return formattedDate
         }
     setDevice(){
         console.log(this.selectedDealer);
-        
+
         this.getDeviceLiveData(this.selectedDealer.device_name);
 
 
@@ -783,13 +1091,119 @@ getDeviceLiveData(name:any){
             const dealer = this.cities[i];
             if (dealer.device.toLowerCase().indexOf(query.toLowerCase()) == 0) {
                 filtered.push(dealer);
-                
+
             }
         }
-  
+
         this.filteredDealer = filtered;
-        
+
     }
+
+    /**
+     * For Getting chart data of `Energy Used`
+     * @param mode : For detecting whether it is `Today`,`Monthly`,`Yearly` or `Total`
+     */
+    getEnergyUsedByFilter = (mode:string) =>{
+        try{
+            this.activeOptionButton = mode
+            const dt:Partial<IEnergyVoltagePowerUsedPayLoad> ={
+             "client_id": 1,
+             "device_id": 1,
+             "device": "123456789",
+             "start_date_time": this.getDatesAccordingToMode(mode,'E')
+            }
+            this.api.call_api(1,api_name.ENERGY_USED,dt).pipe(map((x: any) => x.data))
+            .subscribe((res:Required<IEnergyUsed>[]) =>{
+                if(res.length > 0){
+                let date = [];
+                let arr:Required<{name:string,data:number[],filtered:string}>[] =
+                [
+                    {name:'Phase-1',data:[],filtered:'e1'},
+                    {name:'Phase-2',data:[],filtered:'e2'},
+                    {name:'Phase-3',data:[],filtered:'e3'}
+                ]
+                res.forEach(el =>{
+                    console.log('pahes-1')
+                    date.push(el.date);
+                    Object.keys(el).forEach(item =>{
+                        arr = arr.filter(element =>{
+                            if(element.filtered === item){
+                                element.data.push(el[item])
+                            }
+                            return arr
+                        })
+                    })
+                })
+                    this.chartOptions2 = {
+                    series: arr,
+                    chart: {
+                        type: "bar",
+                        height: 350
+                    },
+                    plotOptions: {
+                        bar: {
+                        horizontal: false,
+                        columnWidth: "55%"
+                        }
+                    },
+                    dataLabels: {
+                        enabled: false
+                    },
+                    stroke: {
+                        show: true,
+                        width: 2,
+                        colors: ["transparent"]
+                    },
+                    xaxis: {
+                        categories: date
+                    },
+                    yaxis: {
+                        labels: {
+                        formatter: (val) => {
+                            return val / 100 + "kWh";
+                        }
+                        }
+                    },
+                    fill: {
+                        opacity: 1
+                    },
+                    tooltip: {
+                        y: {
+                        formatter: function(val) {
+                            return "" + val/100 + " kWh";
+                        }
+                        }
+                    }
+                    };
+                }
+            })
+        }
+        catch(err){
+            console.log(err)
+        }
+    }
+
+    /** For Getting End Date After click on Energy used
+     *
+     * @param mode: detecting which button is clicked
+     * @param range_type: Either MAX/MIN is accepted
+    */
+      getDatesAccordingToMode = (mode:string,range_type:string,__date:Date = new Date()) =>{
+        if(range_type == RANGE_TYPE.MIN || range_type == RANGE_TYPE.MAX){
+            const date = __date;
+            switch(mode){
+                case '1yd': date.setDate(date.getDate() - 1);break;
+                case '1m': date.setMonth(date.getMonth() - 1);break;
+                case '1y': date.setFullYear(date.getFullYear() - 1);break;
+                case 'all': date.setFullYear(date.getFullYear() - 2);break;break;
+            }
+            // return this.datePipe.transform(date,'YYYY-MM-ddhh:mm:ss');
+            return date
+        }
+        console.log('Ivalid argument passed')
+        return null;
+    }
+    /** End */
 
     initCharts() {
         const documentStyle = getComputedStyle(document.documentElement);
@@ -824,7 +1238,7 @@ getDeviceLiveData(name:any){
                 }
             ]
         };
-        
+
         this.options2 = {
             maintainAspectRatio: false,
             aspectRatio: 0.6,
@@ -854,7 +1268,7 @@ getDeviceLiveData(name:any){
                 }
             }
         };
-    
+
         this.options = {
             indexAxis: 'y',
             maintainAspectRatio: false,
@@ -890,7 +1304,7 @@ getDeviceLiveData(name:any){
                 }
             }
         };
-    
+
 
         this.flow = {
             labels: ['01', '02', '03', '04', '05', '06', '07'],
@@ -987,12 +1401,12 @@ getDeviceLiveData(name:any){
             }
         };
 
-        
+
         this.rpm = {
-            
+
             labels: this.rpmDate,
             datasets: [
-                
+
                 {
                     label: 'RPM',
                     data: this.rpmData,
@@ -1105,7 +1519,7 @@ getDeviceLiveData(name:any){
                 }]
         };
 
-this.polarData = {
+        this.polarData = {
             datasets: [{
                 data: [
                     11,
@@ -1168,7 +1582,7 @@ this.polarData = {
                         documentStyle.getPropertyValue('--teal-500'),
                         documentStyle.getPropertyValue('--orange-500'),
                         documentStyle.getPropertyValue('--blue-500')
-    
+
                     ],
                     hoverBackgroundColor: [
                         documentStyle.getPropertyValue('--purple-500'),
@@ -1183,207 +1597,145 @@ this.polarData = {
             ]
         };
 
-        this.chartOptions = {
-            series: [44, 55, 13, 43, 22, 34, 65],
-            chart: {
-              width: 480,
-              type: "pie"
-            },
-            labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-            
-          };
+        // this.chartOptions = {
+        //     series: [44, 55, 13, 43, 22, 34, 65],
+        //     chart: {
+        //       width: 480,
+        //       type: "pie"
+        //     },
+        //     labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
 
-         
-            this.chartOptions2 = {
-              series: [
-                {
-                  name: "Energy Exported",
-                  data: [500, 655, 857, 1056, 961, 858, 663, 560, 506]
-                },
-                {
-                  name: "Self-Use",
-                  data: [406,585, 601, 708, 857, 805, 601, 504, 404]
-                }
-              ],
-              chart: {
-                type: "bar",
-                height: 350
-              },
-              plotOptions: {
-                bar: {
-                  horizontal: false,
-                  columnWidth: "55%"
-                }
-              },
-              dataLabels: {
-                enabled: false
-              },
-              stroke: {
-                show: true,
-                width: 2,
-                colors: ["transparent"]
-              },
-              xaxis: {
-                categories: [
-                  "01/04/2024 04:00",
-                  "01/04/2024 06:00",
-                  "01/04/2024 08:00",
-                  "01/04/2024 10:00",
-                  "01/04/2024 12:00",
-                  "01/04/2024 14:00",
-                  "01/04/2024 16:00",
-                  "01/04/2024 18:00",
-                  "01/04/2024 20:30"
-                ]
-              },
-              yaxis: {
-                labels: {
-                  formatter: (val) => {
-                    return val / 100 + "kWh";
-                  }
-                }
-              },
-              fill: {
-                opacity: 1
-              },
-              tooltip: {
-                y: {
-                  formatter: function(val) {
-                    return "" + val/100 + " kWh";
-                  }
-                }
-              }
-            };
+        //   };
 
-            this.chartOptions3 = {
-                series: [
-                  {
-                    name: "power",
-                    data: this.generateDayWiseTimeSeries(
-                      new Date("11 Feb 2017").getTime(),
-                      185,
-                      {
-                        min: 30,
-                        max: 90
-                      }
-                    )
-                  }
-                ],
-                chart: {
-                  id: "chart2",
-                  type: "line",
-                  height: 230,
-                  toolbar: {
-                    autoSelected: "pan",
-                    show: false
-                  }
-                },
-                colors: ["#546E7A"],
-                stroke: {
-                  width: 3
-                },
-                dataLabels: {
-                  enabled: false
-                },
-                fill: {
-                  opacity: 1
-                },
-                markers: {
-                  size: 0
-                },
-                xaxis: {
-                  type: "datetime"
-                }
-              };
-              this.chartOptions33 = {
-                series: [
-                  {
-                    name: "Power",
-                    data: this.generateDayWiseTimeSeries(
-                      new Date("11 Feb 2017").getTime(),
-                      185,
-                      {
-                        min: 30,
-                        max: 90
-                      }
-                    )
-                  }
-                ],
-                chart: {
-                  id: "chart2",
-                  type: "line",
-                  height: 230,
-                  toolbar: {
-                    autoSelected: "pan",
-                    show: false
-                  }
-                },
-                colors: ["#A32409"],
-                stroke: {
-                  width: 3
-                },
-                dataLabels: {
-                  enabled: false
-                },
-                fill: {
-                  opacity: 1
-                },
-                markers: {
-                  size: 0
-                },
-                xaxis: {
-                  type: "datetime"
-                }
-              };
-              this.chartOptions4 = {
-                series: [
-                  {
-                    name: "series1",
-                    data: this.generateDayWiseTimeSeries(
-                      new Date("11 Feb 2017").getTime(),
-                      185,
-                      {
-                        min: 30,
-                        max: 90
-                      }
-                    )
-                  }
-                ],
-                chart: {
-                  id: "chart1",
-                  height: 130,
-                  type: "area",
-                  brush: {
-                    target: "chart2",
-                    enabled: true
-                  },
-                  selection: {
-                    enabled: true,
-                    xaxis: {
-                      min: new Date("19 feb 2017").getTime(),
-                      max: new Date("14 Jun 2017").getTime()
-                    }
-                  }
-                },
-                colors: ["#008FKW"],
-                fill: {
-                  type: "gradient",
-                  gradient: {
-                    opacityFrom: 0.91,
-                    opacityTo: 0.1
-                  }
-                },
-                xaxis: {
-                  type: "datetime",
-                  tooltip: {
-                    enabled: false
-                  }
-                },
-                yaxis: {
-                  tickAmount: 2
-                }
-              }
-              
+        //     this.chartOptions3 = {
+        //         series: [
+        //           {
+        //             name: "power",
+        //             data: this.generateDayWiseTimeSeries(
+        //               new Date("11 Feb 2017").getTime(),
+        //               185,
+        //               {
+        //                 min: 30,
+        //                 max: 90
+        //               }
+        //             )
+        //           }
+        //         ],
+        //         chart: {
+        //           id: "chart2",
+        //           type: "line",
+        //           height: 230,
+        //           toolbar: {
+        //             autoSelected: "pan",
+        //             show: false
+        //           }
+        //         },
+        //         colors: ["#546E7A"],
+        //         stroke: {
+        //           width: 3
+        //         },
+        //         dataLabels: {
+        //           enabled: false
+        //         },
+        //         fill: {
+        //           opacity: 1
+        //         },
+        //         markers: {
+        //           size: 0
+        //         },
+        //         xaxis: {
+        //           type: "datetime"
+        //         }
+        //       };
+        //       this.chartOptions33 = {
+        //         series: [
+        //           {
+        //             name: "Power",
+        //             data: this.generateDayWiseTimeSeries(
+        //               new Date("11 Feb 2017").getTime(),
+        //               185,
+        //               {
+        //                 min: 30,
+        //                 max: 90
+        //               }
+        //             )
+        //           }
+        //         ],
+        //         chart: {
+        //           id: "chart2",
+        //           type: "line",
+        //           height: 230,
+        //           toolbar: {
+        //             autoSelected: "pan",
+        //             show: false
+        //           }
+        //         },
+        //         colors: ["#A32409"],
+        //         stroke: {
+        //           width: 3
+        //         },
+        //         dataLabels: {
+        //           enabled: false
+        //         },
+        //         fill: {
+        //           opacity: 1
+        //         },
+        //         markers: {
+        //           size: 0
+        //         },
+        //         xaxis: {
+        //           type: "datetime"
+        //         }
+        //       };
+        //       this.chartOptions4 = {
+        //         series: [
+        //           {
+        //             name: "series1",
+        //             data: this.generateDayWiseTimeSeries(
+        //               new Date("11 Feb 2017").getTime(),
+        //               185,
+        //               {
+        //                 min: 30,
+        //                 max: 90
+        //               }
+        //             )
+        //           }
+        //         ],
+        //         chart: {
+        //           id: "chart1",
+        //           height: 130,
+        //           type: "area",
+        //           brush: {
+        //             target: "chart2",
+        //             enabled: true
+        //           },
+        //           selection: {
+        //             enabled: true,
+        //             xaxis: {
+        //               min: new Date("19 feb 2017").getTime(),
+        //               max: new Date("14 Jun 2017").getTime()
+        //             }
+        //           }
+        //         },
+        //         colors: ["#008FKW"],
+        //         fill: {
+        //           type: "gradient",
+        //           gradient: {
+        //             opacityFrom: 0.91,
+        //             opacityTo: 0.1
+        //           }
+        //         },
+        //         xaxis: {
+        //           type: "datetime",
+        //           tooltip: {
+        //             enabled: false
+        //           }
+        //         },
+        //         yaxis: {
+        //           tickAmount: 2
+        //         }
+        //       }
+
               this.chartOptions5 = {
                 series: [
                   {
@@ -1449,316 +1801,92 @@ this.polarData = {
                   type: "datetime"
                 }
               };
-              this.chart1options = {
-                series: [
-                  {
-                    name: "R",
-                    data: this.generateDayWiseTimeSeries2(
-                      new Date("11 Feb 2017").getTime(),
-                      20,
-                      {
-                        min: 10,
-                        max: 60
-                      }
-                    )
-                  }
-                ],
-                chart: {
-                  id: "fb",
-                  group: "social",
-                  type: "line",
-                  height: 160
-                },
-                colors: ["#F81C11"],
-                yaxis: {
-                  tickAmount: 2,
-                  labels: {
-                    minWidth: 40
-                  }
-                }
-              };
-          
-              this.chart2options = {
-                series: [
-                  {
-                    name: "Y",
-                    data: this.generateDayWiseTimeSeries2(
-                      new Date("11 Feb 2017").getTime(),
-                      20,
-                      {
-                        min: 10,
-                        max: 30
-                      }
-                    )
-                  }
-                ],
-                chart: {
-                  id: "tw",
-                  group: "social",
-                  type: "line",
-                  height: 160
-                },
-                colors: ["#EAEA06"],
-                yaxis: {
-                  tickAmount: 2,
-                  labels: {
-                    minWidth: 40
-                  }
-                }
-              };
-          
-              this.chart3options = {
-                series: [
-                  {
-                    name: "B",
-                    data: this.generateDayWiseTimeSeries2(
-                      new Date("11 Feb 2017").getTime(),
-                      20,
-                      {
-                        min: 10,
-                        max: 60
-                      }
-                    )
-                  }
-                ],
-                chart: {
-                  id: "yt",
-                  group: "social",
-                  type: "area",
-                  height: 160
-                },
-                colors: ["#062FEA"],
-                yaxis: {
-                  tickAmount: 2,
-                  labels: {
-                    minWidth: 40
-                  }
-                }
-              }
-              this.chartOptions6 = {
-                series: [
-                  {
-                    name: "R",
-                    type: "line",
-                    data: [240.02, 125.03, 240.04, 125.02, 240.05, 125.05, 240.03, 125.08, 240.05, 125.03, 240.06]
-                  },
-                  {
-                    name: "Y",
-                    type: "line",
-                    data: [230.02, 135.03, 230.04, 135.02, 230.05, 135.05, 230.03, 135.08, 230.05, 135.03, 230.06]
-                  },
-                  {
-                    name: "B",
-                    type: "line",
-                    data: [220.02, 145.03, 220.04, 145.02, 220.05, 145.05, 220.03, 145.08, 220.05, 145.03, 220.06]
-                  }
-                  ,
-                  {
-                    name: "Vavg",
-                    type: "line",
-                    data:  [235.02, 147.03, 235.04, 147.02, 235.05, 147.05, 235.03, 147.08, 235.05, 147.03, 235.06]
-                  },
-                  
-                  {
-                    name: "R-Y",
-                    type: "line",
-                    data: [430.02, 260.03, 430.04, 260.02, 430.05, 260.05, 430.03, 260.08, 430.05, 260.03, 430.06]
-                  }
-                  ,{
-                    name: "Y-B",
-                    type: "line",
-                    data: [460.02, 285.03, 460.04, 285.02, 460.05, 285.05, 460.03, 285.08, 460.05, 285.03, 460.06]
-                  },
-                  {
-                    name: "R-B",
-                    type: "line",
-                    data: [410.02, 230.03, 410.04, 230.02, 410.05, 230.05, 410.03, 230.08, 410.05, 230.03, 410.06]
-                  }
-                  
-                ],
-                chart: {
-                  height: 350,
-                  type: "line"
-                },
-                stroke: {
-                  curve: "smooth"
-                },
-                fill: {
-                  type: "solid",
-                  opacity: [0.35, 1]
-                },
-                labels: [
-                  "04:00",
-                  "06:00",
-                  "08:00",
-                  "10:00",
-                  "12:00",
-                  "14:00",
-                  "16:00",
-                  "18:00",
-                  "20:30",
-                  "22:30",
-                  "00:00"
-                ],
-                markers: {
-                  size: 0
-                },
-                xaxis: {
-                  labels: {
-                    formatter: function(y) {
-                      if (typeof y !== "undefined") {
-                        return y + " ";
-                      }
-                      return y;
-                    }
-                  }
-                },
-                tooltip: {
-                  shared: true,
-                  intersect: false,
-                  y: {
-                    formatter: function(y) {
-                      if (typeof y !== "undefined") {
-                        return y.toFixed(2) + " ";
-                      }
-                      return y;
-                    }
-                  }
-                }
-             
-              };
-              this.chartOptions7 = {
-                series: [
-                  {
-                    name: "R",
-                    type: "line",
-                    data: [24.02, 47.03, 24.04, 47.02, 24.05, 47.05, 24.03, 47.08, 24.05, 47.03, 24.06]
-                  },
-                  {
-                    name: "Y",
-                    type: "line",
-                    data: [14.02, 34.03, 14.04, 34.02, 14.05, 34.05, 14.03, 34.08, 14.05, 34.03, 14.06]
-                  },
-                  {
-                    name: "B",
-                    type: "line",
-                    data: [10.02, 26.03, 10.04, 26.02, 10.05, 26.05, 10.03, 26.08, 10.05, 26.03, 10.06]
-                  }
-                  
-                  
-                ],
-                chart: {
-                  height: 350,
-                  type: "line"
-                },
-                stroke: {
-                  curve: "smooth"
-                },
-                fill: {
-                  type: "solid",
-                  opacity: [0.35, 1]
-                },
-                labels: [
-                  "04:00",
-                  "06:00",
-                  "08:00",
-                  "10:00",
-                  "12:00",
-                  "14:00",
-                  "16:00",
-                  "18:00",
-                  "20:30",
-                  "22:30",
-                  "00:00"
-                ],
-                markers: {
-                  size: 0
-                },
-                xaxis: {
-                  labels: {
-                    trim: false
-                  }
-                },
-                tooltip: {
-                  shared: true,
-                  intersect: false,
-                  y: {
-                    formatter: function(y) {
-                      if (typeof y !== "undefined") {
-                        return y.toFixed(2) + " ";
-                      }
-                      return y;
-                    }
-                  }
-                }
-             
-              };
-              this.chartOptions8 = {
-                series: [
-                  {
-                    name: "Active Power",
-                    type: "line",
-                    data: [9.02, 6.03, 9.04, 5.02, 9.05, 6.05, 9.03, 5.08, 9.05, 4.03, 9.06]
-                  },
-                  {
-                    name: "Apparent Power",
-                    type: "line",
-                    data: [7.02, 3.03, 7.04, 3.02, 7.05, 3.05, 7.03, 3.08, 7.05, 3.03, 7.06]
-                  },
-                  {
-                    name: "Power factor",
-                    type: "line",
-                    data: [0.2, 0.7, 0.4, 0.2, 0.5, 0.5, 0.3, 0.8, 0.5, 0.3, 0.6]
-                  }
-                  
-                  
-                ],
-                chart: {
-                  height: 350,
-                  type: "line"
-                },
-                stroke: {
-                  curve: "smooth"
-                },
-                fill: {
-                  type: "solid",
-                  opacity: [0.35, 1]
-                },
-                labels: [
-                  "04:00",
-                  "06:00",
-                  "08:00",
-                  "10:00",
-                  "12:00",
-                  "14:00",
-                  "16:00",
-                  "18:00",
-                  "20:30",
-                  "22:30",
-                  "00:00"
-                ],
-                markers: {
-                  size: 0
-                },
-                xaxis: {
-                  labels: {
-                    trim: false
-                  }
-                },
-                tooltip: {
-                  shared: true,
-                  intersect: false,
-                  y: {
-                    formatter: function(y) {
-                      if (typeof y !== "undefined") {
-                        return y.toFixed(2) + " ";
-                      }
-                      return y;
-                    }
-                  }
-                }
-             
-              };
+            //   this.chart1options = {
+            //     series: [
+            //       {
+            //         name: "R",
+            //         data: this.generateDayWiseTimeSeries2(
+            //           new Date("11 Feb 2017").getTime(),
+            //           20,
+            //           {
+            //             min: 10,
+            //             max: 60
+            //           }
+            //         )
+            //       }
+            //     ],
+            //     chart: {
+            //       id: "fb",
+            //       group: "social",
+            //       type: "line",
+            //       height: 160
+            //     },
+            //     colors: ["#F81C11"],
+            //     yaxis: {
+            //       tickAmount: 2,
+            //       labels: {
+            //         minWidth: 40
+            //       }
+            //     }
+            //   };
+
+            //   this.chart2options = {
+            //     series: [
+            //       {
+            //         name: "Y",
+            //         data: this.generateDayWiseTimeSeries2(
+            //           new Date("11 Feb 2017").getTime(),
+            //           20,
+            //           {
+            //             min: 10,
+            //             max: 30
+            //           }
+            //         )
+            //       }
+            //     ],
+            //     chart: {
+            //       id: "tw",
+            //       group: "social",
+            //       type: "line",
+            //       height: 160
+            //     },
+            //     colors: ["#EAEA06"],
+            //     yaxis: {
+            //       tickAmount: 2,
+            //       labels: {
+            //         minWidth: 40
+            //       }
+            //     }
+            //   };
+
+            //   this.chart3options = {
+            //     series: [
+            //       {
+            //         name: "B",
+            //         data: this.generateDayWiseTimeSeries2(
+            //           new Date("11 Feb 2017").getTime(),
+            //           20,
+            //           {
+            //             min: 10,
+            //             max: 60
+            //           }
+            //         )
+            //       }
+            //     ],
+            //     chart: {
+            //       id: "yt",
+            //       group: "social",
+            //       type: "area",
+            //       height: 160
+            //     },
+            //     colors: ["#062FEA"],
+            //     yaxis: {
+            //       tickAmount: 2,
+            //       labels: {
+            //         minWidth: 40
+            //       }
+            //     }
+            //   }
     }
 
     public updateOptions(option: any): void {
@@ -1773,7 +1901,7 @@ this.polarData = {
           var x = baseval;
           var y =
             Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
-    
+
           series.push([x, y]);
           baseval += 86400000;
           i++;
@@ -1787,7 +1915,7 @@ this.polarData = {
           var x = baseval;
           var y =
             Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
-    
+
           series.push([x, y]);
           baseval += 86400000;
           i++;
@@ -1799,5 +1927,14 @@ this.polarData = {
             this.subscription.unsubscribe();
         }
     }
-    
+
+}
+
+
+export interface IEnergyVoltagePowerUsedPayLoad{
+    client_id: number,
+    "device_id": number,
+    "device": string,
+    "end_date_time":Partial<Date>,
+    "start_date_time": Date,
 }

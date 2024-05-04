@@ -24,10 +24,10 @@ import {
     ApexAnnotations,
     ApexStroke,
     ApexLegend,
-    
+
   } from "ng-apexcharts";
 import { MessagesDemoComponent } from '../alert/messagesdemo.component';
-  
+
   export type ChartOptions = {
     series: ApexNonAxisChartSeries;
     chart: ApexChart;
@@ -347,12 +347,12 @@ import { MessagesDemoComponent } from '../alert/messagesdemo.component';
     [1361833200000, 38.59],
     [1361919600000, 39.6]
   ];
-  
+
 @Component({
     selector:"app-chartsdemo",
     templateUrl: './chartsdemo.component.html',
     styleUrls:['./chartsdemo.component.css'],
-    
+
   providers: [MessageService, ConfirmationService, DatePipe]
 })
 export class ChartsDemoComponent implements OnInit, OnDestroy {
@@ -399,7 +399,7 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
     }
   };
 
- 
+
 
     rpm: any;
     flow: any;
@@ -474,12 +474,12 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
 
     loginType:string=localStorage.getItem('loginType')
     constructor(private datePipe: DatePipe,public layoutService: LayoutService, private authservice:AuthenticationService,
-        private fb: FormBuilder,private http:HttpClient ,private productService: ProductService, 
+        private fb: FormBuilder,private http:HttpClient ,private productService: ProductService,
         private messageService: MessageService, private confirmationService: ConfirmationService,private api:ApiService) {
         this.subscription = this.layoutService.configUpdate$.subscribe(config => {
             this.initCharts();
         });
-        
+
     }
     convertToISTDateTime(utcDatetime: string) {
         const utcDateTime = new Date(utcDatetime);
@@ -487,7 +487,7 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
         return istTime || '';
       }
    ggg(){
-    debugger
+    // //debugger
    }
     ngOnInit() {
       this.items = [
@@ -498,29 +498,29 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
         { label: 'Historic Data', icon: 'pi pi-fw pi-cog',routerLink: ['/app/outlet/alert']  }
       ];
       this.activeItem = this.items[0];
-        debugger
+        // //debugger
         this.initCharts();
         this.getDevice();
 
         // setInterval(()=>{
         //     this.currTm= ' '+ '| '+ new Date().toString().substring(16,24)+ ' '
-        //     this.currDt= new Date().toString().substring(0,15)   
+        //     this.currDt= new Date().toString().substring(0,15)
         //   ,1000})
 
         //   setInterval(() => {
         //     this.selectedDealer?.device_name ? this.getDeviceLiveData(this.selectedDealer?.device_name) : console.log('hii');
         //     this.getDevice();
         //   }, 20000);
-          
-         
-      
+
+
+
     }
     abc(){
         this.alert_type=''
         console.log(this.selectedAlert);
         this.alert_type=this.selectedAlert?.unit_name
         this.alert_type=' '+this.alert_type;
-        debugger
+        //debugger
       }
     getDevice(){
         const credentials = {
@@ -533,13 +533,13 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
   this.http.post(apiUrl+'/client/devices/list', credentials,{ headers }).subscribe(
       (response) => {
         console.log(response);
-        
+
         this.data1=response
-        this.cities=this.data1.data 
-        
+        this.cities=this.data1.data
+
       },
       (error) => {
-        
+
         console.error(error);
       }
     );
@@ -555,30 +555,30 @@ const day = String(dateObject.getDate()).padStart(2, '0');
 // Create the desired format
 const result = `${month}/${day}`;
 
-console.log(result); 
+console.log(result);
 return result
 }
 getDeviceLiveData(name:any){
     // const apiUrl = this.api.baseUrl;
 //   baseUrl = 'https://iot.wrongcode.in/backend/api';
 
-  
+
          if(name){
             const token = localStorage.getItem('token');
             const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
-            
+
             this.liveData=[];
             this.liveData2=null;
-    
+
             const credentials = {
                 device_id:name
             };
-            
+
             this.http.post(this.api.baseUrl+'/device-data/last', credentials, { headers }).subscribe(
                 (response) => {
-                    
+
                     console.log(response);
-                    
+
                     this.data1=response
                     this.data1=this.data1.data
                     if(this.data1) {
@@ -589,53 +589,53 @@ getDeviceLiveData(name:any){
                         this.liveData=this.data1.chart_data_list
                         this.liveData2=this.data1.device_data_list
                         this.liveData.forEach(e => {
-                            
+
                             this.flowDate.push(this.dateConvt(e.created_at))
                             this.flowData.push(e.flow)
                             this.rpmDate.push(this.dateConvt(e.created_at))
                             this.rpmData.push(e.rpm.toString())
 
-                            
+
                             console.log(this.flowDate);
                             console.log(this.flowData);
                             console.log(this.rpmDate);
                             console.log(this.rpmData);
-                            
+
                         });
-                        
+
                         if(this.flowDate && this.flowData && this.rpmDate && this.rpmData){
                             this.lastUpdateTime=''
                             this.lastUpdateTime=this.convertToISTDateTime(this.liveData2.created_at)
                             console.log(this.lastUpdateTime);
-                            var currentdate = new Date(); 
+                            var currentdate = new Date();
                             var datetime = currentdate.getDate() + "-"
-                                + (currentdate.getMonth()+1)  + "-" 
-                                + currentdate.getFullYear() + " "  
-                                + currentdate.getHours() + ":"  
-                                + currentdate.getMinutes() + ":" 
+                                + (currentdate.getMonth()+1)  + "-"
+                                + currentdate.getFullYear() + " "
+                                + currentdate.getHours() + ":"
+                                + currentdate.getMinutes() + ":"
                                 + currentdate.getSeconds();
                                 console.log(datetime);
-                                
-                            
+
+
                             // this.flowDate = this.flowDate.map(value => JSON.stringify(value).replace(/[{}]/g, ''));
                             // this.flowData = this.flowData.map(value => JSON.stringify(value).replace(/[{}]/g, ''));
                             // this.rpmDate = this.rpmDate.map(value => JSON.stringify(value).replace(/[{}]/g, ''));
                             // this.rpmData = this.rpmData.map(value => JSON.stringify(value).replace(/[{}]/g, ''));
-                            
+
                             this.initCharts();
-                            
+
                         }
-                        
+
                     }
-                   
-                    
+
+
                 },
                 (error) => {
                     console.error(error);
                 }
                 );
          }
-  
+
 }
         dateChange(i:any){
             const utcTimestamp = i;
@@ -661,12 +661,12 @@ getDeviceLiveData(name:any){
             // Format the date
             const formattedDate = date.toLocaleString('en-US', options);
 
-            console.log(formattedDate); 
+            console.log(formattedDate);
             return formattedDate
         }
     setDevice(){
         console.log(this.selectedDealer);
-        
+
         this.getDeviceLiveData(this.selectedDealer.device_name);
 
 
@@ -678,12 +678,12 @@ getDeviceLiveData(name:any){
             const dealer = this.cities[i];
             if (dealer.device.toLowerCase().indexOf(query.toLowerCase()) == 0) {
                 filtered.push(dealer);
-                
+
             }
         }
-  
+
         this.filteredDealer = filtered;
-        
+
     }
 
     initCharts() {
@@ -719,7 +719,7 @@ getDeviceLiveData(name:any){
                 }
             ]
         };
-        
+
         this.options2 = {
             maintainAspectRatio: false,
             aspectRatio: 0.6,
@@ -749,7 +749,7 @@ getDeviceLiveData(name:any){
                 }
             }
         };
-    
+
         this.options = {
             indexAxis: 'y',
             maintainAspectRatio: false,
@@ -785,7 +785,7 @@ getDeviceLiveData(name:any){
                 }
             }
         };
-    
+
 
         this.flow = {
             labels: ['01', '02', '03', '04', '05', '06', '07'],
@@ -882,12 +882,12 @@ getDeviceLiveData(name:any){
             }
         };
 
-        
+
         this.rpm = {
-            
+
             labels: this.rpmDate,
             datasets: [
-                
+
                 {
                     label: 'RPM',
                     data: this.rpmData,
@@ -1063,7 +1063,7 @@ this.polarData = {
                         documentStyle.getPropertyValue('--teal-500'),
                         documentStyle.getPropertyValue('--orange-500'),
                         documentStyle.getPropertyValue('--blue-500')
-    
+
                     ],
                     hoverBackgroundColor: [
                         documentStyle.getPropertyValue('--purple-500'),
@@ -1081,14 +1081,28 @@ this.polarData = {
         this.chartOptions = {
             series: [44, 55, 13, 43, 22, 34, 65],
             chart: {
-              width: 480,
+            //   width: 480,
               type: "pie"
             },
             labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-            
+
+            responsive: [
+                {
+                  breakpoint: 1349,
+                  options: {
+                    // chart: {
+                    //   width: 480
+                    // },
+                    legend: {
+                      position: "bottom"
+                    }
+                  }
+                }
+              ]
+
           };
 
-         
+
             this.chartOptions2 = {
               series: [
                 {
@@ -1282,7 +1296,7 @@ this.polarData = {
                   tickAmount: 2
                 }
               }
-              
+
               this.chartOptions5 = {
                 series: [
                   {
@@ -1362,7 +1376,7 @@ this.polarData = {
           var x = baseval;
           var y =
             Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
-    
+
           series.push([x, y]);
           baseval += 86400000;
           i++;
@@ -1374,5 +1388,5 @@ this.polarData = {
             this.subscription.unsubscribe();
         }
     }
-    
+
 }

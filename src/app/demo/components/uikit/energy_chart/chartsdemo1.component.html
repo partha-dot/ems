@@ -5,7 +5,7 @@
                 <div class="field col-12 md:col-3">
                     <label htmlFor="lastname2">Site Name</label>
                     <input pInputText  type="text" />
-                </div>  
+                </div>
                 <div class="field col-12 md:col-2">
                     <label htmlFor="lastname2">Capacity (HP)</label>
                     <input pInputText  type="text" />
@@ -24,9 +24,9 @@
                 <div class="field col-12 md:col-1" style="margin-top: 2%;">
                     <p-button styleClass="p-button-primary " label="Update"></p-button>
                 </div>
-                
+
             </div>
-           
+
         </div>
 
     </div>
@@ -34,7 +34,7 @@
     <!-- <div class="col-12 lg:col-12"> -->
     <!-- <div class="card" style="padding: 0!important;"> -->
         <div class="grid" style="margin-left: 0rem!important;">
-           
+
             <!-- <div class="col-12 lg:col-2 xl:col-1">
                 <div class="livenow">
                   <div></div>
@@ -55,7 +55,7 @@
             </div>
             </div>
             <div class="col-12 md:col-12" *ngIf="checked">
-                
+
                     <ng-template pTemplate="header" style="width: 30%;">
                         <span>Device Location</span>
                         <agm-map [latitude]="lat" [longitude]="lng">
@@ -68,50 +68,62 @@
                                 <h4>Energy Used</h4>
                             <button class="qbutton"
                             [class.active]="activeOptionButton=='1yd'"
+                            (click)="getEnergyUsedByFilter('1yd')"
                             >
                             TODAY
                             </button>
                             <!-- (click)="updateOptions( '1yd' )" -->
 
-                            
-                            <button class="qbutton"[class.active]="activeOptionButton=='1m'"
+
+                            <button class="qbutton"
+                            (click)="getEnergyUsedByFilter('1m')"
+                            [class.active]="activeOptionButton=='1m'"
                             >
                             <!-- (click)="updateOptions( '1m' )" -->
                             MONTHLY
                             </button>
                             <button class="qbutton"
-                           
+                            (click)="getEnergyUsedByFilter('1y')"
                             [class.active]="activeOptionButton=='1y'"
                             >
                             <!-- (click)="updateOptions( '1y' )" -->
                             YEARLY
                             </button>
                             <button class="qbutton"
-                            
+                            (click)="getEnergyUsedByFilter('all')"
                             [class.active]="activeOptionButton=='all'"
                             >
                             <!-- (click)="updateOptions( 'all' )" -->
                             TOTAL
                             </button>
-                            <apx-chart
-                            #chart
-                            [series]="chartOptions2.series"
-                            [chart]="chartOptions2.chart"
-                            [colors]="chartOptions2.colors"
-                            [yaxis]="chartOptions2.yaxis"
-                            [dataLabels]="chartOptions2.dataLabels"
-                            [markers]="chartOptions2.markers"
-                            [stroke]="chartOptions2.stroke"
-                            [grid]="chartOptions2.grid"
-                            [xaxis]="chartOptions2.xaxis"
-                            [tooltip]="chartOptions2.tooltip"
-                            [annotations]="chartOptions2.annotations"
-                          ></apx-chart>
-                          
+                            <ng-container *ngIf="chartOptions2;else no_Data">
+                                <apx-chart
+                                #chart
+                                [series]="chartOptions2?.series"
+                                [chart]="chartOptions2?.chart"
+                                [colors]="chartOptions2?.colors"
+                                [yaxis]="chartOptions2?.yaxis"
+                                [dataLabels]="chartOptions2?.dataLabels"
+                                [markers]="chartOptions2?.markers"
+                                [stroke]="chartOptions2?.stroke"
+                                [grid]="chartOptions2?.grid"
+                                [xaxis]="chartOptions2?.xaxis"
+                                [tooltip]="chartOptions2?.tooltip"
+                                [annotations]="chartOptions2?.annotations"
+                              ></apx-chart>
+                            </ng-container>
+                            <ng-template #no_Data>
+                                <p class="text-center">
+                                    No Data Available
+                                </p>
+                            </ng-template>
+
+
+
                         </div>
                         </div>
-                        
-                        
+
+
                         <!-- <div class="col-12 lg:col-6 xl:col-6">
 
                             <div class="card" >
@@ -198,8 +210,8 @@
 
                         </div>
                         </div>
-                        
-                        
+
+
                         <div class="col-12 lg:col-6 xl:col-12">
                             <div class="card" >
                                 <h4>Power</h4>
@@ -227,88 +239,128 @@
                                     ></apx-chart>
                                     </div>
                                 </div>
-                                
+
                             </div>
                         </div> -->
                         <div class="col-12 lg:col-6 xl:col-12">
                             <div class="card" >
-                                <div style="float: left;">
+                                <div class="card-header">
                                     <h4>Voltage(V)</h4>
+
+                                    <form [formGroup]="energy_filter">
+                                        <p-calendar
+                                        [inline]="false"
+                                        placeholde="From Date - To Date"
+                                        dateFormat="dd/mm/yy"
+                                        [showTime]="true"
+                                        selectionMode="range"
+                                        [readonlyInput]="true"
+                                        [showButtonBar]="true"
+                                         formControlName="voltage_date_time"
+                                        appendTo="body"
+                                         ></p-calendar>
+                                    </form>
+
                                 </div>
-                                <div style="float: right;">
-                                    <div class="field">
-                                        <p-calendar dateFormat="dd/mm/yy" [(ngModel)]="vfdate" [showTime]="true" [showSeconds]="true" placeholder="Form DateTime"></p-calendar>
-                                       -
-                                        <p-calendar dateFormat="dd/mm/yy" [(ngModel)]="vtdate" [showTime]="true" [showSeconds]="true" placeholder="To DateTime"></p-calendar>
-                                    </div>
-                                    
-                                </div><br>
+                                <br>
                                 <div id="chart6">
+                                    <ng-container *ngIf="chartOptions6;else noData">
                                     <apx-chart
-                                      [series]="chartOptions6.series"
-                                      [chart]="chartOptions6.chart"
-                                      [yaxis]="chartOptions6.yaxis"
-                                      [xaxis]="chartOptions6.xaxis"
-                                      [labels]="chartOptions6.labels"
-                                      [stroke]="chartOptions6.stroke"
-                                      [markers]="chartOptions6.markers"
-                                      [fill]="chartOptions6.fill"
-                                      [tooltip]="chartOptions6.tooltip"
+                                      [series]="chartOptions6?.series"
+                                      [chart]="chartOptions6?.chart"
+                                      [yaxis]="chartOptions6?.yaxis"
+                                      [xaxis]="chartOptions6?.xaxis"
+                                      [labels]="chartOptions6?.labels"
+                                      [stroke]="chartOptions6?.stroke"
+                                      [markers]="chartOptions6?.markers"
+                                      [fill]="chartOptions6?.fill"
+                                      [tooltip]="chartOptions6?.tooltip"
                                     ></apx-chart>
+                                </ng-container>
+                                <ng-template #noData>
+                                        <p class="text-center">No Data Available</p>
+                                </ng-template>
+
                                   </div>
                             </div>
                         </div>
                         <div class="col-12 lg:col-6 xl:col-12">
                             <div class="card" >
-                                <div style="float: left;">
+                                <div class="card-header">
                                     <h4>Current(A)</h4>
+                                    <form [formGroup]="energy_filter">
+                                        <p-calendar
+                                        [inline]="false"
+                                        placeholde="From Date - To Date"
+                                        dateFormat="dd/mm/yy"
+                                        [showTime]="true"
+                                        selectionMode="range"
+                                        [readonlyInput]="true"
+                                        [showButtonBar]="true"
+                                         formControlName="current_date_time"
+                                        appendTo="body"
+                                         ></p-calendar>
+                                    </form>
                                 </div>
-                                <div style="float: right;">
-                                    <div class="field">
-                                        <p-calendar dateFormat="dd/mm/yy" [(ngModel)]="cfdate" [showTime]="true" [showSeconds]="true" placeholder="Form DateTime"></p-calendar>
-                                       -
-                                        <p-calendar dateFormat="dd/mm/yy" [(ngModel)]="ctdate" [showTime]="true" [showSeconds]="true" placeholder="To DateTime"></p-calendar>
-                                    </div>
-                                </div><br>
+                                <br>
                                 <div id="chart6">
+                                    <ng-container *ngIf="chartOptions7;else noData">
                                     <apx-chart
-                                      [series]="chartOptions7.series"
-                                      [chart]="chartOptions7.chart"
-                                      [yaxis]="chartOptions7.yaxis"
-                                      [xaxis]="chartOptions7.xaxis"
-                                      [labels]="chartOptions7.labels"
-                                      [stroke]="chartOptions7.stroke"
-                                      [markers]="chartOptions7.markers"
-                                      [fill]="chartOptions7.fill"
-                                      [tooltip]="chartOptions7.tooltip"
+                                      [series]="chartOptions7?.series"
+                                      [chart]="chartOptions7?.chart"
+                                      [yaxis]="chartOptions7?.yaxis"
+                                      [xaxis]="chartOptions7?.xaxis"
+                                      [labels]="chartOptions7?.labels"
+                                      [stroke]="chartOptions7?.stroke"
+                                      [markers]="chartOptions7?.markers"
+                                      [fill]="chartOptions7?.fill"
+                                      [tooltip]="chartOptions7?.tooltip"
                                     ></apx-chart>
+                                    </ng-container>
+                                    <ng-template #noData>
+                                        <p class="text-center">No Data Available</p>
+                                    </ng-template>
                                   </div>
                             </div>
                         </div>
                         <div class="col-12 lg:col-6 xl:col-12">
                             <div class="card" >
-                                <div style="float: left;">
+                                <div class="card-header">
                                     <h4>Power</h4>
+                                    <form [formGroup]="energy_filter">
+                                        <p-calendar
+                                        [inline]="false"
+                                        placeholde="From Date - To Date"
+                                        dateFormat="dd/mm/yy"
+                                        [showTime]="true"
+                                        selectionMode="range"
+                                        [readonlyInput]="true"
+                                        [showButtonBar]="true"
+                                         formControlName="power_date_time"
+                                        appendTo="body"
+                                         ></p-calendar>
+                                    </form>
                                 </div>
-                                <div style="float: right;">
-                                    <div class="field">
-                                        <p-calendar dateFormat="dd/mm/yy" [(ngModel)]="pfdate" [showTime]="true" [showSeconds]="true" placeholder="Form DateTime"></p-calendar>
-                                       -
-                                        <p-calendar dateFormat="dd/mm/yy" [(ngModel)]="ptdate" [showTime]="true" [showSeconds]="true" placeholder="To DateTime"></p-calendar>
-                                    </div>
-                                </div><br>
+
+                                <br>
                                 <div id="chart6">
-                                    <apx-chart
-                                      [series]="chartOptions8.series"
-                                      [chart]="chartOptions8.chart"
-                                      [yaxis]="chartOptions8.yaxis"
-                                      [xaxis]="chartOptions8.xaxis"
-                                      [labels]="chartOptions8.labels"
-                                      [stroke]="chartOptions8.stroke"
-                                      [markers]="chartOptions8.markers"
-                                      [fill]="chartOptions8.fill"
-                                      [tooltip]="chartOptions8.tooltip"
-                                    ></apx-chart>
+                                    <ng-container *ngIf="chartOptions8;else noData">
+                                        <apx-chart
+                                        [series]="chartOptions8?.series"
+                                        [chart]="chartOptions8?.chart"
+                                        [yaxis]="chartOptions8?.yaxis"
+                                        [xaxis]="chartOptions8?.xaxis"
+                                        [labels]="chartOptions8?.labels"
+                                        [stroke]="chartOptions8?.stroke"
+                                        [markers]="chartOptions8?.markers"
+                                        [fill]="chartOptions8?.fill"
+                                        [tooltip]="chartOptions8?.tooltip"
+                                      ></apx-chart>
+                                    </ng-container>
+                                    <ng-template #noData>
+                                        <p class="text-center">No Data Available</p>
+                                    </ng-template>
+
                                   </div>
                             </div>
                         </div>
@@ -317,28 +369,28 @@
                             <div class="card" >
                                 <div>
                                     <apx-chart
-                                    [series]="chartOptions5.series"
-                                    [chart]="chartOptions5.chart"
-                                    [xaxis]="chartOptions5.xaxis"
-                                    [dataLabels]="chartOptions5.dataLabels"
-                                    [yaxis]="chartOptions5.yaxis"
-                                    [colors]="chartOptions5.colors"
-                                    [legend]="chartOptions5.legend"
-                                    [fill]="chartOptions5.fill"
+                                    [series]="chartOptions5?.series"
+                                    [chart]="chartOptions5?.chart"
+                                    [xaxis]="chartOptions5?.xaxis"
+                                    [dataLabels]="chartOptions5?.dataLabels"
+                                    [yaxis]="chartOptions5?.yaxis"
+                                    [colors]="chartOptions5?.colors"
+                                    [legend]="chartOptions5?.legend"
+                                    [fill]="chartOptions5?.fill"
                                     ></apx-chart>
                                 </div>
                             </div>
                         </div>
                         </div>
-               
+
             </div>
-        </div> 
+        </div>
     <!-- </div> -->
-        
-          
-       
-     
+
+
+
+
 
     <!-- </div>
-   
+
 </div> -->
