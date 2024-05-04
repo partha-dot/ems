@@ -1,22 +1,20 @@
-
+<!-- 
 <div class="col-12 lg:col-6 xl:col-12">
 	<h4>Device Information</h4>
 	<div class="grid" style="margin-left: 0rem!important;">
-		<div class="col-12 lg:col-6 xl:col-4">
+		<div class="col-12 lg:col-6 xl:col-12">
 			<div class="card mb-0 xcard">
-				<div class="flex justify-content-between mb-3">
-					<div>
-						<span class="block mb-3" style="font-size: x-large;color: #00cc00;">ENERGY</span>
-						<div class="text-900 font-medium text-xl">Total Generators : 30</div>
-							<hr>
-						<div class="justify-content-center gap-2">
-							<b>ON</b>&nbsp;&nbsp;<p-badge [value]="20" severity="success"></p-badge>&nbsp;&nbsp;&nbsp;&nbsp;
-							<b>OFF</b>&nbsp;&nbsp;<p-badge [value]="10" severity="danger"></p-badge>
-						</div><hr>
-						<div class="text-900 font-medium text-xl">Total Power :  205.52kWH</div>
-					</div>
-                    <img src="assets/demo/images/access/energy.png" alt="logo" style="width: 85px;">
-				</div>
+				<div class="justify-content-center">
+                    <div class="col-12 lg:col-6 xl:col-6">
+                        <b  style="font-size: x-large;color: #00cc00;">ENERGY</b>
+                    </div>
+                    <div class="col-12 lg:col-6 xl:col-6">
+                        <b class="text-900 font-medium text-xl">Total Device : 30</b>&nbsp;&nbsp;&nbsp;&nbsp;
+							<b>ONLINE</b>&nbsp;&nbsp;<p-badge [value]="20" severity="success"></p-badge>&nbsp;&nbsp;&nbsp;&nbsp;
+							<b>OFFLINE</b>&nbsp;&nbsp;<p-badge [value]="10" severity="danger"></p-badge>
+                    </div>
+                </div>
+						
 			</div>
 		</div>
 		<div class="col-12 lg:col-6 xl:col-4" *ngIf="this.loginType=='pro'">
@@ -55,7 +53,7 @@
 		</div>
 	</div>
 </div>
-
+ -->
 
 
 
@@ -65,10 +63,10 @@
 	
 <div class="card">
     <p-toast></p-toast>
-
+    <h5 class="m-2">Manage Device</h5>
     <p-table
         #dt
-        [value]="device"
+        [value]="stockList"
         [rows]="10"
         [paginator]="true"
         [globalFilterFields]="['device_id', 'modal', 'battery', 'status']"
@@ -79,12 +77,16 @@
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
         [showCurrentPageReport]="true"
     >
+    
         <ng-template pTemplate="caption">
             <div class="flex align-items-center justify-content-between">
-                <h5 class="m-0">Manage Device</h5>
+                <b class="text-900 font-medium text-xl">Total Device : 30</b>|
+                <b>ONLINE</b><p-badge [value]="20" severity="success"></p-badge>|
+                <b>OFFLINE</b><p-badge [value]="10" severity="danger"></p-badge><br>
                 <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>
-                    <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Search..." />
+                    <!-- <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Search..." /> -->
+                    <button pButton pRipple label="Add New Device" icon="pi pi-plus" class="p-button-primary mr-2" (click)="openNew2()"></button>
                 </span>
             </div>
         </ng-template>
@@ -92,25 +94,32 @@
             <tr>
                 <th>Sl No.</th>
                 <th pSortableColumn="name" style="min-width:15rem">Device Name <p-sortIcon field="name"></p-sortIcon></th>
-                <th pSortableColumn="price">Model <p-sortIcon field="price"></p-sortIcon></th>
-                <th pSortableColumn="category" style="min-width:10rem">Battery <p-sortIcon field="category"></p-sortIcon></th>
-				<th pSortableColumn="inventoryStatus" style="min-width:10rem">Active Status <p-sortIcon field="inventoryStatus"></p-sortIcon></th>
-                <th>Edit / Delete</th>
+                <!-- <th pSortableColumn="price">Device ID <p-sortIcon field="price"></p-sortIcon></th> -->
+                <th pSortableColumn="price">Model<p-sortIcon field="price"></p-sortIcon></th>
+                <th pSortableColumn="category" style="min-width:10rem">Latitude <p-sortIcon field="category"></p-sortIcon></th>
+                <th pSortableColumn="category" style="min-width:10rem">Longitude <p-sortIcon field="category"></p-sortIcon></th>
+                <th pSortableColumn="category" style="min-width:10rem">IMEI NO <p-sortIcon field="category"></p-sortIcon></th>
+				<th pSortableColumn="inventoryStatus" style="min-width:10rem">Status <p-sortIcon field="inventoryStatus"></p-sortIcon></th>
+                <th>Edit</th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-rowIndex="rowIndex" let-product>
             <tr>
                <td>{{rowIndex+1}}</td>
-                <td>{{ product.device_id }}</td>
-                <td>{{ product.model}}</td>
-                <td>{{ product.battery }}</td>
-				<th style="text-align: left;">
-					<p-badge [value]="product.status" [severity]="product.status!='active'?'danger':'success'"></p-badge>
+                <td>{{ product.device }}</td>
+                <!-- <td>{{ product.device_name}}</td> -->
+                <td>{{ product.model }}</td>
+                <td>{{ product.lat }}</td>
+                <td>{{ product.lon }}</td>
+                <td>{{ product.imei_no }}</td>
+                <!-- <td>{{ product.energy_data_created_at?"Offline":"Online" }}</td> -->
+				<th style="text-align: center;">
+					<p-badge [value]="product.energy_data_created_at?'Online':'Offline'" [severity]="!product.energy_data_created_at?'danger':'success'"></p-badge>
 				</th>
                 
                 <td>
                     <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editProduct(product)"></button>
-                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteProduct()"></button>
+                    <!-- <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteProduct(product.device_id)"></button> -->
                 </td>
             </tr>
         </ng-template>
@@ -174,7 +183,51 @@
         <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveProduct()"></button>
     </ng-template>
 </p-dialog>
+<p-dialog [(visible)]="AddproductDialog" [style]="{ width: '450px', height:'500px' }" header="Product Details" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <form [formGroup]="addDevice">
+            <!-- <div class="field">
+                <label for="name">Device Name</label>
+                <input type="text" pInputText id="name" formControlName="deviceName" required autofocus />
+                
+            </div> -->
+            <div class="field">
+                <label for="name">Device ID</label>
+                <input type="text" pInputText id="name" formControlName="deviceId" required autofocus />
+                <!-- <small class="p-error" *ngIf="submitted && !product.name">Name is required.</small> -->
+            </div>
+            <div class="field">
+                <label for="name">Model</label>
+                <input type="text" pInputText id="name" formControlName="dmodel" required autofocus />
+                <!-- <small class="p-error" *ngIf="submitted && !product.name">Name is required.</small> -->
+            </div>
+            <div class="field">
+                <label for="name">Latitude</label>
+                <input type="text" pInputText id="name" formControlName="lat" required autofocus />
+                <!-- <small class="p-error" *ngIf="submitted && !product.name">Name is required.</small> -->
+            </div>
+            <div class="field">
+                <label for="name">Longitude</label>
+                <input type="text" pInputText id="name" formControlName="long" required autofocus />
+                <!-- <small class="p-error" *ngIf="submitted && !product.name">Name is required.</small> -->
+            </div>
+            <div class="field">
+                <label for="name">IMEI NO</label>
+                <input type="text" pInputText id="name" formControlName="imeiNo" required autofocus />
+                <!-- <small class="p-error" *ngIf="submitted && !product.name">Name is required.</small> -->
+            </div>
+        </form>
+        
+
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveProduct()"></button>
+    </ng-template>
+</p-dialog>
 
 	<!-- <div *ngIf="spinner" class="spinner_overlay"><p-progressSpinner></p-progressSpinner></div> -->
 		
 </div>
+<div *ngIf="spinner" class="spinner_overlay"><p-progressSpinner></p-progressSpinner></div>

@@ -51,53 +51,50 @@
         <ng-template pTemplate="header">
             <tr>
                 
-				<th style="text-align: center;">Sl No.</th>
+				<!-- <th style="text-align: center;">Sl No.</th> -->
                 <th pSortableColumn="company" style="min-width:15rem">Device Id <p-sortIcon field="company"></p-sortIcon></th>
-                <th pSortableColumn="product" style="min-width:15rem">Device Type <p-sortIcon field="product"></p-sortIcon></th>
-                <th pSortableColumn="model" style="min-width:15rem">Alert Type <p-sortIcon field="model"></p-sortIcon></th>
+                <th pSortableColumn="company" style="min-width:15rem">Unit Name <p-sortIcon field="company"></p-sortIcon></th>
+                <th pSortableColumn="product" style="min-width:15rem">Alert Type <p-sortIcon field="product"></p-sortIcon></th>
+                <th pSortableColumn="model" style="min-width:15rem">Alert Status <p-sortIcon field="model"></p-sortIcon></th>
+                <th pSortableColumn="model" style="min-width:15rem">Alert Value <p-sortIcon field="model"></p-sortIcon></th>
                 <th pSortableColumn="model" style="min-width:15rem">Email <p-sortIcon field="model"></p-sortIcon></th>
-                <th>Action</th>
+                <th>Edit</th>
+                <th>Delete</th>
             </tr>
-            <tr>
-                
-                <td style="text-align: center;">1</td>
-                <td>ABCDE01001</td>
-                <td>Energy</td>
-                <td>High Voltage</td>
-                <td>abcd@email.com </td>
-                
-                <td>
-                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-primary mr-2" (click)="editProduct(model)"></button>
-                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteProduct(model)"></button>
-                </td>
-            </tr>
-            <tr>
-                
-                <td style="text-align: center;">2</td>
-                <td>ABCDE01002</td>
-                <td>Energy</td>
-                <td>Critical High Voltage</td>
-                <td>mncp@email.com </td>
-                
-                <td>
-                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-primary mr-2" (click)="editProduct(model)"></button>
-                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteProduct(model)"></button>
-                </td>
-            </tr>
-            <tr>
-                
-                <td style="text-align: center;">3</td>
-                <td>ABCDE01002</td>
-                <td>Energy</td>
-                <td>Critical Low Voltage</td>
-                <td>xyzpq@email.com </td>
-                
-                <td>
-                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-primary mr-2" (click)="editProduct(model)"></button>
-                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteProduct(model)"></button>
-                </td>
-            </tr>
+            
         </ng-template>
+        <ng-template pTemplate="body" let-alert >
+			<tr>
+				<td>{{ alert.device }}</td>
+				<td>{{ alert.unit_name }}</td>
+				<td>{{ alert.alert_type }}</td>
+				<!-- <td>{{ alert.alert_status }}</td> -->
+                <td style="text-align: left;">
+					<p-badge  [severity]="alert.alert_status=='Y'?'success':'danger '">{{alert.alert_status=='Y'?'Active':'Deactive'}}</p-badge>
+				</td>
+				<td>{{ alert.alert_value }}</td>
+				<td>{{ alert.alert_email }}</td>
+				<!-- <td>{{ alert.model_name }}</td>
+				<td>{{ alert.purchase_rate |currency:"INR"}}</td>
+				<td>{{ alert.purchase_date }}</td>
+				<td>{{ alert.warranty_expired }}</td>
+				<td>{{ alert.sales_rate |currency:"INR"}}</td>
+				<td>{{ alert.cgst_p}}%</td>
+				<td>{{ alert.sgst_p}}%</td> -->
+				<!-- <td>
+					<button type="button" pButton pRipple icon="pi pi-pencil" (click)="selectProduct(alert)"></button>
+				</td>-->
+				<!-- <td style="text-align: center;">
+					<button type="button" pButton pRipple icon="pi pi-eye" (click)="show(alert)"></button>
+				</td>  -->
+				<td style="text-align: center;">
+					<button type="button" pButton pRipple icon="pi pi-pencil" (click)="editAlert(alert)"></button>
+				</td> 
+                <td style="text-align: center;">
+					<button type="button" pButton pRipple icon="pi pi-trash" (click)="deleteAlert(alert)"></button>
+				</td> 
+			</tr>
+		</ng-template>
         <ng-template pTemplate="summary">
             <div class="flex align-items-center justify-content-between">In total there are {{ model ? model.length : 0 }} Models.</div>
         </ng-template>
@@ -105,48 +102,66 @@
 </div>
 <p-dialog [(visible)]="productDialog" [style]="{ width: '550px', height:'540px'}" header="Product Details" [modal]="true" styleClass="p-fluid">
     <ng-template pTemplate="content">
-        <from [formGroup]="userForm">
+        <from [formGroup]="unitForm">
         <!-- <img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + product.image" [alt]="product.image" class="block m-auto pb-3" *ngIf="product.image" /> -->
         <div class="field">
+            <label for="company">Select Organization</label>
+            <!-- <p-dropdown formControlName="organization_id" [options]="products" optionLabel="organization_name" placeholder="Select a Organization"></p-dropdown> -->
+            <select formControlName="organization_id" style="width: 100%;height: 39px;border-color: lightgray;border-radius: 5px;">
+                <option selected>Select an Organization</option>
+                <option *ngFor="let dt of products" [value]="dt.organization_id">{{dt.organization_name}}</option>
+             </select>
+        </div>
+        <div class="field">
             <label for="company">Select Device</label>
-            <p-dropdown formControlName="device_id" [options]="cities" optionLabel="device_name" placeholder="Select a Device"></p-dropdown>
-            <!-- <select formControlName="origination_id" style="width: 100%;height: 39px;border-color: lightgray;border-radius: 5px;">
-                <option selected>Select a Organization</option>
-                <option *ngFor="let dt of companys" [value]="dt.origination_id">{{dt.origination_name}}</option>
-             </select> -->
+            <!-- <p-dropdown formControlName="device_id" [options]="cities" optionLabel="device" placeholder="Select a Device"></p-dropdown> -->
+            <select formControlName="device_id" style="width: 100%;height: 39px;border-color: lightgray;border-radius: 5px;">
+                <option selected>Select a Device</option>
+                <option *ngFor="let dt of cities" [value]="dt.device_id">{{dt.device}}</option>
+             </select>
         </div>
         <div class="field">
             <label for="product">Unit</label>
-            <p-dropdown formControlName="a_unit" [options]="cities2" optionLabel="unit_name" placeholder="Select a unit"></p-dropdown>
+            <select formControlName="unit_id" style="width: 100%;height: 39px;border-color: lightgray;border-radius: 5px;">
+                <option selected>Select a Unit</option>
+                <option *ngFor="let dt of unitList" [value]="dt.unit_id">{{dt.unit_name}}</option>
+             </select>
+            <!-- <p-dropdown formControlName="unit_id" [options]="unitList" optionLabel="unit_name" placeholder="Select a unit"></p-dropdown> -->
         </div> 
         <div class="field">
             <label for="product">Alert Type</label>
             <div class="flex flex-column md:flex-row gap-3">
-                <p-inputSwitch [ngModelOptions]="{standalone: true}" [(ngModel)]="low"></p-inputSwitch>  Low<br>
-                <p-inputSwitch [ngModelOptions]="{standalone: true}" [(ngModel)]="high"></p-inputSwitch>  High<br>
-                <p-inputSwitch [ngModelOptions]="{standalone: true}" [(ngModel)]="c_low"></p-inputSwitch>  Critical Low<br>
-                <p-inputSwitch [ngModelOptions]="{standalone: true}" [(ngModel)]="c_high"></p-inputSwitch>  Critical High<br>
+               <div [hidden]="editMode&&!low"><p-inputSwitch [ngModelOptions]="{standalone: true}" [(ngModel)]="low" ></p-inputSwitch>  Low</div> <br>
+                <div [hidden]="editMode&&!high"><p-inputSwitch [ngModelOptions]="{standalone: true}" [(ngModel)]="high"></p-inputSwitch>  High</div><br>
+                <div [hidden]="editMode&&!c_low"><p-inputSwitch [ngModelOptions]="{standalone: true}" [(ngModel)]="c_low"></p-inputSwitch>  Critical Low</div><br>
+                <div [hidden]="editMode&&!c_high"><p-inputSwitch [ngModelOptions]="{standalone: true}" [(ngModel)]="c_high"></p-inputSwitch>  Critical High</div>
             </div>
            
             <div class="flex flex-column md:flex-row gap-1">
                 <div class="col-6 lg:col-6 xl:col-6" *ngIf="low">
                     <label for="product">Low</label>
-                    
-                    <input type="text" pInputText id="email" formControlName="email" placeholder="Enter Low Value" pTooltip="Below this value Alert will generated"  required  />
+                    <p-inputNumber placeholder="Enter Low Value" formControlName="low_val" [minFractionDigits]="2"  pTooltip="Below this value Alert will generated"  required /> 
+                    <!-- <input type="text" pInputText id="email" formControlName="low_val" placeholder="Enter Low Value" pTooltip="Below this value Alert will generated"  required  /> -->
                 </div>
                 <div class="col-6 lg:col-6 xl:col-6"  *ngIf="high">
                     <label for="product">High</label>
-                    <input type="text" pInputText id="email" formControlName="email" placeholder="Enter High Value" required  pTooltip="Above this value Alert will generated"/>
+                    <p-inputNumber placeholder="Enter High Value" formControlName="high_val" [minFractionDigits]="2"  pTooltip="Below this value Alert will generated"  required /> 
+
+                    <!-- <input type="text" pInputText id="email" formControlName="high_val" placeholder="Enter High Value" required  pTooltip="Above this value Alert will generated"/> -->
                 </div>
             </div>
             <div class="flex flex-column md:flex-row gap-1">
-                <div class="col-6 lg:col-6 xl:col-6"  *ngIf="c_low">
+                <div class="col-6 lg:col-6 xl:col-6"  *ngIf="c_high">
                     <label for="product">Critical High</label>
-                    <input type="text" pInputText id="email" formControlName="email" placeholder="Enter Critical High Value" required pTooltip="Above this value Alert will generated" />
+                    <p-inputNumber placeholder="Enter Critical High Value" formControlName="c_high_val" [minFractionDigits]="2"  pTooltip="Below this value Alert will generated"  required /> 
+
+                    <!-- <input type="text" pInputText id="email" formControlName="c_high_val" placeholder="Enter Critical High Value" required pTooltip="Above this value Alert will generated" /> -->
                 </div>
-                <div class="col-6 lg:col-6 xl:col-6" *ngIf="c_high">
+                <div class="col-6 lg:col-6 xl:col-6" *ngIf="c_low">
                     <label for="product">Critical low</label>
-                    <input type="text" pInputText id="email" formControlName="email" placeholder="Enter Critical low Value" required  pTooltip="Below this value Alert will generated"/>
+                    <p-inputNumber placeholder="Enter Critical low Value" formControlName="c_low_val" [minFractionDigits]="2"  pTooltip="Below this value Alert will generated"  required /> 
+
+                    <!-- <input type="text" pInputText id="email" formControlName="c_low_val" placeholder="Enter Critical low Value" required  pTooltip="Below this value Alert will generated"/> -->
                 </div>
             </div>
         </div>

@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit, OnDestroy, ViewChild, TemplateRef} from '@angular/core';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ConfirmationService, MessageService, SelectItem } from 'primeng/api';
 import { DataView } from 'primeng/dataview';
 import { Product } from 'src/app/demo/api/product';
@@ -10,6 +10,8 @@ import { ProductService } from 'src/app/demo/service/product.service';
 import { CrudComponent } from '../../pages/crud/crud.component';
 import { Customer } from 'src/app/demo/api/customer';
 import { TreeNode } from 'primeng/api';
+import { AuthenticationService } from 'src/app/demo/service/authentication.service';
+import { CountryService } from 'src/app/demo/service/country.service';
 interface PageEvent {
     first: number;
     rows: number;
@@ -31,139 +33,21 @@ export class FloatLabelDemoComponent implements OnInit  {
   checked:boolean=true
   checked2:boolean=false
   productDialog: boolean = false;
-
+  AddproductDialog:boolean = false;
+  addDevice:FormGroup;
   products!: Product[];
-
+  operationType:any;
   product!: Product;
-
+  client_id:number=(+localStorage.getItem('c_id'));
   selectedProducts!: Product[] | null;
-
+  spinner:boolean=false;
   submitted: boolean = false;
-
+  ct:any;
+  stockApi:any;
+  stockList:any[]=[];
   statuses!: any[];
   loginType:string=localStorage.getItem('loginType')
-  device=[
-    {
-      "device_id": "AB0000001",
-      "model": "ENERGY",
-      "battery": "70%",
-      "status": "active"
-    },
-    {
-      "device_id": "AB0000002",
-      "model": "ENERGY",
-      "battery": "60%",
-      "status": "deactive"
-    },
-    {
-      "device_id": "AB0000003",
-      "model": "ENERGY",
-      "battery": "75%",
-      "status": "active"
-    },
-    {
-      "device_id": "AB0000004",
-      "model": "ENERGY",
-      "battery": "80%",
-      "status": "deactive"
-    },
-    {
-      "device_id": "AB0000005",
-      "model": "ENERGY",
-      "battery": "65%",
-      "status": "active"
-    },
-    {
-      "device_id": "AB0000006",
-      "model": "ENERGY",
-      "battery": "50%",
-      "status": "deactive"
-    },
-    {
-      "device_id": "AB0000007",
-      "model": "ENERGY",
-      "battery": "90%",
-      "status": "active"
-    },
-    {
-      "device_id": "AB0000008",
-      "model": "ENERGY",
-      "battery": "45%",
-      "status": "deactive"
-    },
-    {
-      "device_id": "AB0000009",
-      "model": "ENERGY",
-      "battery": "85%",
-      "status": "active"
-    },
-    {
-      "device_id": "AB0000010",
-      "model": "ENERGY",
-      "battery": "55%",
-      "status": "deactive"
-    },
-    {
-      "device_id": "AB0000011",
-      "model": "ENERGY",
-      "battery": "75%",
-      "status": "active"
-    },
-    {
-      "device_id": "AB0000012",
-      "model": "ENERGY",
-      "battery": "40%",
-      "status": "deactive"
-    },
-    {
-      "device_id": "AB0000013",
-      "model": "ENERGY",
-      "battery": "60%",
-      "status": "active"
-    },
-    {
-      "device_id": "AB0000014",
-      "model": "ENERGY",
-      "battery": "95%",
-      "status": "deactive"
-    },
-    {
-      "device_id": "AB0000015",
-      "model": "ENERGY",
-      "battery": "50%",
-      "status": "active"
-    },
-    {
-      "device_id": "AB0000016",
-      "model": "ENERGY",
-      "battery": "75%",
-      "status": "deactive"
-    },
-    {
-      "device_id": "AB0000017",
-      "model": "ENERGY",
-      "battery": "80%",
-      "status": "active"
-    },
-    {
-      "device_id": "AB0000018",
-      "model": "ENERGY",
-      "battery": "65%",
-      "status": "deactive"
-    },
-    {
-      "device_id": "AB0000019",
-      "model": "ENERGY",
-      "battery": "70%",
-      "status": "active"
-    },
-    {
-      "device_id": "AB0000020",
-      "model": "ENERGY",
-      "battery": "85%",
-      "status": "deactive"
-    }
-  ]
+ 
   DeviceModel = [
     { name: 'Energy', code: 'EN' },
     { name: 'Water', code: 'WA' },
@@ -171,9 +55,22 @@ export class FloatLabelDemoComponent implements OnInit  {
     { name: 'Wind', code: 'WI' }
 ];
 
-  constructor(private productService: ProductService, private messageService: MessageService, private confirmationService: ConfirmationService) {}
+  constructor(private authservice:AuthenticationService,private api:ApiService,private countryService: CountryService,private http:HttpClient,private productService: ProductService,private fb: FormBuilder, private messageService: MessageService, private confirmationService: ConfirmationService) {
+    this.addDevice = this.fb.group({
+      did: [''],
+      // deviceName: ['', Validators.required],
+      deviceId: ['', [Validators.required]],
+      dmodel: ['', [Validators.required]],
+      lat: ['', [Validators.required]],
+      long: ['', [Validators.required]],
+      imeiNo: ['', [Validators.required]],
+      // sl_no: this.fb.array([]) 
+    });
+  }
 
   ngOnInit() {
+    this.getAllStock();
+    this.ct=this.addDevice.controls;
       this.productService.getProducts().then((data) => (this.products = data));
 
       this.statuses = [
@@ -184,10 +81,17 @@ export class FloatLabelDemoComponent implements OnInit  {
   }
 
   openNew() {
+    this.operationType="U"
       this.product = {};
       this.submitted = false;
-      this.productDialog = true;
+      this.AddproductDialog = true;
   }
+  openNew2() {
+    this.operationType="I"
+    this.product = {};
+    this.submitted = false;
+    this.AddproductDialog = true;
+}
 
   public getSeverity(status: string) {
     
@@ -207,50 +111,161 @@ export class FloatLabelDemoComponent implements OnInit  {
   }
 
   editProduct(product: Product) {
-      this.product = { ...product };
-      this.productDialog = true;
+    this.operationType='U'
+    debugger
+      this.addDevice.patchValue({
+        did:product.device_id,
+        // deviceName:product.device_name,
+        deviceId:product.device,
+        dmodel:product.model,
+        lat:product.lat,
+        long:product.lon,
+        imeiNo:product.imei_no
+        })
+      this.AddproductDialog = true;
   }
 
-  deleteProduct() {
+  deleteProduct(did:any) {
     debugger
-    this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Device Deleted', life: 3000 });
-      // this.confirmationService.confirm({
-      //     message: 'Are you sure you want to delete this Device ?',
-      //     header: 'Confirm',
-      //     icon: 'pi pi-exclamation-triangle',
-      //     accept: () => {
-      //         this.products = this.products.filter((val) => val.id !== product.id);
-      //         this.product = {};
-      //         this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Device Deleted', life: 3000 });
-      //     }
-      // });
+    // this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Device Deleted', life: 3000 });
+      this.confirmationService.confirm({
+          message: 'Are you sure you want to delete this Device ?',
+          header: 'Confirm',
+          icon: 'pi pi-exclamation-triangle',
+          accept: () => {
+              this.products = this.products.filter((val) => val.device_id !== did);
+              this.product = {};
+              this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Device Deleted', life: 3000 });
+          }
+      });
   }
 
   hideDialog() {
+      this.AddproductDialog = false;
       this.productDialog = false;
       this.submitted = false;
   }
+  getAllStock(){
+    this.spinner=true;
+    const apiUrl = this.api.baseUrl;
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
+    const credentials = {
+      client_id:this.client_id  
+    };
+    this.http.post(apiUrl+'/client/manage/devices/list',credentials, { headers }).subscribe(
+        (response) => {
+          this.spinner=false;
+          console.log(response);
+          this.stockApi=response
+          this.stockList=this.stockApi.data;
+          debugger
+        },
+        (error) => {
+          this.spinner=false;
+          console.error(error);
+        }
+        
+      );
+}
+    convDt(){
+      var originalTimestamp = new Date();
 
+    // Convert to Date object
+    var date = new Date(originalTimestamp);
+
+    // Extract year, month, and day
+    var year = date.getFullYear();
+    var month = ("0" + (date.getMonth() + 1)).slice(-2); // Adding 1 because getMonth() returns 0-indexed month
+    var day = ("0" + date.getDate()).slice(-2);
+
+    // Form the desired format
+    var formattedDate = year + "-" + month + "-" + day;
+    return formattedDate;
+    }
   saveProduct() {
       this.submitted = true;
+      if(this.operationType=="I"){
+        debugger
+        const apiUrl = this.api.baseUrl;
+        const token = localStorage.getItem('token');
+        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+        const credentials = {
+          client_id:this.client_id,
+          // device_name:this.ct.deviceName.value,
+          device:this.ct.deviceId.value,
+          model:this.ct.dmodel.value,
+          lat:this.ct.lat.value,
+          lon:this.ct.long.value,
+          imei_no:this.ct.imeiNo.value,
+          do_channel:1,
+          last_maintenance:this.convDt()
 
-      if (this.product.name?.trim()) {
-          if (this.product.id) {
-              this.products[this.findIndexById(this.product.id)] = this.product;
-              this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
-          } else {
-              this.product.id = this.createId();
-              this.product.image = 'product-placeholder.svg';
-              this.products.push(this.product);
-              this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
-          }
-
-          this.products = [...this.products];
-          this.productDialog = false;
-          this.product = {};
+          
+        };
+        const credentials2=[credentials]
+        debugger
+        this.http.post(apiUrl+'/client/manage/devices/add', credentials2,{ headers }).subscribe(
+            (response) => {
+              console.log(response);
+                    this.spinner=false;
+                    debugger
+              this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Device Created', life: 3000 });
+              this.resetData();
+              this.getAllStock();
+              this.hideDialog();
+            },
+            (error) => {
+                    this.spinner=false;
+                    console.log(error);
+                    this.hideDialog();
+                    
+            }
+          );
       }
-  }
+      else{
+        debugger
+        const apiUrl = this.api.baseUrl;
+        const token = localStorage.getItem('token');
+        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+        const credentials = {
+          device_id:this.ct.did.value,
+          client_id:this.client_id,
+          // device_name:this.ct.deviceName.value,
+          device:this.ct.deviceId.value,
+          model:this.ct.dmodel.value,
+          lat:this.ct.lat.value,
+          lon:this.ct.long.value,
+          imei_no:this.ct.imeiNo.value,
+          do_channel:1,
+          // last_maintenance:this.convDt()
 
+          
+        };
+        debugger
+        this.http.post(apiUrl+'/client/manage/devices/edit', credentials,{ headers }).subscribe(
+            (response) => {
+              console.log(response);
+                    this.spinner=false;
+                    debugger
+              this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Device Updated', life: 3000 });
+              this.resetData();
+              this.getAllStock();
+              this.hideDialog();
+            },
+            (error) => {
+                    this.spinner=false;
+                    console.log(error);
+                    this.hideDialog();
+                    
+            }
+          );
+      }
+      
+  }
+  resetData(){
+    this.addDevice.reset();
+      }
   findIndexById(id: string): number {
       let index = -1;
       for (let i = 0; i < this.products.length; i++) {

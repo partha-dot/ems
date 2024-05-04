@@ -7,9 +7,9 @@ import { Observable } from 'rxjs';
 })
 export class ApiService {
   
-  baseUrl = 'http://192.168.116.18:8000/api';
+  // baseUrl = 'http://localhost:8000/api';
   // baseUrl = 'https://iot.wrongcode.in/backend/api';
-  // private baseUrl = 'https://192.168.169.10:8000/api';
+  baseUrl = 'http://51.20.92.59:8000/api';
  
   token:any;
     baseURL: any;

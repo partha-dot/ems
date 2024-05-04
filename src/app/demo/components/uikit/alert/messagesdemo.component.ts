@@ -17,7 +17,11 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class MessagesDemoComponent {
     productDialog: boolean = false;
-
+    credentials4:any;
+    credentials3:any;
+    credentials2:any;
+    credentials1:any;
+    credentials:any[]=[];
     products!: Company[];
     companys!: any[];
     models!: any[];
@@ -30,11 +34,14 @@ export class MessagesDemoComponent {
   
     statuses!: any[];
     companyList:any=[]
+    unitList:any=[]
+    units:any;
     productList:any=[]
     modelList:any=[]
     countries: any[] | undefined;
     selectedCountry: any | undefined;
-  userForm: FormGroup;
+    unitForm: FormGroup;
+  client_id:number=(+localStorage.getItem('c_id'))
   ct:any;
   value:any='';
   editMode:boolean=false;
@@ -86,31 +93,78 @@ export class MessagesDemoComponent {
 
     constructor(private formBuilder: FormBuilder,private http:HttpClient ,private productService: ProductService,
        private messageService: MessageService, private confirmationService: ConfirmationService,private api:ApiService) {
-      this.userForm = this.formBuilder.group({
+      this.unitForm = this.formBuilder.group({
+        alert_id:[''],
+        organization_id:[''],
         device_id: [''],
-        a_unit: [''],
-        a_type:[''],
-        email: ['']
+        device: [''],
+        unit_id: [''],
+        low_val:[''],
+        high_val: [''],
+        c_high_val: [''],
+        c_low_val: [''],
+        email: [''],
       });
      }
    
     ngOnInit() {
-      this.ct=this.userForm.controls
-    this.getDeviceCompany();
+      this.ct=this.unitForm.controls
+    this.getOrganization();
     this.getDevice();
-    this.getDeviceModel();
+    this.getUnit();
+    this.getAlertList();
+    // this.getDeviceModel();
   
     }
     abc(){
       debugger
       
     }
-    getDeviceModel(){
-  const apiUrl = this.api.baseUrl;
+    getUnit(){
+      const apiUrl = this.api.baseUrl;
+        const token = localStorage.getItem('token');
+        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
+        this.http.post(apiUrl+'/client/unit/list', { headers }).subscribe(
+            (response) => {
+              console.log(response);
+              this.units=response
+              this.unitList=this.units.data 
+              debugger
+            },
+            (error) => {
+              console.error(error);
+            }
+          );
+      }
+      getOrganization(){
+        const apiUrl = this.api.baseUrl;
+          const token = localStorage.getItem('token');
+          const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
+        debugger
+          const credentials = {
+              client_id:this.client_id
+            };
+          this.http.post(apiUrl+'/client/manage_organization/list', credentials,{ headers }).subscribe(
+              (response) => {
+                console.log(response);
+                debugger
+                this.data1=response
+                this.products=this.data1.data 
+                debugger
+              },
+              (error) => {
+                console.error(error);
+              }
+            );
+        }
+    getAlertList(){
+    const apiUrl = this.api.baseUrl;
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
-  
-    this.http.get(apiUrl+'/master/list-user', { headers }).subscribe(
+    const credentials = {
+      client_id:this.client_id
+    };
+    this.http.post(apiUrl+'/client/alert/list',credentials, { headers }).subscribe(
         (response) => {
           console.log(response);
           this.modelList=response
@@ -143,7 +197,7 @@ export class MessagesDemoComponent {
   
     openNew() {
       this.editMode=false
-      this.userForm.reset();
+      this.unitForm.reset();
         this.product = {};
         this.submitted = false;
         this.productDialog = true;
@@ -166,60 +220,184 @@ export class MessagesDemoComponent {
       debugger
     }
   
-    editProduct(product: Company) {
+    editAlert(alert: any) {
       this.editMode=true;
       debugger
-        this.product = { ...product };
+      if(alert.alert_type=="1CL"){
+        this.ct.c_low_val.setValue(alert.alert_value);
+        this.ct.low_val.setValue(0);
+        this.ct.high_val.setValue(0);
+        this.ct.c_high_val.setValue(0);
+        this.c_low=true;
+        this.low=false; 
+        this.high=false; 
+        this.c_high=false;
+      }
+      if(alert.alert_type=="2L"){
+        this.ct.low_val.setValue(alert.alert_value);
+        this.ct.c_low_val.setValue(0);
+        this.ct.high_val.setValue(0);
+        this.ct.c_high_val.setValue(0);
+        this.low=true;
+        this.c_low=false;
+        this.high=false; 
+        this.c_high=false;
+      }
+      if(alert.alert_type=="3H"){
+        this.ct.high_val.setValue(alert.alert_value);
+        this.ct.c_low_val.setValue(0);
+        this.ct.low_val.setValue(0);
+        this.ct.c_high_val.setValue(0);
+        this.high=true;
+        this.low=false;
+        this.c_low=false;
+        this.c_high=false;
+      }
+      if(alert.alert_type=="4CH"){
+        this.ct.c_high_val.setValue(alert.alert_value);
+        this.ct.c_low_val.setValue(0);
+        this.ct.low_val.setValue(0);
+        this.ct.high_val.setValue(0);
+        this.c_high=true;
+        this.low=false;
+        this.c_low=false;
+        this.high=false; 
+      }
+        // this.product = { ...product };
         this.productDialog = true;
-        this.userForm.patchValue({
-          origination_id:product.origination_id,
-          user_id:product.id,
-         user_name:product.name,
-          email:product.email,
-          password:product.password,
+        this.unitForm.patchValue({
+          alert_id:alert.alert_id,
+          organization_id:alert.organization_id,
+          device_id: alert.device_id,
+          unit_id: alert.unit_id,
+          email: alert.alert_email,
         })
+        debugger
+      //  this.saveProduct();
     }
   
-    deleteProduct(product: Company) {
+    deleteAlert(product: any) {
         this.confirmationService.confirm({
-            message: 'Are you sure you want to delete ' + product.user_name + '?',
+            message: 'Are you sure you want to delete ' + product.device + '?',
             header: 'Confirm',
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
-                this.DeleteCompany(product.user_id);
+                this.DeleteAlert(product);
             
             }
         });
     }
   
     hideDialog() {
+      this.credentials=[];
         this.productDialog = false;
         // this.submitted = false;
     }
   
     saveProduct() {
-        // this.submitted = true;
-        if(this.ct.device_id.value){
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Alert created', life: 3000 });
-          this.productDialog = false;
-          // debugger
-          // if (this.product.id) {
-  
-          //     debugger
-          //     this.updateCompany(this.ct.origination_id.value,this.ct.user_id.value,this.ct.user_name.value,this.ct.email.value,this.ct.password.value?this.ct.password.value:'')
-          //     debugger
-          // } else {
-          //     this.AddCompany(this.ct.origination_id.value,this.ct.user_name.value,this.ct.email.value,this.ct.password.value,)
-              
-          // }
-          // this.productDialog = false;
-          // this.product = {};
+      debugger
+          debugger
+          if(this.low){
+            this.credentials1 = {
+              "alert_id":this.ct.alert_id.value,
+              "client_id": this.client_id,
+              "organization_id": this.ct.organization_id.value,
+              "device_id": this.ct.device_id.value,
+              "device": this.cities.filter(e=>e.device_id==this.ct.device_id.value)[0].device,
+              "unit_id":this.ct.unit_id.value,
+              "alert_type": "2L",
+              "alert_status": "Y",
+              "alert_value":this.ct.low_val.value,
+              "alert_email": this.ct.email.value,
+              "create_by": Number(localStorage.getItem('user_id')),
+            };
+            this.credentials.push(this.credentials1)
+          }
+          if(this.c_low){
+            this.credentials2 = {
+              "alert_id":this.ct.alert_id.value,
+              "client_id": this.client_id,
+              "organization_id": this.ct.organization_id.value,
+              "device_id": this.ct.device_id.value,
+              "device":  this.cities.filter(e=>e.device_id==this.ct.device_id.value)[0].device,
+              "unit_id":this.ct.unit_id.value,
+              "alert_type": "1CL",
+              "alert_status": "Y",
+              "alert_value":this.ct.c_low_val.value,
+              "alert_email": this.ct.email.value,
+              "create_by": Number(localStorage.getItem('user_id')),
+            };
+            this.credentials.push(this.credentials2)
+          }
+          if(this.high){
+            this.credentials3 = {
+              "alert_id":this.ct.alert_id.value,
+              "client_id": this.client_id,
+              "organization_id": this.ct.organization_id.value,
+              "device_id": this.ct.device_id.value,
+              "device":  this.cities.filter(e=>e.device_id==this.ct.device_id.value)[0].device,
+              "unit_id":this.ct.unit_id.value,
+              "alert_type": "3H",
+              "alert_status": "Y",
+              "alert_value":this.ct.high_val.value,
+              "alert_email": this.ct.email.value,
+              "create_by": Number(localStorage.getItem('user_id')),
+            };
+            this.credentials.push(this.credentials3)
+          }
+          if(this.c_high){
+            this.credentials4 = {
+              "alert_id":this.ct.alert_id.value,
+              "client_id": this.client_id,
+              "organization_id": this.ct.organization_id.value,
+              "device_id": this.ct.device_id.value,
+              "device":  this.cities.filter(e=>e.device_id==this.ct.device_id.value)[0].device,
+              "unit_id":this.ct.unit_id.value,
+              "alert_type": "4CH",
+              "alert_status": "Y",
+              "alert_value":this.ct.c_high_val.value,
+              "alert_email": this.ct.email.value,
+              "create_by": Number(localStorage.getItem('user_id')),
+            };
+            this.credentials.push(this.credentials4)
+          }
+          this.credentials
+           debugger
+        const apiUrl = this.api.baseUrl;
+        const token = localStorage.getItem('token');
+        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
+        debugger
+        if(!this.ct.alert_id.value){
+          this.http.post(apiUrl+'/client/alert/add', this.credentials,{ headers }).subscribe(
+            (response) => {
+              console.log(response);
+              debugger
+              this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Alert Created', life: 3000 });
+              this.getAlertList();
+              this.hideDialog();
+            },
+            (error) => {
+              this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Data Related Issue!!', life: 3000 });
+              console.error(error);
+            }
+          );
         }
-       else{
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Set all the information for creating a alert', life: 3000 });
-       
+        else{
+          this.http.post(apiUrl+'/client/alert/edit',this.low? this.credentials1:this.c_low?this.credentials2:this.high?this.credentials3:this.credentials4,{ headers }).subscribe(
+            (response) => {
+              console.log(response);
+              debugger
+              this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Alert Updated', life: 3000 });
+              this.getAlertList();
+              this.hideDialog();
+            },
+            (error) => {
+              this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Data Related Issue!!', life: 3000 });
+              console.error(error);
+            }
+          );
+        }
         
-       }
         
     }
   
@@ -253,7 +431,7 @@ export class MessagesDemoComponent {
               console.log(response);
               debugger
               this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'User Updated', life: 3000 });
-              this.getDeviceModel();
+              this.getAlertList();
             },
             (error) => {
               this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Data Related Issue!!', life: 3000 });
@@ -277,7 +455,7 @@ export class MessagesDemoComponent {
               console.log(response);
               debugger
               this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'User Created', life: 3000 });
-              this.getDeviceModel();
+              this.getAlertList();
             },
             (error) => {
               this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Data Related Issue!!', life: 3000 });
@@ -285,20 +463,24 @@ export class MessagesDemoComponent {
             }
           );
     }   
-    DeleteCompany(user){
+    DeleteAlert(user){
         const credentials = {
-            user_id:user.id
-          };
+          "alert_id": user.alert_id,
+          "client_id": this.client_id,
+          "organization_id": user.organization_id,
+          "device_id": user.device_id
+        };
         const apiUrl = this.api.baseUrl;
         const token = localStorage.getItem('token');
         const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
         debugger
-        this.http.post(apiUrl+'/master/delete_user', credentials,{ headers }).subscribe(
+        this.http.post(apiUrl+'/client/alert/delete', credentials,{ headers }).subscribe(
             (response) => {
               console.log(response);
               debugger
-              this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'User Deleted', life: 3000 });
-              this.getDeviceModel();
+              this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Alert Deleted', life: 3000 });
+              this.getAlertList();
+              this.hideDialog();
             },
             (error) => {
               this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Data Related Issue!!', life: 3000 });
@@ -311,10 +493,12 @@ export class MessagesDemoComponent {
       const apiUrl = this.api.baseUrl;
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
-  
-    this.http.get(apiUrl+'/device/list', { headers }).subscribe(
+    const credentials = {
+      client_id:this.client_id
+    };
+    this.http.post(apiUrl+'/client/devices/list',credentials, { headers }).subscribe(
         (response) => {
-          console.log(response);
+          console.log(response,"ppp");
           
           this.data1=response
           this.cities=this.data1.data 

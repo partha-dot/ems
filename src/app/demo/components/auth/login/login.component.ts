@@ -43,47 +43,47 @@ export class LoginComponent implements OnInit{
     
     loginCall() {
       // localStorage.setItem('loginType',this.project.value==1?"demo":"pro");
-      localStorage.setItem('loginType',"pro");
-      this.router.navigate(['/app/outlet/energy']);
-      // this.project.value
-      // debugger
-      //   const requestData = {
-      //     email:this.ct.mail.value,
-      //     password:this.ct.pass.value,
-      //   };
-      //   this.spinner=true;
-      //   this.apiService.login(requestData).subscribe(
-      //     (response) => {
-      //       if(response.status=='success'){
-      //         this.spinner=false;
-      //         const data=response.data;
-      //         const userdata=data.user_data;
-      //         console.log(userdata);
+      
+      this.project.value
+      debugger
+        const requestData = {
+          email:this.ct.mail.value,
+          password:this.ct.pass.value,
+        };
+        this.spinner=true;
+        this.apiService.login(requestData).subscribe(
+          (response) => {
+            if(response.status=='success'){
+              this.spinner=false;
+              const data=response.data;
+              const userdata=data.user_data;
+              console.log(userdata);
               
-      //         this.apiService.token=data.token;
-      //         localStorage.setItem('token',data.token);
-      //         localStorage.setItem('user',userdata.user_name);
-      //         localStorage.setItem('email',userdata.user_email);
-      //         localStorage.setItem('u_type',userdata.user_type);
-      //         localStorage.setItem('c_id',userdata.client_id);
+              this.apiService.token=data.token;
+              localStorage.setItem('token',data.token);
+              localStorage.setItem('user',userdata.user_name);
+              localStorage.setItem('user_id',userdata.user_id);
+              localStorage.setItem('email',userdata.user_email);
+              localStorage.setItem('u_type',userdata.user_type);
+              localStorage.setItem('c_id',userdata.client_id);
               
-      //         this.router.navigate(['/app/outlet/energy']);
-      //       }
-      //       // q1e3
-      //       else{
-      //             this.spinner=false;
-      //             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Wrong username or password !!', life: 3000 });
+              this.router.navigate(['/app/outlet/energy']);
+            }
+            // q1e3
+            else{
+                  this.spinner=false;
+                  this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Wrong username or password !!', life: 3000 });
               
-      //       }
-      //       console.log('Response:', response);
-      //       // Handle response here
-      //     },
-      //     (error) => {
-      //       console.error('Error:', error);
-      //       this.spinner=false;
-      //       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Wrong username or password !!', life: 3000 });
+            }
+            console.log('Response:', response);
+            // Handle response here
+          },
+          (error) => {
+            console.error('Error:', error);
+            this.spinner=false;
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Wrong username or password !!', life: 3000 });
 
-      //     }
-      //   );
+          }
+        );
       }
 }

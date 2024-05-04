@@ -12,7 +12,7 @@ import { AuthGuard } from '../../service/auth.guard';
         { path: 'profile', data: { breadcrumb: 'File' }, loadChildren: () => import('./userProfile/filedemo.module').then(m => m.FileDemoModule)},
         { path: 'device_m', data: { breadcrumb: 'Float Label' }, loadChildren: () => import('./m_device_management/floatlabeldemo.module').then(m => m.FloatlabelDemoModule) },
         { path: 'schedul', data: { breadcrumb: 'Form Layout' }, loadChildren: () => import('./stockEntry/formlayoutdemo.module').then(m => m.FormLayoutDemoModule) },
-        { path: 'device_s', data: { breadcrumb: 'Input' }, loadChildren: () => import('./s_device_management/inputdemo.module').then(m => m.InputDemoModule) },
+        { path: 'device_s', data: { breadcrumb: 'Input' }, loadChildren: () => import('./m_user_management/inputdemo.module').then(m => m.InputDemoModule) },
         // { path: 'invalidstate', data: { breadcrumb: 'Invalid State' }, loadChildren: () => import('./invalid/invalidstatedemo.module').then(m => m.InvalidStateDemoModule) },
         { path: 'UPS', data: { breadcrumb: 'List' }, loadChildren: () => import('./ups/listdemo.module').then(m => m.ListDemoModule) },
         { path: 'AddDealer', data: { breadcrumb: 'Media' }, loadChildren: () => import('./AddDealer/mediademo.module').then(m => m.MediaDemoModule) },

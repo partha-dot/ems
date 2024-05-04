@@ -54,14 +54,16 @@ export class InputDemoComponent implements OnInit {
         this.stockIn = this.fb.group({
             org_id: ['', Validators.required],
             device_id: ['', [Validators.required]],
+            device_name: ['', [Validators.required]],
             user_id: ['', [Validators.required]],
-            as_device_id:['']
+            manage_user_device_id:['']
           });
           this.stockIn2 = this.fb.group({
             org_id: ['', Validators.required],
             device_id: ['', [Validators.required]],
+            device_name: ['', [Validators.required]],
             user_id: ['', [Validators.required]],
-            as_device_id:['']
+            manage_user_device_id:['']
           });
     }
     
@@ -69,9 +71,14 @@ export class InputDemoComponent implements OnInit {
         this.ct=this.stockIn.controls;
         this.getuser();
           this.getDevice(); 
+          this.getDeviceData(); 
           this.getOrganization();
           // this.getAllStock();
+          this.loadPage();
        
+
+    }
+    getDeviceData(){
 
     }
     getuser(){
@@ -81,7 +88,7 @@ export class InputDemoComponent implements OnInit {
         const credentials = {
           client_id:this.client_id
         };
-        this.http.post(apiUrl+'/client/manage_user/list_user_device',credentials , { headers }).subscribe(
+        this.http.post(apiUrl+'/client/manage_user/list',credentials , { headers }).subscribe(
             (response) => {
               console.log(response);
               this.userList=response
@@ -100,36 +107,37 @@ export class InputDemoComponent implements OnInit {
       this.first = event.first;
       this.rows = event.rows;
       this.goingPage=event.page+1;
-      this.loadNewPage(this.goingPage);
       debugger
     }
-    loadNewPage(pageNo:Number){
+    loadPage(){
       // const url="https://billing-application.wrongcode.in/api/stock/stock_product?page=2"
                   this.spinner=true;
                   const apiUrl = this.api.baseUrl;
             const token = localStorage.getItem('token');
             const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
-          
-            this.http.get(apiUrl+'/stock/stock_product?page='+pageNo, { headers }).subscribe(
+            const credentials = {
+              client_id:this.client_id
+            };
+            this.http.post(apiUrl+'/client/manage_user/list_user_device',credentials, { headers }).subscribe(
                 (response) => {
                   this.spinner=false;
                   this.stockApi=response;
                   this.stockListAll=this.stockApi.data;
-                  this.stockList=this.stockListAll.data;
+                  // this.stockList=this.stockListAll.data;
                   // this.totalPGNO=this.stockListAll.last_page;
                   debugger
                 })
     }
     
     selectProduct(stock) {
-      this.users=this.users2.filter(e=>e.origination_id==stock.origination_id)
+      this.users=this.users2.filter(e=>e.organization_id==stock.organization_id)
       debugger
       // model_id: this.modelID,
       this.stockIn.patchValue({
         device_id:stock.device_id,
-        org_id:stock.origination_id,
-        user_id:stock.id,
-        as_device_id:stock.assign_device_id
+        org_id:stock.organization_id,
+        user_id:stock.user_id,
+        manage_user_device_id:stock.manage_user_device_id
       });
       debugger
         // this.messageService.add({ severity: 'info', summary: 'Product Selected', detail: cities.name });
@@ -174,9 +182,7 @@ export class InputDemoComponent implements OnInit {
               
             },
             (error) => {
-              if(error.status==401){
-                  this.authservice.logout();
-              }
+              
               console.error(error);
             }
           );
@@ -199,7 +205,7 @@ export class InputDemoComponent implements OnInit {
       }
       setUser(){
         this.users=[];
-        this.users=this.users2.filter(e=>e.origination_id==this.ct.org_id.value)
+        this.users=this.users2.filter(e=>e.organization_id==this.ct.org_id.value)
         debugger
         // this.ct.org_id.value
       }
@@ -225,29 +231,37 @@ export class InputDemoComponent implements OnInit {
                 
               );
       }
+      deviceChange(i:any){
+        const dname=this.models.filter(e=>e.device_id==i)[0].device
+        this.ct.device_name.setValue(dname)
+        debugger
+      }
       insertStockData(){
         debugger
                   this.spinner=true;
                   const credentials = {
-                    origination_id:this.ct.org_id.value,
-                    device_id:this.ct.device_id.value,
-                    user_id:this.ct.user_id.value,
-                    assign_device_id:this.ct.as_device_id.value?this.ct.as_device_id.value:''
+                    client_id:this.client_id,
+                    organization_id:Number(this.ct.org_id.value),
+                    device_id:Number(this.ct.device_id.value),
+                    device:this.ct.device_name.value,
+                    user_id:Number(this.ct.user_id.value),
+                    manage_user_device_id:this.ct.manage_user_device_id.value?this.ct.manage_user_device_id.value:'',
+                    created_by:0
                   };
-        if(this.ct.as_device_id.value){
+        if(this.ct.manage_user_device_id.value){
           debugger
           const apiUrl = this.api.baseUrl;
           const token = localStorage.getItem('token');
           const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
           debugger
-          this.http.post(apiUrl+'/assign-device/edit-origination', credentials,{ headers }).subscribe(
+          this.http.post(apiUrl+'/client/manage_user/edit_user_device', credentials,{ headers }).subscribe(
               (response) => {
                 console.log(response);
                       this.spinner=false;
                       debugger
                 this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Device Updated', life: 3000 });
                 this.resetData();
-                this.getAllStock();
+                this.loadPage();
               },
               (error) => {
                       this.spinner=false;
@@ -262,7 +276,7 @@ export class InputDemoComponent implements OnInit {
           const token = localStorage.getItem('token');
           const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
           debugger
-          this.http.post(apiUrl+'/assign-device/add-origination', credentials,{ headers }).subscribe(
+          this.http.post(apiUrl+'/client/manage_user/add_device', credentials,{ headers }).subscribe(
               (response) => {
                 console.log(response);
                       this.spinner=false;
@@ -354,7 +368,8 @@ export class InputDemoComponent implements OnInit {
        
         debugger
         const credentials = {
-          product_store_id: stock.product_store_id
+          client_id:this.client_id,
+          manage_user_device_id: stock.manage_user_device_id
         };
         debugger
                   this.spinner=true;
@@ -362,14 +377,14 @@ export class InputDemoComponent implements OnInit {
       const token = localStorage.getItem('token');
       const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
       debugger
-      this.http.post(apiUrl+'/stock/delete', credentials,{ headers }).subscribe(
+      this.http.post(apiUrl+'/client/manage_user/delete_user_device', credentials,{ headers }).subscribe(
           (response) => {
             console.log(response);
             this.spinner=false;
             debugger
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Stock Deleted', life: 3000 });
+            this.messageService.add({ severity: 'Success', summary: 'Successful', detail: 'Assign Device Deleted', life: 3000 });
             this.resetData();
-            this.getAllStock();
+            this.loadPage();
           },
           (error) => {
                   this.spinner=false;

@@ -457,20 +457,16 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
     client_id:number=(+localStorage.getItem('c_id'))
     cities2:any=[
     {
-      "unit_name": "Voltage",
-      "unit": "volt"
+      "unit_name": "Single Phase System",
+      "unit": "single"
     },
     {
-      "unit_name": "Current",
-      "unit": "ampere"
+      "unit_name": "Two Phase System",
+      "unit": "two"
     },
     {
-      "unit_name": "Power",
-      "unit": "watt"
-    },
-    {
-      "unit_name": "Frequency",
-      "unit": "hertz"
+      "unit_name": "Three Phase System",
+      "unit": "three"
     }];
     items: MenuItem[] | undefined;
     activeItem: MenuItem | undefined;
