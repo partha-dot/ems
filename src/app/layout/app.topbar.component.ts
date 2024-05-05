@@ -64,7 +64,7 @@ export class AppTopBarComponent implements OnInit{
             target: event.target as EventTarget,
             message: 'Are you sure that you want to Logout?',
             header: 'Confirmation',
-            icon: 'pi pi-exclamation-triangle text-yellow-600',
+            icon: 'pi pi-exclamation-triangle text-blue-600',
             
             acceptIcon:"none",
             rejectIcon:"none",

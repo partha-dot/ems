@@ -453,28 +453,19 @@ export class ChartsDemo2Component implements OnInit, OnDestroy,AfterViewInit {
     options: any;
     options2: any;
     data: any;
+    data2:any;
     selectedAlert:any
     alert_type:string=''
     client_id:number=(+localStorage.getItem('c_id'))
-    cities2:any=[
-    {
-      "unit_name": "Voltage",
-      "unit": "volt"
-    },
-    {
-      "unit_name": "Current",
-      "unit": "ampere"
-    },
-    {
-      "unit_name": "Power",
-      "unit": "watt"
-    },
-    {
-      "unit_name": "Frequency",
-      "unit": "hertz"
-    }];
+    cities2:any=[];
     items: MenuItem[] | undefined;
     activeItem: MenuItem | undefined;
+    l_val:number=0
+    cl_val:number=0
+    h_val:number=0
+    ch_val:number=0
+    locations:any[]=[]
+    loc:any={}
 
 
     loginType:string=localStorage.getItem('loginType')
@@ -486,14 +477,7 @@ export class ChartsDemo2Component implements OnInit, OnDestroy,AfterViewInit {
         });
         
     }
-    convertToISTDateTime(utcDatetime: string) {
-        const utcDateTime = new Date(utcDatetime);
-        const istTime = this.datePipe.transform(utcDateTime, 'dd-MM-yyyy HH:mm:ss', '+0530');
-        return istTime || '';
-      }
-   ggg(){
-    debugger
-   }
+   
    ngAfterViewInit(): void {
     this.initMap()
    }
@@ -509,6 +493,7 @@ export class ChartsDemo2Component implements OnInit, OnDestroy,AfterViewInit {
         debugger
         this.initCharts();
         this.getDevice();
+        this.getUnit();
 
         // setInterval(()=>{
         //     this.currTm= ' '+ '| '+ new Date().toString().substring(16,24)+ ' '
@@ -524,14 +509,6 @@ export class ChartsDemo2Component implements OnInit, OnDestroy,AfterViewInit {
       
     }
     initMap() {
-      // Array of locations with their latitude and longitude
-      var locations = [
-          {lat: 22.5354064, lng: 88.2649504, name: 'Kolkata'},
-          // {lat: 28.679079, lng: 77.069710, name: 'Delhi'},
-          // {lat: 51.5074, lng: -0.1278, name: 'London'},
-          // Add more locations as needed
-      ];
-
       // Create a map centered at a specific location
       var map = new google.maps.Map(document.getElementById('map'));
 
@@ -539,7 +516,7 @@ export class ChartsDemo2Component implements OnInit, OnDestroy,AfterViewInit {
       var bounds = new google.maps.LatLngBounds();
 
       // Loop through each location and add a marker to the map
-      locations.forEach(function(location) {
+      this.locations.forEach(function(location) {
           var marker = new google.maps.Marker({
               position: {lat: location.lat, lng: location.lng},
               map: map,
@@ -556,13 +533,62 @@ export class ChartsDemo2Component implements OnInit, OnDestroy,AfterViewInit {
 
       // Fit the map to the bounds
       map.fitBounds(bounds);
-  }
+    
+    }
+    convertToISTDateTime(utcDatetime: string) {
+      const utcDateTime = new Date(utcDatetime);
+      const istTime = this.datePipe.transform(utcDateTime, 'dd-MM-yyyy HH:mm:ss', '+0530');
+      return istTime || '';
+    }
+    ggg(){
+      debugger
+    }
+    getUnit(){
+      const apiUrl = this.api.baseUrl;
+        const token = localStorage.getItem('token');
+        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
+        this.http.post(apiUrl+'/client/unit/list', { headers }).subscribe(
+            (response) => {
+              console.log(response);
+              const units:any=response;
+              this.cities2=units.data;
+              debugger
+            },
+            (error) => {
+              console.error(error);
+            }
+          );
+      }
     abc(){
-        this.alert_type=''
-        console.log(this.selectedAlert);
-        this.alert_type=this.selectedAlert?.unit_name
-        this.alert_type=' '+this.alert_type;
+        // this.alert_type=''
+        // console.log(this.selectedAlert);
+        // this.alert_type=this.selectedAlert?.unit_name
+        // this.alert_type=' '+this.alert_type;
         debugger
+        if(this.data2){
+          this.l_val=0
+          this.cl_val=0
+          this.h_val=0
+          this.ch_val=0
+          this.data2.forEach(element => {
+            if(element.alert_type=="4CH" && element.unit_id==this.selectedAlert?.unit_id)
+              {
+                this.ch_val=element.alert
+              }
+              if(element.alert_type=="3H" && element.unit_id==this.selectedAlert?.unit_id)
+                {
+                  this.h_val=element.alert
+                }
+                if(element.alert_type=="2L" && element.unit_id==this.selectedAlert?.unit_id)
+                  {
+                    this.l_val=element.alert
+                  }
+                  if(element.alert_type=="1CL" && element.unit_id==this.selectedAlert?.unit_id)
+                    {
+                      this.cl_val=element.alert
+                    }
+          });
+        }
       }
     getDevice(){
         const credentials = {
@@ -622,9 +648,27 @@ getDeviceLiveData(name:any,id:any){
                 (response) => {
                     
                     console.log(response);
-                    
-                    this.data1=response
-                    this.data1=this.data1.data
+                    const res:any=response
+                    const res2=res.data
+                    this.data1=res2.data
+                    this.data2=res2.data2
+                    if(this.data1){
+                      this.loc={lat:0, lng:0, name:""}
+                      this.loc.lat=(+this.data1.lat);
+                      this.loc.lng=(+this.data1.lon);
+                      this.loc.name="Kolkata"
+                      console.log(this.loc);
+                      this.locations.push(this.loc)
+                      if(this.locations.length>0){
+                        this.initMap();
+                        console.log(this.locations);
+                        debugger
+                      }
+                     
+                      
+                      debugger
+                    }
+                   
                     // if(this.data1) {
                     //     this.flowDate=[]
                     //     this.flowData=[]
@@ -709,11 +753,19 @@ getDeviceLiveData(name:any,id:any){
             return formattedDate
         }
     setDevice(){
+      this.l_val=0
+      this.cl_val=0
+      this.h_val=0
+      this.ch_val=0
+      this.cities2=[];
+      this.data2=[];
+      this.data1=[];
+      this.locations=[];
         console.log(this.selectedDealer);
         debugger
         this.getDeviceLiveData(this.selectedDealer.device,this.selectedDealer.device_id);
-
-
+        this.getUnit();
+        
     }
     filterDealer(event: any) {
         const filtered: any[] = [];

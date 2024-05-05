@@ -50,7 +50,7 @@
            </div>  -->
            <div class="col-12 md:col-12" >
             <div style="float: right;">
-                <p-autoComplete [(ngModel)]="selectedDealer" [ngModelOptions]="{standalone: true}" placeholder="ABCDE01001" (onSelect)="setDevice()" [suggestions]="filteredDealer" (completeMethod)="filterDealer($event)" field="device" [dropdown]="true">
+                <p-autoComplete [(ngModel)]="selectedDealer" [ngModelOptions]="{standalone: true}" placeholder="Select a device" (onSelect)="setDevice()" [suggestions]="filteredDealer" (completeMethod)="filterDealer($event)" field="device" [dropdown]="true">
                 </p-autoComplete>
             </div>
             </div>
