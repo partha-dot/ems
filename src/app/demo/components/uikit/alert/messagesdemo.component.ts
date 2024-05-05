@@ -17,6 +17,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class MessagesDemoComponent {
     productDialog: boolean = false;
+    credentials5:any;
     credentials4:any;
     credentials3:any;
     credentials2:any;
@@ -50,8 +51,14 @@ export class MessagesDemoComponent {
   high:boolean=false
   c_low:boolean=false
   c_high:boolean=false
+
+  low2:boolean=true
+  high2:boolean=true
+  c_low2:boolean=true
+  c_high2:boolean=true
   value3:number=15.00
   cities:any=[];
+  editedalert:any;
   cities2:any=[
   {
     "unit_name": "voltage",
@@ -201,6 +208,10 @@ export class MessagesDemoComponent {
         this.product = {};
         this.submitted = false;
         this.productDialog = true;
+        this.low=false;
+        this.c_low=false;
+        this.high=false;
+        this.c_high=false;
     }
   
     deleteSelectedProducts() {
@@ -221,6 +232,7 @@ export class MessagesDemoComponent {
     }
   
     editAlert(alert: any) {
+      this.editedalert=alert.alert_type
       this.editMode=true;
       debugger
       if(alert.alert_type=="1CL"){
@@ -232,6 +244,11 @@ export class MessagesDemoComponent {
         this.low=false; 
         this.high=false; 
         this.c_high=false;
+
+        this.c_low2=false;
+        this.low2=true; 
+        this.high2=true; 
+        this.c_high2=true;
       }
       if(alert.alert_type=="2L"){
         this.ct.low_val.setValue(alert.alert_value);
@@ -242,6 +259,11 @@ export class MessagesDemoComponent {
         this.c_low=false;
         this.high=false; 
         this.c_high=false;
+
+        this.low2=false;
+        this.c_low2=true;
+        this.high2=true; 
+        this.c_high2=true;
       }
       if(alert.alert_type=="3H"){
         this.ct.high_val.setValue(alert.alert_value);
@@ -252,6 +274,11 @@ export class MessagesDemoComponent {
         this.low=false;
         this.c_low=false;
         this.c_high=false;
+
+        this.high2=false;
+        this.low2=true;
+        this.c_low2=true;
+        this.c_high2=true;
       }
       if(alert.alert_type=="4CH"){
         this.ct.c_high_val.setValue(alert.alert_value);
@@ -262,6 +289,11 @@ export class MessagesDemoComponent {
         this.low=false;
         this.c_low=false;
         this.high=false; 
+
+        this.c_high2=false;
+        this.low2=true;
+        this.c_low2=true;
+        this.high2=true; 
       }
         // this.product = { ...product };
         this.productDialog = true;
@@ -361,6 +393,21 @@ export class MessagesDemoComponent {
             };
             this.credentials.push(this.credentials4)
           }
+          else{
+            this.credentials5 = {
+              "alert_id":this.ct.alert_id.value,
+              "client_id": this.client_id,
+              "organization_id": this.ct.organization_id.value,
+              "device_id": this.ct.device_id.value,
+              "device":  this.cities.filter(e=>e.device_id==this.ct.device_id.value)[0].device,
+              "unit_id":this.ct.unit_id.value,
+              "alert_type": this.editedalert,
+              "alert_status": "N",
+              "alert_value":0.00,
+              "alert_email": this.ct.email.value,
+              "create_by": Number(localStorage.getItem('user_id')),
+            };
+          }
           this.credentials
            debugger
         const apiUrl = this.api.baseUrl;
@@ -383,7 +430,7 @@ export class MessagesDemoComponent {
           );
         }
         else{
-          this.http.post(apiUrl+'/client/alert/edit',this.low? this.credentials1:this.c_low?this.credentials2:this.high?this.credentials3:this.credentials4,{ headers }).subscribe(
+          this.http.post(apiUrl+'/client/alert/edit',this.low? this.credentials1:this.c_low?this.credentials2:this.high?this.credentials3:this.c_high?this.credentials4:this.credentials5,{ headers }).subscribe(
             (response) => {
               console.log(response);
               debugger

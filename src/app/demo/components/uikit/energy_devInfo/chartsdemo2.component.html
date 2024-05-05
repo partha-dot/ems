@@ -13,14 +13,14 @@
                 </div>
                 
             </div>
-                <div class="grid" *ngIf="data1?.device">
+                <div class="grid">
                     <div class="col-12 md:col-6 xl:col-6">
                         <div class="card" style="height: 360px!important;background-color: white;">
                             <h4>Description</h4><br><br>
                             <b>Device Name</b><p style="float: right;">{{data1?.device}}</p><hr>
                             <b>Model Name</b><p style="float: right;">{{data1?.model}}</p><hr>
                             <b>IMEI NO</b><p style="float: right;"> {{data1?.imei_no}} </p><hr>
-                            <b>Specifications </b><p style="float: right;">Energy Meter </p><hr>
+                            <b>Specifications </b><p style="float: right;">{{data1?.device?"Energy Meter":''}} </p><hr>
                             <b>Last Maintenance </b><p style="float: right;">{{data1?.last_maintenance}}</p>
                         </div>
                     </div>
@@ -35,21 +35,21 @@
                                     <table >
                 
                                         <tr > 
-                                        <th style="text-align: left;"><i class="pi pi-info-circle text-yellow-500 text-xl">&nbsp;&nbsp;</i> High{{alert_type}} Alert</th>
-                                        <th>0</th>
+                                        <th style="text-align: left;"><i class="pi pi-info-circle text-yellow-500 text-xl">&nbsp;&nbsp;</i> High Alert</th>
+                                        <th>{{h_val}}</th>
                                         </tr>
                                         
                                         <tr > 
-                                        <th style="text-align: left;"><i class="pi pi-info-circle text-red-500 text-xl">&nbsp;&nbsp;</i>Cretical High{{alert_type}} Alert</th>
-                                        <th>1</th>
+                                        <th style="text-align: left;"><i class="pi pi-info-circle text-red-500 text-xl">&nbsp;&nbsp;</i>Cretical High Alert</th>
+                                        <th>{{ch_val}}</th>
                                         </tr>
                                         <tr > 
-                                            <th style="text-align: left;"><i class="pi pi-info-circle text-yellow-500 text-xl">&nbsp;&nbsp;</i> Low{{alert_type}} Alert</th>
-                                            <th>0</th>
+                                            <th style="text-align: left;"><i class="pi pi-info-circle text-yellow-500 text-xl">&nbsp;&nbsp;</i> Low Alert</th>
+                                            <th>{{l_val}}</th>
                                         </tr>
                                         <tr > 
-                                            <th style="text-align: left;"><i class="pi pi-info-circle text-red-500 text-xl">&nbsp;&nbsp;</i> Cretical Low{{alert_type}} Alert</th>
-                                            <th>1</th>
+                                            <th style="text-align: left;"><i class="pi pi-info-circle text-red-500 text-xl">&nbsp;&nbsp;</i> Cretical Low Alert</th>
+                                            <th>{{cl_val}}</th>
                                         </tr>
                                         
                                         </table>

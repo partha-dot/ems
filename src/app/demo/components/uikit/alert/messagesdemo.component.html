@@ -52,12 +52,12 @@
             <tr>
                 
 				<!-- <th style="text-align: center;">Sl No.</th> -->
-                <th pSortableColumn="device" style="min-width:15rem">Device Id <p-sortIcon field="device"></p-sortIcon></th>
-                <th pSortableColumn="unit_name" style="min-width:15rem">Unit Name <p-sortIcon field="unit_name"></p-sortIcon></th>
-                <th pSortableColumn="alert_type" style="min-width:15rem">Alert Type <p-sortIcon field="alert_type"></p-sortIcon></th>
-                <th pSortableColumn="alert_status" style="min-width:15rem">Alert Status <p-sortIcon field="alert_status"></p-sortIcon></th>
-                <th pSortableColumn="alert_value" style="min-width:15rem">Alert Value <p-sortIcon field="alert_value"></p-sortIcon></th>
-                <th pSortableColumn="alert_email" style="min-width:15rem">Email <p-sortIcon field="alert_email"></p-sortIcon></th>
+                <th pSortableColumn="device" >Device Id <p-sortIcon field="device"></p-sortIcon></th>
+                <th pSortableColumn="unit_name" >Unit Name <p-sortIcon field="unit_name"></p-sortIcon></th>
+                <th pSortableColumn="alert_type" >Alert Type <p-sortIcon field="alert_type"></p-sortIcon></th>
+                <th pSortableColumn="alert_status" >Alert Status <p-sortIcon field="alert_status"></p-sortIcon></th>
+                <th pSortableColumn="alert_value" >Alert Value <p-sortIcon field="alert_value"></p-sortIcon></th>
+                <th pSortableColumn="alert_email" >Email <p-sortIcon field="alert_email"></p-sortIcon></th>
                 <th>Edit</th>
                 <th>Delete</th>
             </tr>
@@ -73,7 +73,7 @@
 					<p-badge  [severity]="alert.alert_status=='Y'?'success':'danger '">{{alert.alert_status=='Y'?'Active':'Deactive'}}</p-badge>
 				</td> -->
                 <th style="text-align: center;">
-					<p-badge [value]="alert.alert_status=='Y'?'Online':'Offline'" [severity]="!alert.alert_status=='Y'?'danger':'success'"></p-badge>
+					<p-badge [value]="alert.alert_status=='Y'?'ON':'OFF'" [severity]="alert.alert_status=='Y'?'success':'danger'"></p-badge>
 				</th>
 				<td>{{ alert.alert_value }}</td>
 				<td>{{ alert.alert_email }}</td>
@@ -103,7 +103,7 @@
         </ng-template>
     </p-table>
 </div>
-<p-dialog [(visible)]="productDialog" [style]="{ width: '550px', height:'540px'}" header="Product Details" [modal]="true" styleClass="p-fluid">
+<p-dialog [(visible)]="productDialog" [style]="{ width: '550px', height:'540px'}" header="Alert Details" [modal]="true" styleClass="p-fluid">
     <ng-template pTemplate="content">
         <from [formGroup]="unitForm">
         <!-- <img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + product.image" [alt]="product.image" class="block m-auto pb-3" *ngIf="product.image" /> -->
@@ -133,12 +133,18 @@
         </div> 
         <div class="field">
             <label for="product">Alert Type</label>
-            <div class="flex flex-column md:flex-row gap-3">
-               <div [hidden]="editMode&&!low"><p-inputSwitch [ngModelOptions]="{standalone: true}" [(ngModel)]="low" ></p-inputSwitch>  Low</div> <br>
-                <div [hidden]="editMode&&!high"><p-inputSwitch [ngModelOptions]="{standalone: true}" [(ngModel)]="high"></p-inputSwitch>  High</div><br>
-                <div [hidden]="editMode&&!c_low"><p-inputSwitch [ngModelOptions]="{standalone: true}" [(ngModel)]="c_low"></p-inputSwitch>  Critical Low</div><br>
-                <div [hidden]="editMode&&!c_high"><p-inputSwitch [ngModelOptions]="{standalone: true}" [(ngModel)]="c_high"></p-inputSwitch>  Critical High</div>
+            <div class="flex flex-column md:flex-row gap-3"*ngIf="editMode">
+               <div style="display: flex;" [hidden]="!low2"><p-inputSwitch [ngModelOptions]="{standalone: true}" [(ngModel)]="low" ></p-inputSwitch> <h5 style="padding: 3px;margin: 0px;font-size: 14px;">Low</h5></div> <br>
+                <div style="display: flex;" [hidden]="!high2"><p-inputSwitch [ngModelOptions]="{standalone: true}" [(ngModel)]="high"></p-inputSwitch> <h5 style="padding: 3px;margin: 0px;font-size: 14px;">High</h5> </div><br>
+                <div style="display: flex;" [hidden]="!c_low2"><p-inputSwitch [ngModelOptions]="{standalone: true}" [(ngModel)]="c_low"></p-inputSwitch> <h5 style="padding: 3px;margin: 0px;font-size: 14px;">Critical Low</h5> </div><br>
+                <div style="display: flex;" [hidden]="!c_high2"><p-inputSwitch [ngModelOptions]="{standalone: true}" [(ngModel)]="c_high"></p-inputSwitch>  <h5 style="padding: 3px;margin: 0px;font-size: 14px;">Critical High</h5></div>
             </div>
+            <div class="flex flex-column md:flex-row gap-3" *ngIf="!editMode">
+                <div style="display: flex;"><p-inputSwitch [ngModelOptions]="{standalone: true}" [(ngModel)]="low" ></p-inputSwitch> <h5 style="padding: 3px;margin: 0px;font-size: 14px;">Low</h5> </div> <br>
+                 <div style="display: flex;"><p-inputSwitch [ngModelOptions]="{standalone: true}" [(ngModel)]="high"></p-inputSwitch> <h5 style="padding: 3px;margin: 0px;font-size: 14px;">High</h5> </div><br>
+                 <div style="display: flex;"><p-inputSwitch [ngModelOptions]="{standalone: true}" [(ngModel)]="c_low"></p-inputSwitch> <h5 style="padding: 3px;margin: 0px;font-size: 14px;">Critical Low</h5> </div><br>
+                 <div style="display: flex;"><p-inputSwitch [ngModelOptions]="{standalone: true}" [(ngModel)]="c_high"></p-inputSwitch> <h5 style="padding: 3px;margin: 0px;font-size: 14px;">Critical High</h5> </div>
+             </div>
            
             <div class="flex flex-column md:flex-row gap-1">
                 <div class="col-6 lg:col-6 xl:col-6" *ngIf="low">
