@@ -37,17 +37,18 @@ $gutter: 1rem; //for primeflex grid system
   }
 
   .spinner_overlay{
+    visibility: inherit;
     // position: fixed;
-    padding-top: 18%;
-    position: absolute;
-    left: 0;
-    // top: 0;
-    // width: 100%;
-    // height: 100%;
-    background-color: #ffffff81;
-    opacity: 20;
-    z-index: 1000;
-    text-align: center;
+    // padding-top: 18%;
+    // position: absolute;
+    // left: 0;
+    // // top: 0;
+    // // width: 100%;
+    // // height: 100%;
+    // background-color: #ffffff81;
+    // opacity: 20;
+    // z-index: 0;
+    // text-align: center;
   }
   i{color: #f6f6f6;}
   

@@ -12,6 +12,7 @@ import {
     ChartComponent,
     ApexNonAxisChartSeries,
     ApexResponsive,
+    ApexChart,
   } from "ng-apexcharts";
 
 import { MessagesDemoComponent } from '../alert/messagesdemo.component';
@@ -25,7 +26,48 @@ import { WebsocketService } from 'src/app/demo/service/web-socket.service';
   };
 
 
-
+  interface EnergyData {
+    energy_data_id: number;
+    client_id: number;
+    device_id: number;
+    device: string;
+    do_channel: number;
+    e1: number;
+    e2: number;
+    e3: number;
+    r: number;
+    y: number;
+    b: number;
+    r_y: number;
+    y_b: number;
+    b_y: number;
+    curr1: number;
+    curr2: number;
+    curr3: number;
+    activep1: number;
+    activep2: number;
+    activep3: number;
+    apparentp1: number;
+    apparentp2: number;
+    apparentp3: number;
+    pf1: number;
+    pf2: number;
+    pf3: number;
+    freq: number;
+    reactvp1: number;
+    reactvp2: number;
+    reactvp3: number;
+    avaragevln: number;
+    avaragevll: number;
+    avaragecurrent: number;
+    totkw: number;
+    totkva: number;
+    totkvar: number;
+    runhr: number;
+    date: string;
+    time: string;
+    created_at: string;
+  }
 @Component({
     selector:"app-chartsdemo",
     templateUrl: './chartsdemo.component.html',
@@ -457,7 +499,7 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
       }
 
     ngOnDestroy() {
-      this.websocketSubscription.unsubscribe();
+      // this.websocketSubscription.unsubscribe();
         if (this.subscription) {
           this.subscription.unsubscribe();
       }
