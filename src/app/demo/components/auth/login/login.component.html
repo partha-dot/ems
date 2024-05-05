@@ -22,11 +22,14 @@
         </div>
     </div>
 </div> -->
-<img src="assets/demo/images/nature/circuit.jpg" alt="Image" class="backimg">
+<div class="container">
+
+<!-- <img src="assets/demo/images/nature/circuit.jpg" alt="Image" class="backimg"> -->
 <div class="box">
     <div class="form" >
         <form [formGroup]="userForm" >
-            <img src="assets/demo/images/login/avatar.png" alt="Image" height="160" style="margin-left: 64px;">
+            <!-- style="margin-left: 64px;" -->
+            <img src="assets/demo/images/login/avatar.png" alt="Image" height="160" >
             <h2>Login</h2> <br>
         <div class="inputBox">
             <input type="text" required formControlName="mail">
@@ -42,11 +45,13 @@
             <input type="checkbox">
             <a href="#">I agree to the terms and conditions by the user agreement.</a>
         </div>
-        
+
           <button class="button" (click)="loginCall()"><span style="text-align: center;">SIGN IN</span></button>
         </form>
-        
+
     </div>
+</div>
+
 </div>
 
 

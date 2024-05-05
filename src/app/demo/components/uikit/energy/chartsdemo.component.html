@@ -5,7 +5,7 @@
                 <div class="field col-12 md:col-3">
                     <label htmlFor="lastname2">Site Name</label>
                     <input pInputText  type="text" />
-                </div>  
+                </div>
                 <div class="field col-12 md:col-2">
                     <label htmlFor="lastname2">Capacity (HP)</label>
                     <input pInputText  type="text" />
@@ -24,9 +24,9 @@
                 <div class="field col-12 md:col-1" style="margin-top: 2%;">
                     <p-button styleClass="p-button-primary " label="Update"></p-button>
                 </div>
-                
+
             </div>
-           
+
         </div>
 
     </div>
@@ -34,7 +34,7 @@
     <!-- <div class="col-12 lg:col-12"> -->
     <!-- <div class="card" style="padding: 0!important;"> -->
         <div class="grid" style="margin-left: 0rem!important;">
-           
+
             <!-- <div class="col-12 lg:col-2 xl:col-1">
                 <div class="livenow">
                   <div></div>
@@ -48,20 +48,20 @@
             <span >Run Time</span>
             <div class="text-900 font-medium text-xl">2.8 Hrs</div>
            </div>  -->
-           
+
            <div class="col-12 md:col-12" >
             <div style="float: right;">
-                <p-dropdown formControlName="a_unit" [options]="cities2" optionLabel="unit_name" placeholder="Select a Phase Type"></p-dropdown>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <p-dropdown  [options]="cities2" optionLabel="unit_name" placeholder="Select a Phase Type"></p-dropdown>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <p-autoComplete [(ngModel)]="selectedDealer" [ngModelOptions]="{standalone: true}" placeholder="ABCDE01001" (onSelect)="setDevice()" [suggestions]="filteredDealer" (completeMethod)="filterDealer($event)" field="device" [dropdown]="true">
                 </p-autoComplete>
             </div>
             </div>
             <div class="col-12 md:col-12" >
-                
+
                 <div class="card">
                     <div class="grid" style="margin-left: 0rem!important;">
                         <div class="col-12 lg:col-6 xl:col-3">
-                            <div class="card mb-0" style=" 
+                            <div class="card mb-0" style="
                             box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
                             transition: 0.3s;
                             width: 100%;
@@ -70,7 +70,7 @@
                             <div style="
                             border-radius: 10px 10px 0 0;
                             background:linear-gradient(15deg, rgb(59, 8, 92) 0%, rgb(28, 9, 135) 50%, rgb(1, 4, 211) 100%);
-                            height:40px;">
+                            height:40px;" class="tiles__header">
                             <div style="margin: 10px;
                             position: absolute;
                             height: 23px;
@@ -78,18 +78,18 @@
                             <!-- <span class="material-icons" style="position: absolute;padding-top: 3px;padding-left: 2px;">arrow_drop_down</span> -->
                                 <i class="pi pi-clock text-white-600 text-xl" style="position: absolute;padding-top: 3px;padding-left: 2px;"></i>
                             </div>
-                            
+
                             <div style="padding-left: 40px; position: absolute;">
-                        <h5 style="color: white; padding-top: 12px!important;"> TODAY ENERGY</h5></div>
+                        <h5 style="color: white;"> TODAY ENERGY</h5></div>
                             </div>
                             <h3 style="text-align: center;">
-                                22.00 kWh 
+                                22.00 kWh
                             </h3>
                             </div>
-                            
+
                         </div>
                         <div class="col-12 lg:col-6 xl:col-3">
-                            <div class="card mb-0" style=" 
+                            <div class="card mb-0" style="
                             box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
                             transition: 0.3s;
                             width: 100%;
@@ -98,24 +98,24 @@
                             <div style="
                             border-radius: 10px 10px 0 0;
                             background:linear-gradient(15deg, rgb(125, 3, 35) 0%, rgb(156, 5, 5) 50%, rgb(171, 62, 8) 100%);
-                            height:40px;">
+                            height:40px;" class="tiles__header">
                             <div style="margin: 10px;
                             position: absolute;
                             height: 23px;
                             width: 23px;">
                                 <i class="pi pi-calendar text-white-600 text-xl" style="position: absolute;padding-top: 3px;padding-left: 2px;"></i></div>
-                            
+
                             <div style="padding-left: 40px; position: absolute;">
-                        <h5 style="color: white; padding-top: 12px!important;"> MONTHLY ENERGY</h5></div>
+                        <h5 style="color: white;"> MONTHLY ENERGY</h5></div>
                             </div>
                             <h3 style="text-align: center;">
-                                700.00 kWh 
+                                700.00 kWh
                             </h3>
                             </div>
-                            
+
                         </div>
                         <div class="col-12 lg:col-6 xl:col-3">
-                            <div class="card mb-0" style=" 
+                            <div class="card mb-0" style="
                             box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
                             transition: 0.3s;
                             width: 100%;
@@ -124,24 +124,24 @@
                             <div style="
                             border-radius: 10px 10px 0 0;
                             background:linear-gradient(15deg, rgb(49, 70, 13) 0%, rgb(87, 112, 15) 50%, rgb(130, 141, 6) 100%);
-                            height:40px;">
+                            height:40px;" class="tiles__header">
                             <div style="margin: 10px;
                             position: absolute;
                             height: 23px;
                             width: 23px;">
                                 <i class="pi pi-calendar-minus text-white-600 text-xl" style="position: absolute;padding-top: 3px;padding-left: 2px;"></i></div>
-                            
+
                             <div style="padding-left: 40px; position: absolute;">
-                        <h5 style="color: white; padding-top: 12px!important;"> YEARLY ENERGY</h5></div>
+                        <h5 style="color: white;"> YEARLY ENERGY</h5></div>
                             </div>
                             <h3 style="text-align: center;">
-                                5000.00 kWh 
+                                5000.00 kWh
                             </h3>
                             </div>
-                            
+
                         </div>
                         <div class="col-12 lg:col-6 xl:col-3">
-                            <div class="card mb-0" style=" 
+                            <div class="card mb-0" style="
                             box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
                             transition: 0.3s;
                             width: 100%;
@@ -150,24 +150,26 @@
                             <div style="
                             border-radius: 10px 10px 0 0;
                             background:linear-gradient(15deg, rgb(116, 5, 116) 0%, rgb(117, 6, 148) 50%, rgb(174, 7, 176) 100%);
-                            height:40px;">
+                            height:40px;"
+                            class="tiles__header"
+                            >
                             <div style="margin: 10px;
                             position: absolute;
                             height: 23px;
                             width: 23px;">
                                 <i class="pi pi-check-circle text-white-600 text-xl" style="position: absolute;padding-top: 3px;padding-left: 2px;"></i></div>
-                            
+
                             <div style="padding-left: 40px; position: absolute;">
-                        <h5 style="color: white; padding-top: 12px!important;"> TOTAL ENERGY</h5></div>
+                            <h5 style="color: white;"> TOTAL ENERGY</h5></div>
                             </div>
                             <h3 style="text-align: center;">
-                                5000.00 kWh 
+                                5000.00 kWh
                             </h3>
                             </div>
-                            
+
                         </div>
                         <div class="col-12 lg:col-6 xl:col-3">
-                            <div class="card mb-0" style=" 
+                            <div class="card mb-0" style="
                             box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
                             transition: 0.3s;
                             width: 100%;
@@ -176,24 +178,24 @@
                             <div style="
                             border-radius: 10px 10px 0 0;
                             background:linear-gradient(15deg, rgb(6, 103, 123) 0%, rgb(9, 157, 170) 50%, rgb(3, 211, 183) 100%);
-                            height:40px;">
+                            height:40px;" class="tiles__header">
                             <div style="margin: 10px;
                             position: absolute;
                             height: 23px;
                             width: 23px;">
                                 <i class="pi pi-bolt text-white-600 text-xl" style="position: absolute;padding-top: 3px;padding-left: 2px;"></i></div>
-                            
+
                             <div style="padding-left: 40px; position: absolute;">
-                        <h5 style="color: white; padding-top: 12px!important;"> APARENT POWER</h5></div>
+                        <h5 style="color: white;"> APARENT POWER</h5></div>
                             </div>
                             <h3 style="text-align: center;">
-                                9.65 KvA 
+                                9.65 KvA
                             </h3>
                             </div>
-                            
+
                         </div>
                         <div class="col-12 lg:col-6 xl:col-3">
-                            <div class="card mb-0" style=" 
+                            <div class="card mb-0" style="
                             box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
                             transition: 0.3s;
                             width: 100%;
@@ -202,24 +204,24 @@
                             <div style="
                             border-radius: 10px 10px 0 0;
                             background:linear-gradient(15deg, rgb(43, 77, 29) 0%, rgb(47, 114, 16) 50%, rgb(51, 188, 5) 100%);
-                            height:40px;">
+                            height:40px;" class="tiles__header">
                             <div style="margin: 10px;
                             position: absolute;
                             height: 23px;
                             width: 23px;">
                                 <i class="pi pi-bolt text-white-600 text-xl" style="position: absolute;padding-top: 3px;padding-left: 2px;"></i></div>
-                            
+
                             <div style="padding-left: 40px; position: absolute;">
-                        <h5 style="color: white; padding-top: 12px!important;"> ACTIVE POWER</h5></div>
+                        <h5 style="color: white;"> ACTIVE POWER</h5></div>
                             </div>
                             <h3 style="text-align: center;">
-                                10.39 Kw 
+                                10.39 Kw
                             </h3>
                             </div>
-                            
+
                         </div>
                         <div class="col-12 lg:col-6 xl:col-3">
-                            <div class="card mb-0" style=" 
+                            <div class="card mb-0" style="
                             box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
                             transition: 0.3s;
                             width: 100%;
@@ -228,24 +230,24 @@
                             <div style="
                             border-radius: 10px 10px 0 0;
                             background:linear-gradient(15deg, rgb(104, 48, 86) 0%, rgb(136, 20, 95) 50%, rgb(182, 16, 124) 100%);
-                            height:40px;">
+                            height:40px;" class="tiles__header">
                             <div style="margin: 10px;
                             position: absolute;
                             height: 23px;
                             width: 23px;">
                                 <i class="pi pi-sliders-v text-white-600 text-xl" style="position: absolute;padding-top: 3px;padding-left: 2px;"></i></div>
-                            
+
                             <div style="padding-left: 40px; position: absolute;">
-                        <h5 style="color: white; padding-top: 12px!important;"> POWER FACTOR</h5></div>
+                        <h5 style="color: white;"> POWER FACTOR</h5></div>
                             </div>
                             <h3 style="text-align: center;">
                                 0.929
                             </h3>
                             </div>
-                            
+
                         </div>
                         <div class="col-12 lg:col-6 xl:col-3">
-                            <div class="card mb-0" style=" 
+                            <div class="card mb-0" style="
                             box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
                             transition: 0.3s;
                             width: 100%;
@@ -254,21 +256,21 @@
                             <div style="
                             border-radius: 10px 10px 0 0;
                             background:linear-gradient(15deg, rgb(53, 3, 92) 0%, rgb(73, 4, 143) 50%, rgb(83, 4, 185) 100%);
-                            height:40px;">
+                            height:40px;" class="tiles__header">
                             <div style="margin: 10px;
                             position: absolute;
                             height: 23px;
                             width: 23px;">
                                 <i class="pi pi-sliders-v text-white-600 text-xl" style="position: absolute;padding-top: 3px;padding-left: 2px;"></i></div>
-                            
+
                             <div style="padding-left: 40px; position: absolute;">
-                        <h5 style="color: white; padding-top: 12px!important;"> FREQUENCY</h5></div>
+                        <h5 style="color: white;"> FREQUENCY</h5></div>
                             </div>
                             <h3 style="text-align: center;">
-                                50 HZ 
+                                50 HZ
                             </h3>
                             </div>
-                            
+
                         </div>
                         <div class="grid" style="margin-left: 0rem!important;margin-top: 50px; width: 100%!important;">
                                 <div class="col-12 lg:col-6 xl:col-6">
@@ -280,12 +282,13 @@
                                                 [series]="chartOptions.series"
                                                 [chart]="chartOptions.chart"
                                                 [labels]="chartOptions.labels"
+                                                [responsive]="chartOptions.responsive"
                                             ></apx-chart>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-12 lg:col-6 xl:col-6">
-                                
+
                                         <div class="card" style="height: 476px; overflow-x: hidden;
                                         overflow-y: auto;">
                                             <h4 class="card-para">Emission Type</h4>
@@ -296,7 +299,7 @@
                                                     </div>
                                                     <p>Today Energy</p>
                                                 </div>
-                                                
+
                                                 <p class="unit">800 kWh</p>
                                             </div>
                                             <div class="subCard">
@@ -306,10 +309,10 @@
                                                     </div>
                                                     <p>Energy Rate</p>
                                                 </div>
-                                                
+
                                                 <p class="unit">154 kwH</p>
                                             </div>
-                                        
+
                                             <div class="subCard">
                                                 <div class="subcard-icon">
                                                     <div class="icon">
@@ -317,7 +320,7 @@
                                                     </div>
                                                     <p>Percentage Of Energy</p>
                                                 </div>
-                                                
+
                                                 <p class="unit">25 %</p>
                                             </div>
                                             <div class="subCard">
@@ -327,7 +330,7 @@
                                                     </div>
                                                     <p>Available Energy</p>
                                                 </div>
-                                                
+
                                                 <p class="unit">156 kWh</p>
                                             </div>
                                             <div class="subCard">
@@ -337,7 +340,7 @@
                                                     </div>
                                                     <p>Used Energy</p>
                                                 </div>
-                                                
+
                                                 <p class="unit">646 kWh</p>
                                             </div>
                                             <div class="subCard">
@@ -347,7 +350,7 @@
                                                     </div>
                                                     <p>Current Load</p>
                                                 </div>
-                                                
+
                                                 <p class="unit">5.00 %</p>
                                             </div>
                                             <div class="subCard">
@@ -357,7 +360,7 @@
                                                     </div>
                                                     <p>Energy Produce</p>
                                                 </div>
-                                                
+
                                                 <p class="unit">50 kWh</p>
                                             </div>
                                             <div class="subCard">
@@ -367,7 +370,7 @@
                                                     </div>
                                                     <p>Frequency</p>
                                                 </div>
-                                                
+
                                                 <p class="unit">50 MHz</p>
                                             </div>
                                             <div class="subCard">
@@ -377,28 +380,28 @@
                                                     </div>
                                                     <p>Coolent Temperature</p>
                                                 </div>
-                                                
+
                                                 <p class="unit"> 20 <sup>°</sup>C</p>
                                             </div>
-                                            
+
                                         </div>
                                     </div>
-                                
+
                             </div>
-                        
-                            
+
+
                         <!-- </div> -->
                         </div>
-                
+
                 </div>
             </div>
-        </div> 
+        </div>
     <!-- </div> -->
-        
-          
-       
-     
+
+
+
+
 
     <!-- </div>
-   
+
 </div> -->

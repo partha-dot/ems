@@ -12,6 +12,13 @@ import {
     ChartComponent,
     ApexNonAxisChartSeries,
     ApexResponsive,
+
+  
+
+  } from "ng-apexcharts";
+import { MessagesDemoComponent } from '../alert/messagesdemo.component';
+
+
     ApexChart
     
   } from "ng-apexcharts";
@@ -19,19 +26,60 @@ import { MessagesDemoComponent } from '../alert/messagesdemo.component';
 import { webSocket, WebSocketSubject  } from 'rxjs/webSocket'; 
 import { WebsocketService } from 'src/app/demo/service/web-socket.service';
   
+
   export type ChartOptions = {
     series: ApexNonAxisChartSeries;
     chart: ApexChart;
     responsive: ApexResponsive[];
     labels: any;
   };
+
+  export type ChartOptions2 = {
+    series: ApexAxisChartSeries;
+    chart: ApexChart;
+    dataLabels: ApexDataLabels;
+    markers: ApexMarkers;
+    title: ApexTitleSubtitle;
+    fill: ApexFill;
+    yaxis: ApexYAxis;
+    xaxis: ApexXAxis;
+    tooltip: ApexTooltip;
+    stroke: ApexStroke;
+    annotations: ApexAnnotations;
+    colors: any;
+    toolbar: any;
+  };
+  export type ChartOptions3 = {
+    series: ApexAxisChartSeries;
+    chart: ApexChart;
+    xaxis: ApexXAxis;
+    dataLabels: ApexDataLabels;
+    yaxis: ApexYAxis;
+    fill: ApexFill;
+    stroke: ApexStroke;
+    markers: ApexMarkers;
+    colors: string[];
+  };
+  export type ChartOptions5 = {
+    series: ApexAxisChartSeries;
+    chart: ApexChart;
+    xaxis: ApexXAxis;
+    dataLabels: ApexDataLabels;
+    yaxis: ApexYAxis;
+    colors: string[];
+    legend: ApexLegend;
+    fill: ApexFill;
+  };
+ 
+
  
   
+
 @Component({
     selector:"app-chartsdemo",
     templateUrl: './chartsdemo.component.html',
     styleUrls:['./chartsdemo.component.css'],
-    
+
   providers: [MessageService, ConfirmationService, DatePipe]
 })
 export class ChartsDemoComponent implements OnInit, OnDestroy {
@@ -39,7 +87,50 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
     @ViewChild("chart") chart: ChartComponent;
     @ViewChild("chart2", { static: false }) chart2: ChartComponent
     public chartOptions: Partial<ChartOptions>;
+
+  public chartOptions2: Partial<ChartOptions2>;
+  public chartOptions3: Partial<ChartOptions3>;
+  public chartOptions33: Partial<ChartOptions3>;
+  public chartOptions4: Partial<ChartOptions3>;
+  public chartOptions5: Partial<ChartOptions5>;
+  public activeOptionButton = "all";
+  public updateOptionsData = {
+    "1m": {
+      xaxis: {
+        min: new Date("28 Jan 2013").getTime(),
+        max: new Date("27 Feb 2013").getTime()
+      }
+    },
+    "6m": {
+      xaxis: {
+        min: new Date("27 Sep 2012").getTime(),
+        max: new Date("27 Feb 2013").getTime()
+      }
+    },
+    "1y": {
+      xaxis: {
+        min: new Date("27 Feb 2012").getTime(),
+        max: new Date("27 Feb 2013").getTime()
+      }
+    },
+    "1yd": {
+      xaxis: {
+        min: new Date("01 Jan 2013").getTime(),
+        max: new Date("01 Jan 2013").getTime()
+      }
+    },
+    all: {
+      xaxis: {
+        min: undefined,
+        max: undefined
+      }
+    }
+  };
+
+
+
     private websocketSubscription: Subscription;
+
 
     rpm: any;
     flow: any;
@@ -115,12 +206,20 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
   
     loginType:string=localStorage.getItem('loginType')
     constructor(private datePipe: DatePipe,public layoutService: LayoutService, private authservice:AuthenticationService,
+
+        private fb: FormBuilder,private http:HttpClient ,private productService: ProductService,
+
         private fb: FormBuilder,private http:HttpClient ,private productService: ProductService, private websocketService: WebsocketService,
+
         private messageService: MessageService, private confirmationService: ConfirmationService,private api:ApiService) {
         this.subscription = this.layoutService.configUpdate$.subscribe(config => {
             this.initCharts();
         });
+
+
+
         this.connectToWebSocket();
+
     }
     convertToISTDateTime(utcDatetime: string) {
         const utcDateTime = new Date(utcDatetime);
@@ -128,7 +227,7 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
         return istTime || '';
       }
    ggg(){
-    debugger
+    // //debugger
    }
     ngOnInit() {
       
@@ -141,22 +240,22 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
         { label: 'Historic Data', icon: 'pi pi-fw pi-cog',routerLink: ['/app/outlet/alert']  }
       ];
       this.activeItem = this.items[0];
-        debugger
+        // //debugger
         this.initCharts();
         this.getDevice();
 
         // setInterval(()=>{
         //     this.currTm= ' '+ '| '+ new Date().toString().substring(16,24)+ ' '
-        //     this.currDt= new Date().toString().substring(0,15)   
+        //     this.currDt= new Date().toString().substring(0,15)
         //   ,1000})
 
         //   setInterval(() => {
         //     this.selectedDealer?.device_name ? this.getDeviceLiveData(this.selectedDealer?.device_name) : console.log('hii');
         //     this.getDevice();
         //   }, 20000);
-          
-         
-      
+
+
+
     }
     connectToWebSocket() {
       this.websocketSubscription = this.websocketService.connect('1/1/123456789')
@@ -185,7 +284,7 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
         console.log(this.selectedAlert);
         this.alert_type=this.selectedAlert?.unit_name
         this.alert_type=' '+this.alert_type;
-        debugger
+        //debugger
       }
     getDevice(){
         const credentials = {
@@ -198,13 +297,13 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
   this.http.post(apiUrl+'/client/devices/list', credentials,{ headers }).subscribe(
       (response) => {
         console.log(response);
-        
+
         this.data1=response
-        this.cities=this.data1.data 
-        
+        this.cities=this.data1.data
+
       },
       (error) => {
-        
+
         console.error(error);
       }
     );
@@ -220,30 +319,30 @@ const day = String(dateObject.getDate()).padStart(2, '0');
 // Create the desired format
 const result = `${month}/${day}`;
 
-console.log(result); 
+console.log(result);
 return result
 }
 getDeviceLiveData(name:any){
     // const apiUrl = this.api.baseUrl;
 //   baseUrl = 'https://iot.wrongcode.in/backend/api';
 
-  
+
          if(name){
             const token = localStorage.getItem('token');
             const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
-            
+
             this.liveData=[];
             this.liveData2=null;
-    
+
             const credentials = {
                 device_id:name
             };
-            
+
             this.http.post(this.api.baseUrl+'/device-data/last', credentials, { headers }).subscribe(
                 (response) => {
-                    
+
                     console.log(response);
-                    
+
                     this.data1=response
                     this.data1=this.data1.data
                     if(this.data1) {
@@ -254,53 +353,53 @@ getDeviceLiveData(name:any){
                         this.liveData=this.data1.chart_data_list
                         this.liveData2=this.data1.device_data_list
                         this.liveData.forEach(e => {
-                            
+
                             this.flowDate.push(this.dateConvt(e.created_at))
                             this.flowData.push(e.flow)
                             this.rpmDate.push(this.dateConvt(e.created_at))
                             this.rpmData.push(e.rpm.toString())
 
-                            
+
                             console.log(this.flowDate);
                             console.log(this.flowData);
                             console.log(this.rpmDate);
                             console.log(this.rpmData);
-                            
+
                         });
-                        
+
                         if(this.flowDate && this.flowData && this.rpmDate && this.rpmData){
                             this.lastUpdateTime=''
                             this.lastUpdateTime=this.convertToISTDateTime(this.liveData2.created_at)
                             console.log(this.lastUpdateTime);
-                            var currentdate = new Date(); 
+                            var currentdate = new Date();
                             var datetime = currentdate.getDate() + "-"
-                                + (currentdate.getMonth()+1)  + "-" 
-                                + currentdate.getFullYear() + " "  
-                                + currentdate.getHours() + ":"  
-                                + currentdate.getMinutes() + ":" 
+                                + (currentdate.getMonth()+1)  + "-"
+                                + currentdate.getFullYear() + " "
+                                + currentdate.getHours() + ":"
+                                + currentdate.getMinutes() + ":"
                                 + currentdate.getSeconds();
                                 console.log(datetime);
-                                
-                            
+
+
                             // this.flowDate = this.flowDate.map(value => JSON.stringify(value).replace(/[{}]/g, ''));
                             // this.flowData = this.flowData.map(value => JSON.stringify(value).replace(/[{}]/g, ''));
                             // this.rpmDate = this.rpmDate.map(value => JSON.stringify(value).replace(/[{}]/g, ''));
                             // this.rpmData = this.rpmData.map(value => JSON.stringify(value).replace(/[{}]/g, ''));
-                            
+
                             this.initCharts();
-                            
+
                         }
-                        
+
                     }
-                   
-                    
+
+
                 },
                 (error) => {
                     console.error(error);
                 }
                 );
          }
-  
+
 }
         dateChange(i:any){
             const utcTimestamp = i;
@@ -326,12 +425,12 @@ getDeviceLiveData(name:any){
             // Format the date
             const formattedDate = date.toLocaleString('en-US', options);
 
-            console.log(formattedDate); 
+            console.log(formattedDate);
             return formattedDate
         }
     setDevice(){
         console.log(this.selectedDealer);
-        
+
         this.getDeviceLiveData(this.selectedDealer.device_name);
 
 
@@ -343,28 +442,692 @@ getDeviceLiveData(name:any){
             const dealer = this.cities[i];
             if (dealer.device.toLowerCase().indexOf(query.toLowerCase()) == 0) {
                 filtered.push(dealer);
-                
+
             }
         }
-  
+
         this.filteredDealer = filtered;
-        
+
     }
 
     initCharts() {
-        
+
+        const documentStyle = getComputedStyle(document.documentElement);
+        const textColor = documentStyle.getPropertyValue('--text-color');
+        const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
+        const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+        this.data = {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+            datasets: [
+                {
+                    type: 'line',
+                    label: 'Phase-1',
+                    borderColor: documentStyle.getPropertyValue('--blue-500'),
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.4,
+                    data: [50, 25, 12, 48, 56, 76, 42]
+                },
+                {
+                    type: 'bar',
+                    label: 'Phase-2',
+                    backgroundColor: documentStyle.getPropertyValue('--green-500'),
+                    data: [21, 84, 24, 75, 37, 65, 34],
+                    borderColor: 'white',
+                    borderWidth: 2
+                },
+                {
+                    type: 'bar',
+                    label: 'Phase-3',
+                    backgroundColor: documentStyle.getPropertyValue('--orange-500'),
+                    data: [41, 52, 24, 74, 23, 21, 32]
+                }
+            ]
+        };
+
+        this.options2 = {
+            maintainAspectRatio: false,
+            aspectRatio: 0.6,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: textColor
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        color: textColorSecondary
+                    },
+                    grid: {
+                        color: surfaceBorder
+                    }
+                },
+                y: {
+                    ticks: {
+                        color: textColorSecondary
+                    },
+                    grid: {
+                        color: surfaceBorder
+                    }
+                }
+            }
+        };
+
+        this.options = {
+            indexAxis: 'y',
+            maintainAspectRatio: false,
+            aspectRatio: 0.8,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: textColor
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        color: textColorSecondary,
+                        font: {
+                            weight: 500
+                        }
+                    },
+                    grid: {
+                        color: surfaceBorder,
+                        drawBorder: false
+                    }
+                },
+                y: {
+                    ticks: {
+                        color: textColorSecondary
+                    },
+                    grid: {
+                        color: surfaceBorder,
+                        drawBorder: false
+                    }
+                }
+            }
+        };
+
+
+        this.flow = {
+            labels: ['01', '02', '03', '04', '05', '06', '07'],
+            datasets: [
+                {
+                    label: 'Last 6 Days',
+                    data: [65, 59, 80, 81, 56, 55, 40],
+                    fill: false,
+                    backgroundColor: documentStyle.getPropertyValue('--primary-500'),
+                    borderColor: documentStyle.getPropertyValue('--primary-500'),
+                    tension: .4
+                },
+                {
+                    label: 'Last Week',
+                    data: [28, 48, 60, 70, 66, 69, 60],
+                    fill: false,
+                    backgroundColor:'yellow',
+                    borderColor: 'yellow',
+                    tension: .4
+                }
+            ]
+
+        };
+        this.flow2 = {
+            labels: ['01', '02', '03', '04', '05', '06', '07'],
+            datasets: [
+                {
+                    label: 'Last 6 Days',
+                    data: [65, 59, 80, 81, 56, 55, 40],
+                    fill: false,
+                    backgroundColor: documentStyle.getPropertyValue('--primary-500'),
+                    borderColor: documentStyle.getPropertyValue('--primary-500'),
+                    tension: .4
+                },
+                {
+                    label: 'Last Week',
+                    data: [55, 66, 70, 90, 48, 69, 30],
+                    fill: false,
+                    backgroundColor:'yellow',
+                    borderColor: 'yellow',
+                    tension: .4
+                }
+            ]
+
+        };
+        this.barData = {
+            labels: ['01', '02', '03', '04', '05', '06', '07'],
+            datasets: [
+                {
+                    label: 'Last 6 Days',
+                    backgroundColor: documentStyle.getPropertyValue('--primary-500'),
+                    borderColor: documentStyle.getPropertyValue('--primary-500'),
+                    data: [65, 59, 80, 81, 56, 55, 40]
+                },
+                {
+                    label: 'Last Week',
+                    backgroundColor: 'yellow',
+                    borderColor: 'yellow',
+                    data: [28, 48, 40, 19, 86, 27, 80]
+                }
+            ]
+        };
+
+        this.barOptions = {
+            plugins: {
+                legend: {
+                    labels: {
+                        fontColor: textColor
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        color: textColorSecondary,
+                        font: {
+                            weight: 500
+                        }
+                    },
+                    grid: {
+                        display: false,
+                        drawBorder: false
+                    }
+                },
+                y: {
+                    ticks: {
+                        color: textColorSecondary
+                    },
+                    grid: {
+                        color: surfaceBorder,
+                        drawBorder: false
+                    }
+                },
+            }
+        };
+
+
+        this.rpm = {
+
+            labels: this.rpmDate,
+            datasets: [
+
+                {
+                    label: 'RPM',
+                    data: this.rpmData,
+                    fill: false,
+                    backgroundColor:'yellow',
+                    borderColor: 'yellow',
+                    tension: .4
+                }
+            ]
+        };
+        this.lineOptions = {
+            plugins: {
+                legend: {
+                    labels: {
+                        fontColor: textColor
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        color: textColorSecondary
+                    },
+                    grid: {
+                        color: surfaceBorder,
+                        drawBorder: false
+                    }
+                },
+                y: {
+                    ticks: {
+                        color: textColorSecondary
+                    },
+                    grid: {
+                        color: surfaceBorder,
+                        drawBorder: false
+                    }
+                },
+            }
+        };
+         this.lineOptions = {
+            plugins: {
+                legend: {
+                    labels: {
+                        fontColor: textColor
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        color: textColorSecondary
+                    },
+                    grid: {
+                        color: surfaceBorder,
+                        drawBorder: false
+                    }
+                },
+                y: {
+                    ticks: {
+                        color: textColorSecondary
+                    },
+                    grid: {
+                        color: surfaceBorder,
+                        drawBorder: false
+                    }
+                },
+            }
+        }
+        this.pieData = {
+            labels: ['A', 'B', 'C'],
+            datasets: [
+                {
+                    data: [540, 325, 702],
+                    backgroundColor: [
+                        documentStyle.getPropertyValue('--indigo-500'),
+                        documentStyle.getPropertyValue('--purple-500'),
+                        documentStyle.getPropertyValue('--teal-500')
+                    ],
+                    hoverBackgroundColor: [
+                        documentStyle.getPropertyValue('--indigo-400'),
+                        documentStyle.getPropertyValue('--purple-400'),
+                        documentStyle.getPropertyValue('--teal-400')
+                    ]
+                }]
+        };
+         this.pieData = {
+            labels: ['Sun', 'Mon', 'Tue','Wed','Thu','Fri','Sat'],
+            datasets: [
+                {
+                    data: [540, 325, 702,540, 325, 702,300],
+                    backgroundColor: [
+                        documentStyle.getPropertyValue('--purple-500'),
+                        documentStyle.getPropertyValue('--green-500'),
+                        documentStyle.getPropertyValue('--indigo-500'),
+                        documentStyle.getPropertyValue('--yellow-500'),
+                        documentStyle.getPropertyValue('--teal-500'),
+                        documentStyle.getPropertyValue('--orange-500'),
+                        documentStyle.getPropertyValue('--blue-500')
+
+                    ],
+                    hoverBackgroundColor: [
+                        documentStyle.getPropertyValue('--purple-500'),
+                        documentStyle.getPropertyValue('--green-500'),
+                        documentStyle.getPropertyValue('--indigo-500'),
+                        documentStyle.getPropertyValue('--yellow-500'),
+                        documentStyle.getPropertyValue('--teal-500'),
+                        documentStyle.getPropertyValue('--orange-500'),
+                        documentStyle.getPropertyValue('--blue-500')
+                    ]
+                }]
+        };
+
+this.polarData = {
+            datasets: [{
+                data: [
+                    11,
+                    16,
+                    7,
+                    35
+                ],
+                backgroundColor: [
+                    documentStyle.getPropertyValue('--indigo-500'),
+                    documentStyle.getPropertyValue('--purple-500'),
+                    documentStyle.getPropertyValue('--teal-500'),
+                    documentStyle.getPropertyValue('--orange-500')
+                ],
+                label: 'This week'
+            }],
+            labels: [
+                'Today',
+                'Yesterday',
+                'Day befor tomorrow ',
+                'Last Week'
+            ]
+        };
+
+        this.polarOptions = {
+            plugins: {
+                legend: {
+                    labels: {
+                        color: textColor
+                    }
+                }
+            },
+            scales: {
+                r: {
+                    grid: {
+                        color: surfaceBorder
+                    }
+                }
+            }
+        };
+        this.donatoptions = {
+            cutout: '60%',
+            plugins: {
+                legend: {
+                    labels: {
+                        color: textColor
+                    }
+                }
+            }
+        };
+        this.donatdata = {
+            labels: ['Sun', 'Mon', 'Tue','Wed','Thu','Fri','Sat'],
+            datasets: [
+                {
+                    data: [540, 325, 702,540, 325, 702,300],
+                    backgroundColor: [
+                        documentStyle.getPropertyValue('--purple-500'),
+                        documentStyle.getPropertyValue('--green-500'),
+                        documentStyle.getPropertyValue('--indigo-500'),
+                        documentStyle.getPropertyValue('--yellow-500'),
+                        documentStyle.getPropertyValue('--teal-500'),
+                        documentStyle.getPropertyValue('--orange-500'),
+                        documentStyle.getPropertyValue('--blue-500')
+
+                    ],
+                    hoverBackgroundColor: [
+                        documentStyle.getPropertyValue('--purple-500'),
+                        documentStyle.getPropertyValue('--green-500'),
+                        documentStyle.getPropertyValue('--indigo-500'),
+                        documentStyle.getPropertyValue('--yellow-500'),
+                        documentStyle.getPropertyValue('--teal-500'),
+                        documentStyle.getPropertyValue('--orange-500'),
+                        documentStyle.getPropertyValue('--blue-500')
+                    ]
+                    }
+            ]
+        };
+
+
         this.chartOptions = {
             series: [44, 55, 13, 43, 22, 34, 65],
             chart: {
-              width: 480,
+            //   width: 480,
               type: "pie"
             },
             labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-            
+
+            responsive: [
+                {
+                  breakpoint: 1349,
+                  options: {
+                    // chart: {
+                    //   width: 480
+                    // },
+                    legend: {
+                      position: "bottom"
+                    }
+                  }
+                }
+              ]
+
           };
 
-         
-           
+
+            this.chartOptions2 = {
+              series: [
+                {
+                  data: data2
+                }
+              ],
+              chart: {
+                type: "area",
+                height: 350
+              },
+              annotations: {
+                yaxis: [
+                  {
+                    y: 30,
+                    borderColor: "#999",
+                    label: {
+                      text: "Support",
+                      style: {
+                        color: "#fff",
+                        background: "#00E396"
+                      }
+                    }
+                  }
+                ],
+                xaxis: [
+                  {
+                    x: new Date("14 Nov 2012").getTime(),
+                    borderColor: "#999",
+                    label: {
+                      text: "Rally",
+                      style: {
+                        color: "#fff",
+                        background: "#775DD0"
+                      }
+                    }
+                  }
+                ]
+              },
+              dataLabels: {
+                enabled: false
+              },
+              markers: {
+                size: 0
+              },
+              xaxis: {
+                type: "datetime",
+                min: new Date("01 Mar 2012").getTime(),
+                tickAmount: 6
+              },
+              tooltip: {
+                x: {
+                  format: "dd MMM yyyy"
+                }
+              },
+              fill: {
+                type: "gradient",
+                gradient: {
+                  shadeIntensity: 1,
+                  opacityFrom: 0.7,
+                  opacityTo: 0.9,
+                  stops: [0, 100]
+                }
+              }
+            };
+
+            this.chartOptions3 = {
+                series: [
+                  {
+                    name: "Voltage",
+                    data: this.generateDayWiseTimeSeries(
+                      new Date("11 Feb 2017").getTime(),
+                      185,
+                      {
+                        min: 30,
+                        max: 90
+                      }
+                    )
+                  }
+                ],
+                chart: {
+                  id: "chart2",
+                  type: "line",
+                  height: 230,
+                  toolbar: {
+                    autoSelected: "pan",
+                    show: false
+                  }
+                },
+                colors: ["#546E7A"],
+                stroke: {
+                  width: 3
+                },
+                dataLabels: {
+                  enabled: false
+                },
+                fill: {
+                  opacity: 1
+                },
+                markers: {
+                  size: 0
+                },
+                xaxis: {
+                  type: "datetime"
+                }
+              };
+              this.chartOptions33 = {
+                series: [
+                  {
+                    name: "Voltage",
+                    data: this.generateDayWiseTimeSeries(
+                      new Date("11 Feb 2017").getTime(),
+                      185,
+                      {
+                        min: 30,
+                        max: 90
+                      }
+                    )
+                  }
+                ],
+                chart: {
+                  id: "chart2",
+                  type: "line",
+                  height: 230,
+                  toolbar: {
+                    autoSelected: "pan",
+                    show: false
+                  }
+                },
+                colors: ["#A32409"],
+                stroke: {
+                  width: 3
+                },
+                dataLabels: {
+                  enabled: false
+                },
+                fill: {
+                  opacity: 1
+                },
+                markers: {
+                  size: 0
+                },
+                xaxis: {
+                  type: "datetime"
+                }
+              };
+              this.chartOptions4 = {
+                series: [
+                  {
+                    name: "series1",
+                    data: this.generateDayWiseTimeSeries(
+                      new Date("11 Feb 2017").getTime(),
+                      185,
+                      {
+                        min: 30,
+                        max: 90
+                      }
+                    )
+                  }
+                ],
+                chart: {
+                  id: "chart1",
+                  height: 130,
+                  type: "area",
+                  brush: {
+                    target: "chart2",
+                    enabled: true
+                  },
+                  selection: {
+                    enabled: true,
+                    xaxis: {
+                      min: new Date("19 feb 2017").getTime(),
+                      max: new Date("14 Jun 2017").getTime()
+                    }
+                  }
+                },
+                colors: ["#008FKW"],
+                fill: {
+                  type: "gradient",
+                  gradient: {
+                    opacityFrom: 0.91,
+                    opacityTo: 0.1
+                  }
+                },
+                xaxis: {
+                  type: "datetime",
+                  tooltip: {
+                    enabled: false
+                  }
+                },
+                yaxis: {
+                  tickAmount: 2
+                }
+              }
+
+              this.chartOptions5 = {
+                series: [
+                  {
+                    name: "Voltage",
+                    data: this.generateDayWiseTimeSeries(
+                      new Date("11 Feb 2017 GMT").getTime(),
+                      20,
+                      {
+                        min: 10,
+                        max: 60
+                      }
+                    )
+                  },
+                  {
+                    name: "Power",
+                    data: this.generateDayWiseTimeSeries(
+                      new Date("11 Feb 2017 GMT").getTime(),
+                      20,
+                      {
+                        min: 10,
+                        max: 20
+                      }
+                    )
+                  },
+                  {
+                    name: "Current",
+                    data: this.generateDayWiseTimeSeries(
+                      new Date("11 Feb 2017 GMT").getTime(),
+                      20,
+                      {
+                        min: 10,
+                        max: 15
+                      }
+                    )
+                  }
+                ],
+                chart: {
+                  type: "area",
+                  height: 350,
+                  stacked: true,
+                  events: {
+                    selection: function(chart, e) {
+                      console.log(new Date(e.xaxis.min));
+                    }
+                  }
+                },
+                colors: ["#008FFB", "#00E396", "#CED4DC"],
+                dataLabels: {
+                  enabled: false
+                },
+                fill: {
+                  type: "gradient",
+                  gradient: {
+                    opacityFrom: 0.6,
+                    opacityTo: 0.8
+                  }
+                },
+                legend: {
+                  position: "top",
+                  horizontalAlign: "left"
+                },
+                xaxis: {
+                  type: "datetime"
+                }
+              };
 
     }
 
@@ -377,13 +1140,21 @@ getDeviceLiveData(name:any){
           var x = baseval;
           var y =
             Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
-    
+
           series.push([x, y]);
           baseval += 86400000;
           i++;
         }
         return series;
       }
+
+    ngOnDestroy() {
+        if (this.subscription) {
+            this.subscription.unsubscribe();
+        }
+    }
+
+
     
     
 }
