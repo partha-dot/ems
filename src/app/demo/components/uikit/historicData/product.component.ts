@@ -36,7 +36,7 @@ export class ProductComponent implements OnInit{
   selectedProducts!: any[] | null;
 
   submitted: boolean = false;
-
+  client_id:number=(+localStorage.getItem('c_id'));
   statuses!: any[];
   data1:any=[]
   data2:any=[]
@@ -62,15 +62,10 @@ export class ProductComponent implements OnInit{
       {"col":"Battery life"}
     ]
      
-    
+    this.openNew();
   this.targetProducts = [];
     this.user_type=localStorage.getItem('u_type')
-    if(this.user_type=='0'){
-        this.DeviceUrl='/'
-    }
-    else{
-        this.DeviceUrl='/origination/'
-    }
+   
     this.reportData = this.fb.group({
       d_id: ['', Validators.required],
       fdate: ['', Validators.required],
@@ -79,9 +74,9 @@ export class ProductComponent implements OnInit{
   this.getDeviceDATA();
   // this.openNew();
  
-  setInterval(() => {
-    this.device ? this.saveProduct() : console.log('No Data');
-  }, 10000);
+  // setInterval(() => {
+  //   this.device ? this.saveProduct() : console.log('No Data');
+  // }, 10000);
   }
   convertToISTDateTime(utcDatetime: string) {
     const utcDateTime = new Date(utcDatetime);
@@ -92,8 +87,10 @@ export class ProductComponent implements OnInit{
 const apiUrl = this.api.baseUrl;
   const token = localStorage.getItem('token');
   const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
-
-  this.http.get(apiUrl+this.DeviceUrl+'device/list', { headers }).subscribe(
+  const credentials = {
+    client_id:this.client_id  
+  };
+  this.http.post(apiUrl+'/client/devices/list',credentials, { headers }).subscribe(
       (response) => {
         console.log(response);
         
@@ -156,24 +153,27 @@ const apiUrl = this.api.baseUrl;
     
       this.submitted = true;
       this.selectedDevice;
-      this.device=this.reportData.controls['d_id'].value.device_name;
+      this.device=this.reportData.controls['d_id'].value.device;
       this.fromDate=this.reportData.controls['fdate'].value;
       this.toDate=this.reportData.controls['tdate'].value;
       const credentials = {
-        start_date_time:this.reportData.controls['fdate'].value,
-        end_date_time:this.reportData.controls['tdate'].value,
-        device_id:this.device
+        client_id:this.client_id,
+        start_date:this.reportData.controls['fdate'].value,
+        end_date:this.reportData.controls['tdate'].value,
+        device:this.device,
+        device_id:this.reportData.controls['d_id'].value.device_id
       };
-      if(this.device){
-        this.fastLoading+=1
-        this.fastLoading==1?this.spinner=true:this.spinner=false;
-      }
+      // if(this.device){
+      //   this.fastLoading+=1
+      //   this.fastLoading==1?this.spinner=true:this.spinner=false;
+      // }
+      this.spinner=true
       const apiUrl = this.api.baseUrl;
       const token = localStorage.getItem('token');
       const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
       
       this.productDialog = false;
-      this.http.post(apiUrl+this.DeviceUrl+'device-data/list', credentials,{ headers }).subscribe(
+      this.http.post(apiUrl+'/client/devices/energy_data', credentials,{ headers }).subscribe(
         (response) => {
           this.spinner=false;
           console.log(response);

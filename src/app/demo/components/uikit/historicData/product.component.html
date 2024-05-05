@@ -1,5 +1,5 @@
 <div class="card">
-    <div class="col-12 "><div style="position: relative;
+    <!-- <div class="col-12 "><div style="position: relative;
         padding-bottom: inherit; text-align: center;">
         <h4>Select Columns for Creating Table</h4>
             <p-pickList [source]="sourceProducts" [target]="targetProducts" sourceHeader="Available Columns" targetHeader="Selected" [dragdrop]="true" [responsive]="true" 
@@ -9,7 +9,6 @@
                         <div class="flex-1 flex flex-column gap-2">
                             <span class="font-bold">{{ product.col }}</span>
                         </div>
-                        <!-- <span class="font-bold text-900">{{ '$' + product.price }}</span> -->
                     </div>
                 </ng-template>
     
@@ -18,7 +17,7 @@
                 <button pButton pRipple label="Get Table" icon="pi pi-angle-double-down"  (click)="openNew()" class="p-button-primary"></button>
     
             </div>
-        </div></div>
+        </div></div> -->
     <p-toast></p-toast>
     <p-toolbar styleClass="mb-4 gap-2">
         <!--  -->
@@ -106,7 +105,7 @@
         <div class="p-fluid p-formgrid grid">
         <form  [formGroup]="reportData" style="width: 100%;">
             <div class="field col-12 md:col-12">
-                <p-dropdown [options]="cities" [(ngModel)]="selectedDevice" formControlName="d_id"   optionLabel="device_name" [showClear]="true" placeholder="Select a Device"></p-dropdown>
+                <p-dropdown [options]="cities" [(ngModel)]="selectedDevice" formControlName="d_id"   optionLabel="device" [showClear]="true" placeholder="Select a Device"></p-dropdown>
             </div>
 
                 <div class="field col-12 md:col-12">

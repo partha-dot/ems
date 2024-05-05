@@ -25,6 +25,7 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { PasswordModule } from 'primeng/password';
 import { TooltipModule } from 'primeng/tooltip';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { BadgeModule } from 'primeng/badge';
 @NgModule({
 	imports: [
 		InputNumberModule,
@@ -50,6 +51,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 		DialogModule,
 		ToolbarModule,
 		ConfirmDialogModule,
+		BadgeModule,
 	ReactiveFormsModule,
 	NgFor
 	],

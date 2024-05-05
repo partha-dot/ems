@@ -58,7 +58,7 @@ export class FloatLabelDemoComponent implements OnInit  {
   constructor(private authservice:AuthenticationService,private api:ApiService,private countryService: CountryService,private http:HttpClient,private productService: ProductService,private fb: FormBuilder, private messageService: MessageService, private confirmationService: ConfirmationService) {
     this.addDevice = this.fb.group({
       did: [''],
-      // deviceName: ['', Validators.required],
+      deviceName: ['', Validators.required],
       deviceId: ['', [Validators.required]],
       dmodel: ['', [Validators.required]],
       lat: ['', [Validators.required]],
@@ -87,6 +87,7 @@ export class FloatLabelDemoComponent implements OnInit  {
       this.AddproductDialog = true;
   }
   openNew2() {
+    this.addDevice.reset();
     this.operationType="I"
     this.product = {};
     this.submitted = false;
@@ -115,7 +116,7 @@ export class FloatLabelDemoComponent implements OnInit  {
     debugger
       this.addDevice.patchValue({
         did:product.device_id,
-        // deviceName:product.device_name,
+        deviceName:product.device_name,
         deviceId:product.device,
         dmodel:product.model,
         lat:product.lat,
@@ -192,7 +193,7 @@ export class FloatLabelDemoComponent implements OnInit  {
         const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
         const credentials = {
           client_id:this.client_id,
-          // device_name:this.ct.deviceName.value,
+          device_name:this.ct.deviceName.value,
           device:this.ct.deviceId.value,
           model:this.ct.dmodel.value,
           lat:this.ct.lat.value,
@@ -231,7 +232,7 @@ export class FloatLabelDemoComponent implements OnInit  {
         const credentials = {
           device_id:this.ct.did.value,
           client_id:this.client_id,
-          // device_name:this.ct.deviceName.value,
+          device_name:this.ct.deviceName.value,
           device:this.ct.deviceId.value,
           model:this.ct.dmodel.value,
           lat:this.ct.lat.value,
