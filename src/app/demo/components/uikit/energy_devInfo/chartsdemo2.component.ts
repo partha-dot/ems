@@ -526,9 +526,9 @@ export class ChartsDemo2Component implements OnInit, OnDestroy,AfterViewInit {
     initMap() {
       // Array of locations with their latitude and longitude
       var locations = [
-          {lat: 40.7128, lng: -74.0060, name: 'New York City'},
-          {lat: 34.0522, lng: -118.2437, name: 'Los Angeles'},
-          {lat: 51.5074, lng: -0.1278, name: 'London'},
+          {lat: 22.5354064, lng: 88.2649504, name: 'Kolkata'},
+          // {lat: 28.679079, lng: 77.069710, name: 'Delhi'},
+          // {lat: 51.5074, lng: -0.1278, name: 'London'},
           // Add more locations as needed
       ];
 
@@ -600,11 +600,11 @@ const result = `${month}/${day}`;
 console.log(result); 
 return result
 }
-getDeviceLiveData(name:any){
+getDeviceLiveData(name:any,id:any){
     // const apiUrl = this.api.baseUrl;
 //   baseUrl = 'https://iot.wrongcode.in/backend/api';
 
-  
+  debugger
          if(name){
             const token = localStorage.getItem('token');
             const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
@@ -613,62 +613,64 @@ getDeviceLiveData(name:any){
             this.liveData2=null;
     
             const credentials = {
-                device_id:name
+              client_id:this.client_id,
+                device_id:id,
+                device:name
             };
-            
-            this.http.post(this.api.baseUrl+'/device-data/last', credentials, { headers }).subscribe(
+            this.data1=[];
+            this.http.post(this.api.baseUrl+'/client/devices/device_info', credentials, { headers }).subscribe(
                 (response) => {
                     
                     console.log(response);
                     
                     this.data1=response
                     this.data1=this.data1.data
-                    if(this.data1) {
-                        this.flowDate=[]
-                        this.flowData=[]
-                        this.rpmDate=[]
-                        this.rpmData=[]
-                        this.liveData=this.data1.chart_data_list
-                        this.liveData2=this.data1.device_data_list
-                        this.liveData.forEach(e => {
+                    // if(this.data1) {
+                    //     this.flowDate=[]
+                    //     this.flowData=[]
+                    //     this.rpmDate=[]
+                    //     this.rpmData=[]
+                    //     this.liveData=this.data1.chart_data_list
+                    //     this.liveData2=this.data1.device_data_list
+                    //     this.liveData.forEach(e => {
                             
-                            this.flowDate.push(this.dateConvt(e.created_at))
-                            this.flowData.push(e.flow)
-                            this.rpmDate.push(this.dateConvt(e.created_at))
-                            this.rpmData.push(e.rpm.toString())
+                    //         this.flowDate.push(this.dateConvt(e.created_at))
+                    //         this.flowData.push(e.flow)
+                    //         this.rpmDate.push(this.dateConvt(e.created_at))
+                    //         this.rpmData.push(e.rpm.toString())
 
                             
-                            console.log(this.flowDate);
-                            console.log(this.flowData);
-                            console.log(this.rpmDate);
-                            console.log(this.rpmData);
+                    //         console.log(this.flowDate);
+                    //         console.log(this.flowData);
+                    //         console.log(this.rpmDate);
+                    //         console.log(this.rpmData);
                             
-                        });
+                    //     });
                         
-                        if(this.flowDate && this.flowData && this.rpmDate && this.rpmData){
-                            this.lastUpdateTime=''
-                            this.lastUpdateTime=this.convertToISTDateTime(this.liveData2.created_at)
-                            console.log(this.lastUpdateTime);
-                            var currentdate = new Date(); 
-                            var datetime = currentdate.getDate() + "-"
-                                + (currentdate.getMonth()+1)  + "-" 
-                                + currentdate.getFullYear() + " "  
-                                + currentdate.getHours() + ":"  
-                                + currentdate.getMinutes() + ":" 
-                                + currentdate.getSeconds();
-                                console.log(datetime);
+                    //     if(this.flowDate && this.flowData && this.rpmDate && this.rpmData){
+                    //         this.lastUpdateTime=''
+                    //         this.lastUpdateTime=this.convertToISTDateTime(this.liveData2.created_at)
+                    //         console.log(this.lastUpdateTime);
+                    //         var currentdate = new Date(); 
+                    //         var datetime = currentdate.getDate() + "-"
+                    //             + (currentdate.getMonth()+1)  + "-" 
+                    //             + currentdate.getFullYear() + " "  
+                    //             + currentdate.getHours() + ":"  
+                    //             + currentdate.getMinutes() + ":" 
+                    //             + currentdate.getSeconds();
+                    //             console.log(datetime);
                                 
                             
-                            // this.flowDate = this.flowDate.map(value => JSON.stringify(value).replace(/[{}]/g, ''));
-                            // this.flowData = this.flowData.map(value => JSON.stringify(value).replace(/[{}]/g, ''));
-                            // this.rpmDate = this.rpmDate.map(value => JSON.stringify(value).replace(/[{}]/g, ''));
-                            // this.rpmData = this.rpmData.map(value => JSON.stringify(value).replace(/[{}]/g, ''));
+                    //         // this.flowDate = this.flowDate.map(value => JSON.stringify(value).replace(/[{}]/g, ''));
+                    //         // this.flowData = this.flowData.map(value => JSON.stringify(value).replace(/[{}]/g, ''));
+                    //         // this.rpmDate = this.rpmDate.map(value => JSON.stringify(value).replace(/[{}]/g, ''));
+                    //         // this.rpmData = this.rpmData.map(value => JSON.stringify(value).replace(/[{}]/g, ''));
                             
-                            this.initCharts();
+                    //         this.initCharts();
                             
-                        }
+                    //     }
                         
-                    }
+                    // }
                    
                     
                 },
@@ -708,8 +710,8 @@ getDeviceLiveData(name:any){
         }
     setDevice(){
         console.log(this.selectedDealer);
-        
-        this.getDeviceLiveData(this.selectedDealer.device_name);
+        debugger
+        this.getDeviceLiveData(this.selectedDealer.device,this.selectedDealer.device_id);
 
 
     }

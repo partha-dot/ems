@@ -31,11 +31,11 @@
 	[value]="models"
 	[rows]="4"
 	[paginator]="true"
-	[globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
+	[globalFilterFields]="['device', 'unit_name', 'alert_type', 'alert_status']"
 	[tableStyle]="{ 'min-width': '75rem' }"
 	[(selection)]="selectedProducts"
 	[rowHover]="true"
-	dataKey="company_id"
+	dataKey="device"
 	currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
 	[showCurrentPageReport]="true"
     >
@@ -52,12 +52,12 @@
             <tr>
                 
 				<!-- <th style="text-align: center;">Sl No.</th> -->
-                <th pSortableColumn="company" style="min-width:15rem">Device Id <p-sortIcon field="company"></p-sortIcon></th>
-                <th pSortableColumn="company" style="min-width:15rem">Unit Name <p-sortIcon field="company"></p-sortIcon></th>
-                <th pSortableColumn="product" style="min-width:15rem">Alert Type <p-sortIcon field="product"></p-sortIcon></th>
-                <th pSortableColumn="model" style="min-width:15rem">Alert Status <p-sortIcon field="model"></p-sortIcon></th>
-                <th pSortableColumn="model" style="min-width:15rem">Alert Value <p-sortIcon field="model"></p-sortIcon></th>
-                <th pSortableColumn="model" style="min-width:15rem">Email <p-sortIcon field="model"></p-sortIcon></th>
+                <th pSortableColumn="device" style="min-width:15rem">Device Id <p-sortIcon field="device"></p-sortIcon></th>
+                <th pSortableColumn="unit_name" style="min-width:15rem">Unit Name <p-sortIcon field="unit_name"></p-sortIcon></th>
+                <th pSortableColumn="alert_type" style="min-width:15rem">Alert Type <p-sortIcon field="alert_type"></p-sortIcon></th>
+                <th pSortableColumn="alert_status" style="min-width:15rem">Alert Status <p-sortIcon field="alert_status"></p-sortIcon></th>
+                <th pSortableColumn="alert_value" style="min-width:15rem">Alert Value <p-sortIcon field="alert_value"></p-sortIcon></th>
+                <th pSortableColumn="alert_email" style="min-width:15rem">Email <p-sortIcon field="alert_email"></p-sortIcon></th>
                 <th>Edit</th>
                 <th>Delete</th>
             </tr>
@@ -69,9 +69,12 @@
 				<td>{{ alert.unit_name }}</td>
 				<td>{{ alert.alert_type }}</td>
 				<!-- <td>{{ alert.alert_status }}</td> -->
-                <td style="text-align: left;">
+                <!-- <td style="text-align: left;">
 					<p-badge  [severity]="alert.alert_status=='Y'?'success':'danger '">{{alert.alert_status=='Y'?'Active':'Deactive'}}</p-badge>
-				</td>
+				</td> -->
+                <th style="text-align: center;">
+					<p-badge [value]="alert.alert_status=='Y'?'Online':'Offline'" [severity]="!alert.alert_status=='Y'?'danger':'success'"></p-badge>
+				</th>
 				<td>{{ alert.alert_value }}</td>
 				<td>{{ alert.alert_email }}</td>
 				<!-- <td>{{ alert.model_name }}</td>

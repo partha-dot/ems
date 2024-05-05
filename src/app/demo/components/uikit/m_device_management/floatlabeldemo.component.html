@@ -116,11 +116,13 @@
 				<th style="text-align: center;">
 					<p-badge [value]="product.energy_data_created_at?'Online':'Offline'" [severity]="!product.energy_data_created_at?'danger':'success'"></p-badge>
 				</th>
-                
-                <td>
+                <td style="text-align: center;">
+					<button type="button" pButton pRipple icon="pi pi-pencil" (click)="editProduct(product)"></button>
+				</td> 
+                <!-- <td>
                     <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editProduct(product)"></button>
-                    <!-- <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteProduct(product.device_id)"></button> -->
-                </td>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteProduct(product.device_id)"></button>
+                </td> -->
             </tr>
         </ng-template>
         <ng-template pTemplate="summary">
@@ -186,11 +188,11 @@
 <p-dialog [(visible)]="AddproductDialog" [style]="{ width: '450px', height:'500px' }" header="Product Details" [modal]="true" styleClass="p-fluid">
     <ng-template pTemplate="content">
         <form [formGroup]="addDevice">
-            <!-- <div class="field">
+            <div class="field">
                 <label for="name">Device Name</label>
                 <input type="text" pInputText id="name" formControlName="deviceName" required autofocus />
                 
-            </div> -->
+            </div>
             <div class="field">
                 <label for="name">Device ID</label>
                 <input type="text" pInputText id="name" formControlName="deviceId" required autofocus />
