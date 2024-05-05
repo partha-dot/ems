@@ -12,20 +12,31 @@ import {
     ChartComponent,
     ApexNonAxisChartSeries,
     ApexResponsive,
+    ApexChart,
+    ApexAxisChartSeries,
+    ApexDataLabels,
+    ApexMarkers,
+    ApexTitleSubtitle,
+    ApexFill,
+    ApexYAxis,
+    ApexXAxis,
+    ApexTooltip,
+    ApexStroke,
+    ApexAnnotations,
+    ApexLegend
 
-  
 
   } from "ng-apexcharts";
-import { MessagesDemoComponent } from '../alert/messagesdemo.component';
+// import { MessagesDemoComponent } from '../alert/messagesdemo.component';
 
 
-    ApexChart
-    
-  } from "ng-apexcharts";
+//     ApexChart
+
+//   } from "ng-apexcharts";
 import { MessagesDemoComponent } from '../alert/messagesdemo.component';
-import { webSocket, WebSocketSubject  } from 'rxjs/webSocket'; 
+import { webSocket, WebSocketSubject  } from 'rxjs/webSocket';
 import { WebsocketService } from 'src/app/demo/service/web-socket.service';
-  
+
 
   export type ChartOptions = {
     series: ApexNonAxisChartSeries;
@@ -70,10 +81,10 @@ import { WebsocketService } from 'src/app/demo/service/web-socket.service';
     legend: ApexLegend;
     fill: ApexFill;
   };
- 
 
- 
-  
+
+
+
 
 @Component({
     selector:"app-chartsdemo",
@@ -203,11 +214,11 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
     activeItem: MenuItem | undefined;
     ws: WebSocketSubject<any>;
     messages: string[] = [];
-  
+
     loginType:string=localStorage.getItem('loginType')
     constructor(private datePipe: DatePipe,public layoutService: LayoutService, private authservice:AuthenticationService,
 
-        private fb: FormBuilder,private http:HttpClient ,private productService: ProductService,
+        // private fb: FormBuilder,private http:HttpClient ,private productService: ProductService,
 
         private fb: FormBuilder,private http:HttpClient ,private productService: ProductService, private websocketService: WebsocketService,
 
@@ -230,8 +241,8 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
     // //debugger
    }
     ngOnInit() {
-      
-      
+
+
       this.items = [
         { label: 'Live', icon: 'pi pi-fw pi-home',routerLink: ['/app/outlet/alert']  },
         { label: 'device Info', icon: 'pi pi-fw pi-calendar',routerLink: ['/app/outlet/alert']  },
@@ -278,7 +289,7 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
         this.subscription.unsubscribe();
     }
     }
-    
+
     abc(){
         this.alert_type=''
         console.log(this.selectedAlert);
@@ -869,70 +880,70 @@ this.polarData = {
           };
 
 
-            this.chartOptions2 = {
-              series: [
-                {
-                  data: data2
-                }
-              ],
-              chart: {
-                type: "area",
-                height: 350
-              },
-              annotations: {
-                yaxis: [
-                  {
-                    y: 30,
-                    borderColor: "#999",
-                    label: {
-                      text: "Support",
-                      style: {
-                        color: "#fff",
-                        background: "#00E396"
-                      }
-                    }
-                  }
-                ],
-                xaxis: [
-                  {
-                    x: new Date("14 Nov 2012").getTime(),
-                    borderColor: "#999",
-                    label: {
-                      text: "Rally",
-                      style: {
-                        color: "#fff",
-                        background: "#775DD0"
-                      }
-                    }
-                  }
-                ]
-              },
-              dataLabels: {
-                enabled: false
-              },
-              markers: {
-                size: 0
-              },
-              xaxis: {
-                type: "datetime",
-                min: new Date("01 Mar 2012").getTime(),
-                tickAmount: 6
-              },
-              tooltip: {
-                x: {
-                  format: "dd MMM yyyy"
-                }
-              },
-              fill: {
-                type: "gradient",
-                gradient: {
-                  shadeIntensity: 1,
-                  opacityFrom: 0.7,
-                  opacityTo: 0.9,
-                  stops: [0, 100]
-                }
-              }
-            };
+            // this.chartOptions2 = {
+            //   series: [
+            //     {
+            //       data: data2
+            //     }
+            //   ],
+            //   chart: {
+            //     type: "area",
+            //     height: 350
+            //   },
+            //   annotations: {
+            //     yaxis: [
+            //       {
+            //         y: 30,
+            //         borderColor: "#999",
+            //         label: {
+            //           text: "Support",
+            //           style: {
+            //             color: "#fff",
+            //             background: "#00E396"
+            //           }
+            //         }
+            //       }
+            //     ],
+            //     xaxis: [
+            //       {
+            //         x: new Date("14 Nov 2012").getTime(),
+            //         borderColor: "#999",
+            //         label: {
+            //           text: "Rally",
+            //           style: {
+            //             color: "#fff",
+            //             background: "#775DD0"
+            //           }
+            //         }
+            //       }
+            //     ]
+            //   },
+            //   dataLabels: {
+            //     enabled: false
+            //   },
+            //   markers: {
+            //     size: 0
+            //   },
+            //   xaxis: {
+            //     type: "datetime",
+            //     min: new Date("01 Mar 2012").getTime(),
+            //     tickAmount: 6
+            //   },
+            //   tooltip: {
+            //     x: {
+            //       format: "dd MMM yyyy"
+            //     }
+            //   },
+            //   fill: {
+            //     type: "gradient",
+            //     gradient: {
+            //       shadeIntensity: 1,
+            //       opacityFrom: 0.7,
+            //       opacityTo: 0.9,
+            //       stops: [0, 100]
+            //     }
+            //   }
+            // };
 
             this.chartOptions3 = {
                 series: [
@@ -1131,7 +1142,7 @@ this.polarData = {
 
     }
 
-   
+
 
     public generateDayWiseTimeSeries(baseval, count, yrange) {
         var i = 0;
@@ -1148,13 +1159,13 @@ this.polarData = {
         return series;
       }
 
-    ngOnDestroy() {
-        if (this.subscription) {
-            this.subscription.unsubscribe();
-        }
-    }
+    // ngOnDestroy() {
+    //     if (this.subscription) {
+    //         this.subscription.unsubscribe();
+    //     }
+    // }
 
 
-    
-    
+
+
 }
