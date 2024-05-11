@@ -75,83 +75,89 @@ export class AppLayoutComponent implements OnDestroy , OnInit{
                                 this.hideTopMenu=false;
                               }
 
-                            if (this.router.url.includes('/app/outlet/energy')|| this.router.url.includes('/app/outlet/alert') || this.router.url.includes('/app/outlet/schedul') || this.router.url.includes('/app/outlet/report')) {
+                            if (this.router.url.includes('/app/outlet/energy')|| 
+                            this.router.url.includes('/app/outlet/energy_devInfo')|| 
+                            this.router.url.includes('/app/outlet/energy_chart')|| 
+                            this.router.url.includes('/app/outlet/alert') || 
+                            this.router.url.includes('/app/outlet/schedul') || 
+                            this.router.url.includes('/app/outlet/report')|| 
+                            this.router.url.includes('/app/outlet/energy_billing')) {
                                 this.show_energy=true;
                                 this.show_dg=false;
                                 this.show_ups=false;
                                 this.items = [
                                     { label: 'Live', icon: 'pi pi-spin pi-fw pi-sync',routerLink: ['/app/outlet/energy'] , visible:this.show_energy},
-                                    { label: 'Live', icon: 'pi pi-spin pi-fw pi-sync',routerLink: ['/app/outlet/DG'] , visible:this.show_dg },
-                                    { label: 'Live', icon: 'pi pi-spin pi-fw pi-sync',routerLink: ['/app/outlet/UPS'] , visible:this.show_ups },
+                                    // { label: 'Live', icon: 'pi pi-spin pi-fw pi-sync',routerLink: ['/app/outlet/DG'] , visible:this.show_dg },
+                                    // { label: 'Live', icon: 'pi pi-spin pi-fw pi-sync',routerLink: ['/app/outlet/UPS'] , visible:this.show_ups },
                                     { label: 'device Info', icon: 'pi pi-fw pi-info-circle',routerLink: ['/app/outlet/energy_devInfo'] ,visible:this.show_energy },
-                                    { label: 'device Info', icon: 'pi pi-fw pi-info-circle',routerLink: ['/app/outlet/DG'] ,visible:this.show_dg },
-                                    { label: 'device Info', icon: 'pi pi-fw pi-info-circle',routerLink: ['/app/outlet/UPS'] ,visible:this.show_ups },
+                                    // { label: 'device Info', icon: 'pi pi-fw pi-info-circle',routerLink: ['/app/outlet/DG'] ,visible:this.show_dg },
+                                    // { label: 'device Info', icon: 'pi pi-fw pi-info-circle',routerLink: ['/app/outlet/UPS'] ,visible:this.show_ups },
                                     { label: 'Graphical View', icon: 'pi pi-fw pi-chart-pie',routerLink: ['/app/outlet/energy_chart'], visible:this.show_energy },
-                                    { label: 'Graphical View', icon: 'pi pi-fw pi-chart-pie',routerLink: ['/app/outlet/DG'], visible:this.show_dg },
-                                    { label: 'Graphical View', icon: 'pi pi-fw pi-chart-pie',routerLink: ['/app/outlet/UPS'], visible:this.show_ups },
+                                    // { label: 'Graphical View', icon: 'pi pi-fw pi-chart-pie',routerLink: ['/app/outlet/DG'], visible:this.show_dg },
+                                    // { label: 'Graphical View', icon: 'pi pi-fw pi-chart-pie',routerLink: ['/app/outlet/UPS'], visible:this.show_ups },
                                     { label: 'Create Alert', icon: 'pi pi-fw pi-bell',routerLink: ['/app/outlet/alert'] , visible:true },
                                     { label: 'Historic Data', icon: 'pi pi-fw pi-book',routerLink: ['/app/outlet/report'],visible:true  },
                                     { label: 'Scheduling', icon: 'pi pi-fw pi-calendar',routerLink: ['/app/outlet/schedul'] ,visible:true },
-                                    { label: 'Report Analysis', icon: 'pi pi-fw pi-chart-line',routerLink: ['/app/outlet/schedul1'] ,visible:true }
+                                    { label: 'Report Analysis', icon: 'pi pi-fw pi-chart-line',routerLink: ['/app/outlet/energy_billing'] ,visible:true }
                                 ];
                              }
-                            else if (this.router.url.includes('/app/outlet/DG') || this.router.url.includes('/app/outlet/alert') || this.router.url.includes('/app/outlet/schedul') || this.router.url.includes('/app/outlet/report')) {
-                                this.show_dg=true;
-                                this.show_ups=false;
-                                this.show_energy=false;
-                                this.items = [
-                                    { label: 'Live', icon: 'pi pi-spin pi-fw pi-sync',routerLink: ['/app/outlet/energy'] , visible:this.show_energy},
-                                    { label: 'Live', icon: 'pi pi-spin pi-fw pi-sync',routerLink: ['/app/outlet/DG'] , visible:this.show_dg },
-                                    { label: 'Live', icon: 'pi pi-spin pi-fw pi-sync',routerLink: ['/app/outlet/UPS'] , visible:this.show_ups },
-                                    { label: 'device Info', icon: 'pi pi-fw pi-info-circle',routerLink: ['/app/outlet/energy_devInfo'] ,visible:this.show_energy },
-                                    { label: 'device Info', icon: 'pi pi-fw pi-info-circle',routerLink: ['/app/outlet/DG'] ,visible:this.show_dg },
-                                    { label: 'device Info', icon: 'pi pi-fw pi-info-circle',routerLink: ['/app/outlet/UPS'] ,visible:this.show_ups },
-                                    { label: 'Graphical View', icon: 'pi pi-fw pi-chart-line',routerLink: ['/app/outlet/energy_chart'], visible:this.show_energy },
-                                    { label: 'Graphical View', icon: 'pi pi-fw pi-chart-line',routerLink: ['/app/outlet/DG'], visible:this.show_dg },
-                                    { label: 'Graphical View', icon: 'pi pi-fw pi-chart-line',routerLink: ['/app/outlet/UPS'], visible:this.show_ups },
-                                    { label: 'Create Alert', icon: 'pi pi-fw pi-bell',routerLink: ['/app/outlet/alert'] , visible:false },
-                                    { label: 'Historic Data', icon: 'pi pi-fw pi-book',routerLink: ['/app/outlet/report'],visible:false  },
-                                    { label: 'Scheduling', icon: 'pi pi-fw pi-calendar',routerLink: ['/app/outlet/schedul'] ,visible:false }
-                                ];
-                              }
-                            else if (this.router.url.includes('/app/outlet/UPS') || this.router.url.includes('/app/outlet/alert') || this.router.url.includes('/app/outlet/schedul') || this.router.url.includes('/app/outlet/report')) {
-                                this.show_ups=true;
-                                this.show_energy=false;
-                                this.show_dg=false;
-                                this.items = [
-                                    { label: 'Live', icon: 'pi pi-spin pi-fw pi-sync',routerLink: ['/app/outlet/energy'] , visible:this.show_energy},
-                                    { label: 'Live', icon: 'pi pi-spin pi-fw pi-sync',routerLink: ['/app/outlet/DG'] , visible:this.show_dg },
-                                    { label: 'Live', icon: 'pi pi-spin pi-fw pi-sync',routerLink: ['/app/outlet/UPS'] , visible:this.show_ups },
-                                    { label: 'device Info', icon: 'pi pi-fw pi-info-circle',routerLink: ['/app/outlet/energy_devInfo'] ,visible:this.show_energy },
-                                    { label: 'device Info', icon: 'pi pi-fw pi-info-circle',routerLink: ['/app/outlet/DG'] ,visible:this.show_dg },
-                                    { label: 'device Info', icon: 'pi pi-fw pi-info-circle',routerLink: ['/app/outlet/UPS'] ,visible:this.show_ups },
-                                    { label: 'Graphical View', icon: 'pi pi-fw pi-chart-line',routerLink: ['/app/outlet/energy_chart'], visible:this.show_energy },
-                                    { label: 'Graphical View', icon: 'pi pi-fw pi-chart-line',routerLink: ['/app/outlet/DG'], visible:this.show_dg },
-                                    { label: 'Graphical View', icon: 'pi pi-fw pi-chart-line',routerLink: ['/app/outlet/UPS'], visible:this.show_ups },
-                                    { label: 'Create Alert', icon: 'pi pi-fw pi-bell',routerLink: ['/app/outlet/alert'] , visible:false },
-                                    { label: 'Historic Data', icon: 'pi pi-fw pi-book',routerLink: ['/app/outlet/report'],visible:false  },
-                                    { label: 'Scheduling', icon: 'pi pi-fw pi-calendar',routerLink: ['/app/outlet/schedul'] ,visible:false }
-                                ];
-                              }
-                              else{
-                                this.show_ups=false;
-                                this.show_dg=false;
-                                this.show_energy=false;
-                                this.items = [
-                                    { label: 'Live', icon: 'pi pi-spin pi-fw pi-sync',routerLink: ['/app/outlet/energy'] , visible:this.show_energy},
-                                    { label: 'Live', icon: 'pi pi-spin pi-fw pi-sync',routerLink: ['/app/outlet/DG'] , visible:this.show_dg },
-                                    { label: 'Live', icon: 'pi pi-spin pi-fw pi-sync',routerLink: ['/app/outlet/UPS'] , visible:this.show_ups },
-                                    { label: 'device Info', icon: 'pi pi-fw pi-info-circle',routerLink: ['/app/outlet/energy_devInfo'] ,visible:this.show_energy },
-                                    { label: 'device Info', icon: 'pi pi-fw pi-info-circle',routerLink: ['/app/outlet/DG'] ,visible:this.show_dg },
-                                    { label: 'device Info', icon: 'pi pi-fw pi-info-circle',routerLink: ['/app/outlet/UPS'] ,visible:this.show_ups },
-                                    { label: 'Graphical View', icon: 'pi pi-fw pi-chart-line',routerLink: ['/app/outlet/energy_chart'], visible:this.show_energy },
-                                    { label: 'Graphical View', icon: 'pi pi-fw pi-chart-line',routerLink: ['/app/outlet/DG'], visible:this.show_dg },
-                                    { label: 'Graphical View', icon: 'pi pi-fw pi-chart-line',routerLink: ['/app/outlet/UPS'], visible:this.show_ups },
-                                    { label: 'Create Alert', icon: 'pi pi-fw pi-bell',routerLink: ['/app/outlet/alert'] , visible:true },
-                                    { label: 'Historic Data', icon: 'pi pi-fw pi-book',routerLink: ['/app/outlet/report'],visible:true  },
-                                    { label: 'Scheduling', icon: 'pi pi-fw pi-calendar',routerLink: ['/app/outlet/schedul'] ,visible:true }
-                                ];
-                              }
+                            // else if (this.router.url.includes('/app/outlet/DG') || this.router.url.includes('/app/outlet/alert') || this.router.url.includes('/app/outlet/schedul') || this.router.url.includes('/app/outlet/report')) {
+                            //     this.show_dg=true;
+                            //     this.show_ups=false;
+                            //     this.show_energy=false;
+                            //     this.items = [
+                            //         { label: 'Live', icon: 'pi pi-spin pi-fw pi-sync',routerLink: ['/app/outlet/energy'] , visible:this.show_energy},
+                            //         { label: 'Live', icon: 'pi pi-spin pi-fw pi-sync',routerLink: ['/app/outlet/DG'] , visible:this.show_dg },
+                            //         { label: 'Live', icon: 'pi pi-spin pi-fw pi-sync',routerLink: ['/app/outlet/UPS'] , visible:this.show_ups },
+                            //         { label: 'device Info', icon: 'pi pi-fw pi-info-circle',routerLink: ['/app/outlet/energy_devInfo'] ,visible:this.show_energy },
+                            //         { label: 'device Info', icon: 'pi pi-fw pi-info-circle',routerLink: ['/app/outlet/DG'] ,visible:this.show_dg },
+                            //         { label: 'device Info', icon: 'pi pi-fw pi-info-circle',routerLink: ['/app/outlet/UPS'] ,visible:this.show_ups },
+                            //         { label: 'Graphical View', icon: 'pi pi-fw pi-chart-line',routerLink: ['/app/outlet/energy_chart'], visible:this.show_energy },
+                            //         { label: 'Graphical View', icon: 'pi pi-fw pi-chart-line',routerLink: ['/app/outlet/DG'], visible:this.show_dg },
+                            //         { label: 'Graphical View', icon: 'pi pi-fw pi-chart-line',routerLink: ['/app/outlet/UPS'], visible:this.show_ups },
+                            //         { label: 'Create Alert', icon: 'pi pi-fw pi-bell',routerLink: ['/app/outlet/alert'] , visible:false },
+                            //         { label: 'Historic Data', icon: 'pi pi-fw pi-book',routerLink: ['/app/outlet/report'],visible:false  },
+                            //         { label: 'Scheduling', icon: 'pi pi-fw pi-calendar',routerLink: ['/app/outlet/schedul'] ,visible:false }
+                            //     ];
+                            //   }
+                            // else if (this.router.url.includes('/app/outlet/UPS') || this.router.url.includes('/app/outlet/alert') || this.router.url.includes('/app/outlet/schedul') || this.router.url.includes('/app/outlet/report')) {
+                            //     this.show_ups=true;
+                            //     this.show_energy=false;
+                            //     this.show_dg=false;
+                            //     this.items = [
+                            //         { label: 'Live', icon: 'pi pi-spin pi-fw pi-sync',routerLink: ['/app/outlet/energy'] , visible:this.show_energy},
+                            //         { label: 'Live', icon: 'pi pi-spin pi-fw pi-sync',routerLink: ['/app/outlet/DG'] , visible:this.show_dg },
+                            //         { label: 'Live', icon: 'pi pi-spin pi-fw pi-sync',routerLink: ['/app/outlet/UPS'] , visible:this.show_ups },
+                            //         { label: 'device Info', icon: 'pi pi-fw pi-info-circle',routerLink: ['/app/outlet/energy_devInfo'] ,visible:this.show_energy },
+                            //         { label: 'device Info', icon: 'pi pi-fw pi-info-circle',routerLink: ['/app/outlet/DG'] ,visible:this.show_dg },
+                            //         { label: 'device Info', icon: 'pi pi-fw pi-info-circle',routerLink: ['/app/outlet/UPS'] ,visible:this.show_ups },
+                            //         { label: 'Graphical View', icon: 'pi pi-fw pi-chart-line',routerLink: ['/app/outlet/energy_chart'], visible:this.show_energy },
+                            //         { label: 'Graphical View', icon: 'pi pi-fw pi-chart-line',routerLink: ['/app/outlet/DG'], visible:this.show_dg },
+                            //         { label: 'Graphical View', icon: 'pi pi-fw pi-chart-line',routerLink: ['/app/outlet/UPS'], visible:this.show_ups },
+                            //         { label: 'Create Alert', icon: 'pi pi-fw pi-bell',routerLink: ['/app/outlet/alert'] , visible:false },
+                            //         { label: 'Historic Data', icon: 'pi pi-fw pi-book',routerLink: ['/app/outlet/report'],visible:false  },
+                            //         { label: 'Scheduling', icon: 'pi pi-fw pi-calendar',routerLink: ['/app/outlet/schedul'] ,visible:false }
+                            //     ];
+                            //   }
+                            //   else{
+                            //     this.show_ups=false;
+                            //     this.show_dg=false;
+                            //     this.show_energy=false;
+                            //     this.items = [
+                            //         { label: 'Live', icon: 'pi pi-spin pi-fw pi-sync',routerLink: ['/app/outlet/energy'] , visible:this.show_energy},
+                            //         { label: 'Live', icon: 'pi pi-spin pi-fw pi-sync',routerLink: ['/app/outlet/DG'] , visible:this.show_dg },
+                            //         { label: 'Live', icon: 'pi pi-spin pi-fw pi-sync',routerLink: ['/app/outlet/UPS'] , visible:this.show_ups },
+                            //         { label: 'device Info', icon: 'pi pi-fw pi-info-circle',routerLink: ['/app/outlet/energy_devInfo'] ,visible:this.show_energy },
+                            //         { label: 'device Info', icon: 'pi pi-fw pi-info-circle',routerLink: ['/app/outlet/DG'] ,visible:this.show_dg },
+                            //         { label: 'device Info', icon: 'pi pi-fw pi-info-circle',routerLink: ['/app/outlet/UPS'] ,visible:this.show_ups },
+                            //         { label: 'Graphical View', icon: 'pi pi-fw pi-chart-line',routerLink: ['/app/outlet/energy_chart'], visible:this.show_energy },
+                            //         { label: 'Graphical View', icon: 'pi pi-fw pi-chart-line',routerLink: ['/app/outlet/DG'], visible:this.show_dg },
+                            //         { label: 'Graphical View', icon: 'pi pi-fw pi-chart-line',routerLink: ['/app/outlet/UPS'], visible:this.show_ups },
+                            //         { label: 'Create Alert', icon: 'pi pi-fw pi-bell',routerLink: ['/app/outlet/alert'] , visible:true },
+                            //         { label: 'Historic Data', icon: 'pi pi-fw pi-book',routerLink: ['/app/outlet/report'],visible:true  },
+                            //         { label: 'Scheduling', icon: 'pi pi-fw pi-calendar',routerLink: ['/app/outlet/schedul'] ,visible:true }
+                            //     ];
+                            //   }
                         });
                         
     }

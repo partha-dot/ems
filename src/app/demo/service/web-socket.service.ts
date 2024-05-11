@@ -13,7 +13,7 @@ export class WebsocketService {
   device_id:number
   device:string
   resData:string
-  private baseURL:string="ws://51.20.92.59:8000/api/ws_routes/ws/EMS/"
+  private baseURL:string="ws://13.49.80.167:8000/api/ws_routes/ws/EMS/"
   constructor(private api:ApiService,private http:HttpClient) { }
 
   public connect(client_id,d_id,d_name): Observable<any> {

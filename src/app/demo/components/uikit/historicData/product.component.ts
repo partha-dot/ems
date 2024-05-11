@@ -13,6 +13,7 @@ import * as XLSX from 'xlsx';
 import { Device } from 'src/app/demo/api/deviceDetails';
 import { DatePipe } from '@angular/common';
 import { AuthenticationService } from 'src/app/demo/service/authentication.service';
+import { BooleanInput } from '@angular/cdk/coercion';
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
@@ -21,9 +22,9 @@ import { AuthenticationService } from 'src/app/demo/service/authentication.servi
 })
 export class ProductComponent implements OnInit{
   cities: any[] | undefined;
-  sourceProducts!: any[];
+  sourceProducts!: any[]
 
-  targetProducts!: Product[];
+  targetProducts!: any[];
 
   selectedDevice: any | undefined;
 
@@ -45,25 +46,88 @@ export class ProductComponent implements OnInit{
   device:any='';
   reportData:FormGroup;
   spinner:boolean=false;
+  showDragandDrop
   fastLoading:number=0
   user_type:any;
   DeviceUrl:any;
+  cols:any[]=[];
+  r: boolean = false;
+    y: boolean = false;
+    b: boolean = false;
+    r_y: boolean = false;
+    y_b: boolean = false;
+    b_y: boolean = false;
+    curr1: boolean = false;
+    curr2: boolean = false;
+    curr3: boolean = false;
+    eng: boolean = false;
+    pf: boolean = false;
+    freq: boolean = false;
+    runhr: boolean = false;
+    totkw: boolean = false;
+    totkva: boolean = false;
+    totkvar: boolean = false;
   constructor(  private carService: ProductService, private cdr: ChangeDetectorRef,private authservice:AuthenticationService,private filterService: FilterService,private fb: FormBuilder,private http:HttpClient ,private productService: ProductService, private messageService: MessageService,private datePipe: DatePipe, private confirmationService: ConfirmationService,private api:ApiService) { }
 
   ngOnInit() {
+    // this.openNew();
+    this.showDragandDrop=false;
+    this.cols = [ 
+      // { 
+      //     field: 'sl_no', 
+      //     col: 'Sl No.'
+      // }, 
+      { 
+          field: 'date', 
+          col: 'Date'
+      }, 
+      { 
+          field: 'time', 
+          col: 'Time'
+      }, 
+      { 
+        field: 'device', 
+        col: 'Device Name'
+      },
+      // { 
+      //   field: 'device_name', 
+      //   col: 'Device Name'
+      // }
+  ];
     this.sourceProducts=[
-      {"col":"Voltage"},
-      {"col":"Current"},
-      {"col":"Day usage"},
-      {"col":"Apparent Power"},
-      {"col":"Monthly Usage"},
-      {"col":"Pf"},
-      {"col":"Fuel"},
-      {"col":"Battery life"}
+      
+      {field: 'r', col:"Voltage R"},
+      {field: 'y', col:"Voltage Y"},
+      {field: 'b', col:"Voltage B"},
+      {field: 'r_y', col:"Voltage R_Y"},
+      {field: 'y_b', col:"Voltage Y-B"},
+      {field: 'b_y', col:"Voltage B-R"},
+      {field: 'curr1',col:"Current R"},
+      {field: 'curr2',col:"Current Y"},
+      {field: 'curr3',col:"Current B"},
+      {field: 'eng1+eng2+eng3',col:"Total Energy"},
+      {field: 'pf',col:"Average PF"},
+      {field: 'freq',col:"Frequency"},
+      {field: 'runhr',col:"Runhr"},
+      {field: 'totkw',col:"TotkW"},
+      {field: 'totkva',col:"TotkVA"},
+      {field: 'totkvar',col:"TotkVAr"}
     ]
      
-    this.openNew();
-  this.targetProducts = [];
+    this.targetProducts = [
+      { 
+        field: 'date', 
+        col: 'Date'
+    }, 
+    { 
+        field: 'time', 
+        col: 'Time'
+    }, 
+    { 
+      field: 'device', 
+      col: 'Device Name'
+    }
+    ];
     this.user_type=localStorage.getItem('u_type')
    
     this.reportData = this.fb.group({
@@ -71,7 +135,10 @@ export class ProductComponent implements OnInit{
       fdate: ['', Validators.required],
       tdate: ['', [Validators.required]]
     });
-  this.getDeviceDATA();
+    this.product = {};
+    this.submitted = false;
+    this.productDialog = true;
+    this.getDeviceDATA();
   // this.openNew();
  
   // setInterval(() => {
@@ -105,9 +172,73 @@ const apiUrl = this.api.baseUrl;
 }
 
   openNew() {
-      this.product = {};
-      this.submitted = false;
-      this.productDialog = true;
+    this.cols = [];
+      console.log(this.targetProducts);
+      this.showDragandDrop=false;
+      for(let i=0;i<this.targetProducts.length;i++){
+        this.cols.push(this.targetProducts[i])
+      }
+      debugger
+      console.log(this.cols);
+      if(this.cols.some(p => p.field == "r")){
+        this.r=true
+      }
+      if(this.cols.some(p => p.field == "y")){
+        this.y=true
+      }
+      if(this.cols.some(p => p.field == "b")){
+        this.b=true
+      }
+      if(this.cols.some(p => p.field == "r_y")){
+        this.r_y=true
+      }
+      if(this.cols.some(p => p.field == "y_b")){
+        this.y_b=true
+      }
+      if(this.cols.some(p => p.field == "b_y")){
+        this.b_y=true
+      }
+      if(this.cols.some(p => p.field == "curr1")){
+        this.curr1=true
+      }if(this.cols.some(p => p.field == "curr2")){
+        this.curr2=true
+      }if(this.cols.some(p => p.field == "curr3")){
+        this.curr3=true
+      }if(this.cols.some(p => p.field == "eng")){
+        this.eng=true
+      }if(this.cols.some(p => p.field == "pf")){
+        this.pf=true
+      }if(this.cols.some(p => p.field == "freq")){
+        this.freq=true
+      }if(this.cols.some(p => p.field == "runhr")){
+        this.runhr=true
+      }if(this.cols.some(p => p.field == "totkw")){
+        this.totkw=true
+      }if(this.cols.some(p => p.field == "totkva")){
+        this.totkva=true
+      }if(this.cols.some(p => p.field == "totkva")){
+        this.totkvar=true
+      }
+      // else{
+      //   this.r= false;
+      //   this.y= false;
+      //   this.b= false;
+      //   this.r_y= false;
+      //   this.y_b= false;
+      //   this.b_y= false;
+      //   this.curr1= false;
+      //   this.curr2= false;
+      //   this.curr3= false;
+      //   this.eng= false;
+      //   this.pf= false;
+      //   this.freq= false;
+      //   this.runhr= false;
+      //   this.totkw= false;
+      //   this.totkva= false;
+      //   this.totkvar= false;
+      // }
+      debugger
+      
   }
 
   deleteSelectedProducts() {
@@ -185,13 +316,13 @@ const apiUrl = this.api.baseUrl;
           this.products = [...this.products];
           
           this.product = {};
-          
+          this.showDragandDrop=true;
           // this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Get All Data', life: 3000 });
           
         },
         (error) => {
           if(error.status==401){
-            this.authservice.logout();
+            // this.authservice.logout();
         }
           console.error(error);
         }

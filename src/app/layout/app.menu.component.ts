@@ -14,7 +14,37 @@ export class AppMenuComponent implements OnInit {
 
     ngOnInit() {
         this.u_type=localStorage.getItem("u_type");
-        
+        if(this.u_type=="U"){
+            this.model=[
+                {
+                    label: 'Device',
+                    items: [
+                        { label: 'Overview',
+                        icon: 'pi pi-th-large',
+                        items: [
+                                {
+                                    label: 'Energy',
+                                    icon: 'pi pi-bolt',
+                                    routerLink: ['/app/outlet/energy'] 
+                                },
+                                // {
+                                //     label: 'UPS',
+                                //     icon: 'pi pi-server',
+                                //     routerLink: ['/app/outlet/UPS'] 
+                                // },
+                                // {
+                                //     label: 'DG',
+                                //     icon: 'pi pi-exclamation-triangle',
+                                //     routerLink: ['/app/outlet/DG'] 
+                                // }
+                            ]
+                        },
+                    
+                    ]
+                }
+            ]
+        }
+        else{
             this.model = [
                 {
                     label: 'Master',
@@ -80,7 +110,7 @@ export class AppMenuComponent implements OnInit {
                         { label: 'User Management', icon: 'pi pi-users', routerLink: ['/app/outlet/device_s'] , permission:'N'},
                     ]
                 }]
-        
+            }
           
                 
         

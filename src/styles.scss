@@ -36,20 +36,20 @@ $gutter: 1rem; //for primeflex grid system
     border: 3px solid #ffffff;
   }
 
-  .spinner_overlay{
-    visibility: inherit;
-    // position: fixed;
-    // padding-top: 18%;
-    // position: absolute;
-    // left: 0;
-    // // top: 0;
-    // // width: 100%;
-    // // height: 100%;
-    // background-color: #ffffff81;
-    // opacity: 20;
-    // z-index: 0;
-    // text-align: center;
-  }
+  
+.spinner_overlay {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    opacity: 0.2;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
   i{color: #f6f6f6;}
   
   

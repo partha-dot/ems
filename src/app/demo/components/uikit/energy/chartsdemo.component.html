@@ -51,7 +51,7 @@
 
            <div class="col-12 md:col-12" >
             <div style="float: right;">
-                <p-dropdown  [options]="cities2" [(ngModel)]="selectedPhase" optionLabel="unit_name" (onSelect)="setPhase()" placeholder="Select a Phase Type"></p-dropdown>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <p-dropdown *ngIf="this.selectedDealer?.meter_type=='ENTF'"  [options]="cities2" [(ngModel)]="selectedPhase" optionLabel="unit_name" (onSelect)="setPhase()" placeholder="Select a Phase Type"></p-dropdown>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <p-autoComplete [(ngModel)]="selectedDealer" [ngModelOptions]="{standalone: true}" placeholder="Select a device" (onSelect)="setDevice()" [suggestions]="filteredDealer" (completeMethod)="filterDealer($event)" field="device" [dropdown]="true">
                 </p-autoComplete>
             </div>

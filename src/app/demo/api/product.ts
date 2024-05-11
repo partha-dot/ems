@@ -18,6 +18,8 @@ export interface Product {
     client_id?: number,
     device?: string,
     device_name?: string,
+    device_type?:string,
+    meter_type?:string,
     do_channel?: number,
     model?: string,
     lat?: string,

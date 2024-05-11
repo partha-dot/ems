@@ -624,10 +624,10 @@ export class ChartsDemo1Component implements OnInit, OnDestroy {
         this.getDevice();
 
         setTimeout(() => {
-            this.getEnergyUsedByFilter('1yd');
-            this.getVoltagechartDataByFilterDate(this.energy_filter.value.voltage_date_time);
-            this.getCurrentchartDataByFilterDate(this.energy_filter.value.current_date_time)
-            this.getPowerchartDataByFilterDate(this.energy_filter.value.current_date_time)
+            // this.getEnergyUsedByFilter('1yd');
+            // this.getVoltagechartDataByFilterDate(this.energy_filter.value.voltage_date_time);
+            // this.getCurrentchartDataByFilterDate(this.energy_filter.value.current_date_time)
+            // this.getPowerchartDataByFilterDate(this.energy_filter.value.current_date_time)
 
         },1000);
 
@@ -652,9 +652,9 @@ export class ChartsDemo1Component implements OnInit, OnDestroy {
     */
     getVoltagechartDataByFilterDate = (data:Date[] | null = [new Date(), new Date()]) =>{
     const dt:Partial<IEnergyVoltagePowerUsedPayLoad> ={
-            "client_id": 1,
-            "device_id": 1,
-            "device": "123456789",
+            "client_id": this.client_id,
+            "device_id": this.selectedDealer.device_id,
+            "device": this.selectedDealer.device,
             "start_date_time": data[0],
             "end_date_time":data[1]
         }
@@ -734,9 +734,9 @@ export class ChartsDemo1Component implements OnInit, OnDestroy {
     */
       getCurrentchartDataByFilterDate = (data:Date[] | null = [new Date(), new Date()]) =>{
         const dt:Partial<IEnergyVoltagePowerUsedPayLoad> ={
-                "client_id": 1,
-                "device_id": 1,
-                "device": "123456789",
+                "client_id": this.client_id,
+                "device_id": this.selectedDealer.device_id,
+                "device": this.selectedDealer.device,
                 "start_date_time": data[0],
                 "end_date_time":data[1]
             }
@@ -809,9 +809,9 @@ export class ChartsDemo1Component implements OnInit, OnDestroy {
     */
         getPowerchartDataByFilterDate = (data:Date[] | null = [new Date(), new Date()]) =>{
             const dt:Partial<IEnergyVoltagePowerUsedPayLoad> ={
-                    "client_id": 1,
-                    "device_id": 1,
-                    "device": "123456789",
+                    "client_id": this.client_id,
+                    "device_id": this.selectedDealer.device_id,
+                    "device": this.selectedDealer.device,
                     "start_date_time": data[0],
                     "end_date_time":data[1]
                 }
@@ -1079,8 +1079,11 @@ getDeviceLiveData(name:any){
         }
     setDevice(){
         console.log(this.selectedDealer);
-
-        this.getDeviceLiveData(this.selectedDealer.device_name);
+        this.getEnergyUsedByFilter('1yd');
+        this.getVoltagechartDataByFilterDate(this.energy_filter.value.voltage_date_time);
+        this.getCurrentchartDataByFilterDate(this.energy_filter.value.current_date_time)
+        this.getPowerchartDataByFilterDate(this.energy_filter.value.current_date_time)
+        // this.getDeviceLiveData(this.selectedDealer.device_name);
 
 
     }
@@ -1107,9 +1110,9 @@ getDeviceLiveData(name:any){
         try{
             this.activeOptionButton = mode
             const dt:Partial<IEnergyVoltagePowerUsedPayLoad> ={
-             "client_id": 1,
-             "device_id": 1,
-             "device": "123456789",
+              "client_id": this.client_id,
+              "device_id": this.selectedDealer.device_id,
+              "device": this.selectedDealer.device,
              "start_date_time": this.getDatesAccordingToMode(mode,'E')
             }
             this.api.call_api(1,api_name.ENERGY_USED,dt).pipe(map((x: any) => x.data))

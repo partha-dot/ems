@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  BASE_URL:"http://51.20.92.59:8000/"
+  base_url:"http://51.20.92.59:8000/"
 };
 
 /*

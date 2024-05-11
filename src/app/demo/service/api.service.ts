@@ -10,7 +10,8 @@ export class ApiService {
 
   // baseUrl = 'http://localhost:8000/api';
   // baseUrl = 'https://iot.wrongcode.in/backend/api';
-  baseUrl = 'http://51.20.92.59:8000/api';
+  // baseUrl = 'http://51.20.92.59:8000/api';
+  baseUrl = 'http://13.49.80.167:8000/api';
 
   token:any;
     baseURL: any;
@@ -32,7 +33,7 @@ export class ApiService {
    * @returns : retuns as Observable
    */
     call_api = (flag:number,api_name:string,data:any): Observable<any> => {
-        const api_url = `${environment.BASE_URL}${api_name}`;
+        const api_url = `http://13.49.80.167:8000/${api_name}`;
         if(flag > 0){
             /*** For Posting data into API */
             return this.http.post(api_url,data);

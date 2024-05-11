@@ -54,6 +54,16 @@ export class FloatLabelDemoComponent implements OnInit  {
     { name: 'Power', code: 'PO' },
     { name: 'Wind', code: 'WI' }
 ];
+  DeviceType = [
+    { name: 'Energy', code: 'EN' },
+    { name: 'Water', code: 'WA' },
+    { name: 'Power', code: 'PO' },
+    { name: 'Wind', code: 'WI' }
+  ];
+  meterType = [
+    { name: 'Single Phase', code: 'ENSF' },
+    { name: 'Three Phase', code: 'ENTF' }
+  ];
 
   constructor(private authservice:AuthenticationService,private api:ApiService,private countryService: CountryService,private http:HttpClient,private productService: ProductService,private fb: FormBuilder, private messageService: MessageService, private confirmationService: ConfirmationService) {
     this.addDevice = this.fb.group({
@@ -64,6 +74,8 @@ export class FloatLabelDemoComponent implements OnInit  {
       lat: ['', [Validators.required]],
       long: ['', [Validators.required]],
       imeiNo: ['', [Validators.required]],
+      device_type: ['', [Validators.required]],
+      meter_type: ['', [Validators.required]]
       // sl_no: this.fb.array([]) 
     });
   }
@@ -117,6 +129,8 @@ export class FloatLabelDemoComponent implements OnInit  {
       this.addDevice.patchValue({
         did:product.device_id,
         deviceName:product.device_name,
+        device_type:product.device_type,
+        meter_type:product.meter_type,
         deviceId:product.device,
         dmodel:product.model,
         lat:product.lat,
@@ -199,6 +213,8 @@ export class FloatLabelDemoComponent implements OnInit  {
           lat:this.ct.lat.value,
           lon:this.ct.long.value,
           imei_no:this.ct.imeiNo.value,
+          device_type:this.ct.device_type.value,
+          meter_type:this.ct.meter_type.value,
           do_channel:1,
           last_maintenance:this.convDt()
 
@@ -238,6 +254,8 @@ export class FloatLabelDemoComponent implements OnInit  {
           lat:this.ct.lat.value,
           lon:this.ct.long.value,
           imei_no:this.ct.imeiNo.value,
+          device_type:this.ct.device_type.value,
+          meter_type:this.ct.meter_type.value,
           do_channel:1,
           // last_maintenance:this.convDt()
 

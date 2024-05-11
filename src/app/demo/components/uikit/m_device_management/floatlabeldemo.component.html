@@ -93,7 +93,10 @@
         <ng-template pTemplate="header">
             <tr>
                 <th>Sl No.</th>
+                <th pSortableColumn="name" style="min-width:15rem">Device<p-sortIcon field="name"></p-sortIcon></th>
                 <th pSortableColumn="name" style="min-width:15rem">Device Name <p-sortIcon field="name"></p-sortIcon></th>
+                <th pSortableColumn="name" style="min-width:15rem">Device Type <p-sortIcon field="name"></p-sortIcon></th>
+                <th pSortableColumn="name" style="min-width:15rem">Meter Type <p-sortIcon field="name"></p-sortIcon></th>
                 <!-- <th pSortableColumn="price">Device ID <p-sortIcon field="price"></p-sortIcon></th> -->
                 <th pSortableColumn="price">Model<p-sortIcon field="price"></p-sortIcon></th>
                 <th pSortableColumn="category" style="min-width:10rem">Latitude <p-sortIcon field="category"></p-sortIcon></th>
@@ -107,6 +110,9 @@
             <tr>
                <td>{{rowIndex+1}}</td>
                 <td>{{ product.device }}</td>
+                <td>{{ product.device_name }}</td>
+                <td>{{ product.device_type=="EN"?"Energy Meter":"Water Meter" }}</td>
+                <td>{{ product.meter_type=="ENSF"?"Single Phase":"Three Phase" }}</td>
                 <!-- <td>{{ product.device_name}}</td> -->
                 <td>{{ product.model }}</td>
                 <td>{{ product.lat }}</td>
@@ -204,6 +210,24 @@
                 <!-- <small class="p-error" *ngIf="submitted && !product.name">Name is required.</small> -->
             </div>
             <div class="field">
+                <label htmlFor="firstname2">Device Type</label>
+                <select formControlName="device_type" style="width: 100%;height: 42px;border-color: lightgray;border-radius: 5px;">
+                    
+                      <option *ngFor="let option of DeviceType" [value]="option.code">
+                        {{option.name}}
+                      </option>
+                  </select>
+            </div>
+            <div class="field">
+                <label htmlFor="firstname2">Meter Type</label>
+                <select formControlName="meter_type" style="width: 100%;height: 42px;border-color: lightgray;border-radius: 5px;">
+                    
+                      <option *ngFor="let option2 of meterType" [value]="option2.code">
+                        {{option2.name}}
+                      </option>
+                  </select>
+            </div>
+            <div class="field">
                 <label for="name">Latitude</label>
                 <input type="text" pInputText id="name" formControlName="lat" required autofocus />
                 <!-- <small class="p-error" *ngIf="submitted && !product.name">Name is required.</small> -->
@@ -232,4 +256,4 @@
 	<!-- <div *ngIf="spinner" class="spinner_overlay"><p-progressSpinner></p-progressSpinner></div> -->
 		
 </div>
-<div *ngIf="spinner" class="spinner_overlay"><p-progressSpinner></p-progressSpinner></div>
+<!-- <div *ngIf="spinner" class="spinner_overlay"><p-progressSpinner></p-progressSpinner></div> -->
