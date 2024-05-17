@@ -22,6 +22,7 @@
         </div>
     </div>
 </div> -->
+
 <div class="container">
 
 <!-- <img src="assets/demo/images/nature/circuit.jpg" alt="Image" class="backimg"> -->
@@ -57,4 +58,10 @@
 
 
 <p-toast></p-toast>
-<div *ngIf="spinner" class="spinner_overlay"><p-progressSpinner></p-progressSpinner></div>
+<div class="loader" *ngIf="spinner">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+</div>

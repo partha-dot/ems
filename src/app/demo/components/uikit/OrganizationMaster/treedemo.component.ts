@@ -31,8 +31,12 @@ export class TreeDemoComponent implements OnInit {
     submitted: boolean = false;
 
     statuses!: any[];
+
     data1:any=[]
+
     client_id:number=(+localStorage.getItem('c_id'))
+
+    spinner:boolean=false;
     constructor(private http:HttpClient ,private productService: ProductService, private messageService: MessageService, private confirmationService: ConfirmationService,private api:ApiService) { }
 
     ngOnInit() {
@@ -46,8 +50,10 @@ export class TreeDemoComponent implements OnInit {
     const credentials = {
         client_id:this.client_id
       };
+      this.spinner=true;
     this.http.post(apiUrl+'/client/manage_organization/list', credentials,{ headers }).subscribe(
         (response) => {
+          this.spinner=false;
           console.log(response);
           debugger
           this.data1=response
@@ -55,6 +61,7 @@ export class TreeDemoComponent implements OnInit {
           debugger
         },
         (error) => {
+          this.spinner=false;
           console.error(error);
         }
       );
@@ -143,14 +150,17 @@ export class TreeDemoComponent implements OnInit {
         const token = localStorage.getItem('token');
         const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
         debugger
+        this.spinner=true;
         this.http.post(apiUrl+'/client/manage_organization/edit', credentials,{ headers }).subscribe(
             (response) => {
+              this.spinner=false;
               console.log(response);
               debugger
               this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Organization Updated', life: 3000 });
               this.getDeviceDATA();
             },
             (error) => {
+              this.spinner=false;
               console.error(error);
             }
           );
@@ -165,14 +175,17 @@ export class TreeDemoComponent implements OnInit {
         const token = localStorage.getItem('token');
         const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
         debugger
+        this.spinner=true;
         this.http.post(apiUrl+'/client/manage_organization/add', credentials,{ headers }).subscribe(
             (response) => {
+              this.spinner=false;
               console.log(response);
               debugger
               this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Organization Created', life: 3000 });
               this.getDeviceDATA();
             },
             (error) => {
+              this.spinner=false;
               console.error(error);
             }
           );
@@ -186,14 +199,17 @@ export class TreeDemoComponent implements OnInit {
         const token = localStorage.getItem('token');
         const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
         debugger
+        this.spinner=true;
         this.http.post(apiUrl+'/client/manage_organization/delete', credentials,{ headers }).subscribe(
             (response) => {
+              this.spinner=false;
               console.log(response);
               debugger
               this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Organization Deleted', life: 3000 });
               this.getDeviceDATA();
             },
             (error) => {
+              this.spinner=false;
               console.error(error);
             }
           );

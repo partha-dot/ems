@@ -80,7 +80,7 @@
     
         <ng-template pTemplate="caption">
             <div class="flex align-items-center justify-content-between">
-                <b class="text-900 font-medium text-xl">Total Device : 30</b>|
+                <b class="text-900 font-medium text-xl">Total Device : {{ stockList ? stockList.length : 0 }}</b>|
                 <b>ONLINE</b><p-badge [value]="20" severity="success"></p-badge>|
                 <b>OFFLINE</b><p-badge [value]="10" severity="danger"></p-badge><br>
                 <span class="p-input-icon-left">
@@ -93,16 +93,16 @@
         <ng-template pTemplate="header">
             <tr>
                 <th>Sl No.</th>
-                <th pSortableColumn="name" style="min-width:15rem">Device<p-sortIcon field="name"></p-sortIcon></th>
-                <th pSortableColumn="name" style="min-width:15rem">Device Name <p-sortIcon field="name"></p-sortIcon></th>
-                <th pSortableColumn="name" style="min-width:15rem">Device Type <p-sortIcon field="name"></p-sortIcon></th>
-                <th pSortableColumn="name" style="min-width:15rem">Meter Type <p-sortIcon field="name"></p-sortIcon></th>
+                <th pSortableColumn="device" style="min-width:15rem">Device<p-sortIcon field="name"></p-sortIcon></th>
+                <th pSortableColumn="device_name" style="min-width:15rem">Device Name <p-sortIcon field="name"></p-sortIcon></th>
+                <th pSortableColumn="device_type" style="min-width:15rem">Device Type <p-sortIcon field="name"></p-sortIcon></th>
+                <th pSortableColumn="meter_type" style="min-width:15rem">Meter Type <p-sortIcon field="name"></p-sortIcon></th>
                 <!-- <th pSortableColumn="price">Device ID <p-sortIcon field="price"></p-sortIcon></th> -->
-                <th pSortableColumn="price">Model<p-sortIcon field="price"></p-sortIcon></th>
-                <th pSortableColumn="category" style="min-width:10rem">Latitude <p-sortIcon field="category"></p-sortIcon></th>
-                <th pSortableColumn="category" style="min-width:10rem">Longitude <p-sortIcon field="category"></p-sortIcon></th>
-                <th pSortableColumn="category" style="min-width:10rem">IMEI NO <p-sortIcon field="category"></p-sortIcon></th>
-				<th pSortableColumn="inventoryStatus" style="min-width:10rem">Status <p-sortIcon field="inventoryStatus"></p-sortIcon></th>
+                <th pSortableColumn="model">Model<p-sortIcon field="price"></p-sortIcon></th>
+                <th pSortableColumn="lat" style="min-width:10rem">Latitude <p-sortIcon field="category"></p-sortIcon></th>
+                <th pSortableColumn="lon" style="min-width:10rem">Longitude <p-sortIcon field="category"></p-sortIcon></th>
+                <th pSortableColumn="imei_no" style="min-width:10rem">IMEI NO <p-sortIcon field="category"></p-sortIcon></th>
+				<th pSortableColumn="energy_data_created_at" style="min-width:10rem">Status <p-sortIcon field="inventoryStatus"></p-sortIcon></th>
                 <th>Edit</th>
             </tr>
         </ng-template>
@@ -132,7 +132,7 @@
             </tr>
         </ng-template>
         <ng-template pTemplate="summary">
-            <div class="flex align-items-center justify-content-between">In total there are {{ device ? device.length : 0 }} products.</div>
+            <div class="flex align-items-center justify-content-between">In total there are {{ stockList ? stockList.length : 0 }} devices.</div>
         </ng-template>
     </p-table>
 </div>
@@ -253,7 +253,13 @@
     </ng-template>
 </p-dialog>
 
-	<!-- <div *ngIf="spinner" class="spinner_overlay"><p-progressSpinner></p-progressSpinner></div> -->
+
 		
 </div>
-<!-- <div *ngIf="spinner" class="spinner_overlay"><p-progressSpinner></p-progressSpinner></div> -->
+<div class="loader" *ngIf="spinner">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+</div><div class="overlay" *ngIf="spinner"></div>

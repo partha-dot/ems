@@ -155,4 +155,10 @@
         <button pButton pRipple label="Save" icon="pi pi-check" [disabled]="!stockList.length>0" class="p-button-text" (click)="saveProduct()"></button>
     </ng-template>
 </p-dialog>
-<div *ngIf="spinner" class="spinner_overlay"><p-progressSpinner></p-progressSpinner></div>
+<div class="loader" *ngIf="spinner">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+</div><div class="overlay" *ngIf="spinner"></div>

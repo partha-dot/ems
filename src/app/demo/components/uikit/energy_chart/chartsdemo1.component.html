@@ -367,18 +367,41 @@
                         <div class="col-12 lg:col-6 xl:col-12">
 
                             <div class="card" >
-                                <div>
-                                    <apx-chart
-                                    [series]="chartOptions5?.series"
-                                    [chart]="chartOptions5?.chart"
-                                    [xaxis]="chartOptions5?.xaxis"
-                                    [dataLabels]="chartOptions5?.dataLabels"
-                                    [yaxis]="chartOptions5?.yaxis"
-                                    [colors]="chartOptions5?.colors"
-                                    [legend]="chartOptions5?.legend"
-                                    [fill]="chartOptions5?.fill"
-                                    ></apx-chart>
+                                <div class="card-header">
+                                    <h4>Power analysis</h4>
+                                    <form [formGroup]="energy_filter">
+                                        <p-calendar
+                                        [inline]="false"
+                                        placeholde="From Date - To Date"
+                                        dateFormat="dd/mm/yy"
+                                        [showTime]="true"
+                                        selectionMode="range"
+                                        [readonlyInput]="true"
+                                        [showButtonBar]="true"
+                                         formControlName="total_date_time"
+                                        appendTo="body"
+                                         ></p-calendar>
+                                    </form>
                                 </div>
+                                <br>
+                                <div id="chart5">
+                                    <ng-container *ngIf="chartOptions5;else noData">
+                                        <apx-chart
+                                        [series]="chartOptions5?.series"
+                                        [chart]="chartOptions5?.chart"
+                                        [xaxis]="chartOptions5?.xaxis"
+                                        [labels]="chartOptions5?.labels"
+                                        [yaxis]="chartOptions5?.yaxis"
+                                        [colors]="chartOptions5?.colors"
+                                        [legend]="chartOptions5?.legend"
+                                        [fill]="chartOptions5?.fill"
+                                      ></apx-chart>
+                                    </ng-container>
+                                    <ng-template #noData>
+                                        <p class="text-center">No Data Available</p>
+                                    </ng-template>
+
+                                  </div>
                             </div>
                         </div>
                         </div>
@@ -394,3 +417,10 @@
     <!-- </div>
 
 </div> -->
+<div class="loader" *ngIf="spinner">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+</div><div class="overlay" *ngIf="spinner"></div>

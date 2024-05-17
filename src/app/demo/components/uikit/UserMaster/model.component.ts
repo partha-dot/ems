@@ -39,6 +39,7 @@ userForm: FormGroup;
 ct:any;
 value:any='';
 editMode:boolean=false;
+spinner:boolean=false;
 client_id:number=(+localStorage.getItem('c_id'))
   constructor(private formBuilder: FormBuilder,private http:HttpClient ,private productService: ProductService,
      private messageService: MessageService, private confirmationService: ConfirmationService,private api:ApiService) {
@@ -65,14 +66,17 @@ const apiUrl = this.api.baseUrl;
   const credentials = {
     client_id:this.client_id
   };
+  this.spinner=true;
   this.http.post(apiUrl+'/client/manage_user/list', credentials,{ headers }).subscribe(
       (response) => {
+        this.spinner=false;
         console.log(response);
         this.modelList=response
         this.models=this.modelList.data 
         debugger
       },
       (error) => {
+        this.spinner=false;
         console.error(error);
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'From Server Side!!', life: 3000 });
       }
@@ -86,14 +90,17 @@ getDeviceCompany(){
     const credentials = {
       client_id:this.client_id
     };
+    this.spinner=true;
     this.http.post(apiUrl+'/client/manage_organization/list',credentials, { headers }).subscribe(
         (response) => {
+          this.spinner=false;
           console.log(response);
           this.companyList=response
           this.companys=this.companyList.data 
           debugger
         },
         (error) => {
+          this.spinner=false;
           console.error(error);
         }
       );
@@ -208,14 +215,17 @@ getDeviceCompany(){
       const token = localStorage.getItem('token');
       const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
       debugger
+      this.spinner=true;
       this.http.post(apiUrl+'/client/manage_user/edit', credentials,{ headers }).subscribe(
           (response) => {
+            this.spinner=false;
             console.log(response);
             debugger
             this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'User Updated', life: 3000 });
             this.getDeviceModel();
           },
           (error) => {
+            this.spinner=false;
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Data Related Issue!!', life: 3000 });
             console.error(error);
           }
@@ -233,14 +243,17 @@ getDeviceCompany(){
       const token = localStorage.getItem('token');
       const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
       debugger
+      this.spinner=true;
       this.http.post(apiUrl+'/client/manage_user/add', credentials,{ headers }).subscribe(
           (response) => {
+            this.spinner=false;
             console.log(response);
             debugger
             this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'User Created', life: 3000 });
             this.getDeviceModel();
           },
           (error) => {
+            this.spinner=false;
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Data Related Issue!!', life: 3000 });
             console.error(error);
           }
@@ -255,14 +268,17 @@ getDeviceCompany(){
       const token = localStorage.getItem('token');
       const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
       debugger
+      this.spinner=true;
       this.http.post(apiUrl+'/client/manage_user/delete', credentials,{ headers }).subscribe(
           (response) => {
+            this.spinner=false;
             console.log(response);
             debugger
             this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'User Deleted', life: 3000 });
             this.getDeviceModel();
           },
           (error) => {
+            this.spinner=false;
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Data Related Issue!!', life: 3000 });
             console.error(error);
           }

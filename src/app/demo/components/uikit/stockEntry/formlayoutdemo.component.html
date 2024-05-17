@@ -92,4 +92,10 @@
 	</div>
 </div>
 <p-toast></p-toast>
-<div *ngIf="spinner" class="spinner_overlay"><p-progressSpinner></p-progressSpinner></div>
+<div class="loader" *ngIf="spinner">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+</div><div class="overlay" *ngIf="spinner"></div>

@@ -5,6 +5,19 @@ import { Router } from '@angular/router';
 
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ApiService } from 'src/app/demo/service/api.service';
+import {
+  ApexNonAxisChartSeries,
+  ApexPlotOptions,
+  ApexChart,
+  ChartComponent
+} from "ng-apexcharts";
+
+export type ChartOptions = {
+  series: ApexNonAxisChartSeries;
+  chart: ApexChart;
+  labels: string[];
+  plotOptions: ApexPlotOptions;
+};
 
 @Component({
     templateUrl: './filedemo.component.html',
@@ -12,7 +25,10 @@ import { ApiService } from 'src/app/demo/service/api.service';
     providers: [MessageService, ConfirmationService]
 })
 export class FileDemoComponent implements OnInit {
-  
+  @ViewChild("chart") chart: ChartComponent;
+  public chartOptions: Partial<ChartOptions>;
+  public chartOptions2: Partial<ChartOptions>;
+
     // countries=[]
     countries1 = [
         {id: 'b1', name: 'Energy Usage and Billing', link:'/usr' },
@@ -54,11 +70,66 @@ export class FileDemoComponent implements OnInit {
       showDateTime:boolean=false;
       showTable1:boolean=false;
       showTable2:boolean=false;
+      showTable4:boolean=false;
       selectedID:any;
       constructor(private router: Router,private fb: FormBuilder,private http:HttpClient ,
 
         private messageService: MessageService, private confirmationService: ConfirmationService,private api:ApiService){
-    
+          this.chartOptions = {
+            series: [100,73],
+            chart: {
+              height: 350,
+              type: "radialBar"
+            },
+            plotOptions: {
+              radialBar: {
+                dataLabels: {
+                  name: {
+                    fontSize: "22px"
+                  },
+                  value: {
+                    fontSize: "16px"
+                  },
+                  total: {
+                    show: true,
+                    label: "Total",
+                    formatter: function(w) {
+                      return "249 kWh";
+                    }
+                  }
+                }
+              }
+            },
+            labels: ["Forecast", "Current"]
+          }
+
+          this.chartOptions2 = {
+            series: [100,83],
+            chart: {
+              height: 350,
+              type: "radialBar"
+            },
+            plotOptions: {
+              radialBar: {
+                dataLabels: {
+                  name: {
+                    fontSize: "22px"
+                  },
+                  value: {
+                    fontSize: "16px"
+                  },
+                  total: {
+                    show: true,
+                    label: "Total",
+                    formatter: function(w) {
+                      return "255 ($)";
+                    }
+                  }
+                }
+              }
+            },
+            labels: ["Forecast", "Current"]
+          }
       }
       ngOnInit(): void {
         this.getDevice();   
@@ -101,6 +172,7 @@ export class FileDemoComponent implements OnInit {
        ShowHideTable(){
         this.showTable1=!this.showTable1
         this.showTable2=!this.showTable2
+        this.showTable4=!this.showTable4
        }
        getDevice(){
         const credentials = {

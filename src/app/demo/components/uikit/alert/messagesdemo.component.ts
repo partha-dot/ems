@@ -59,6 +59,7 @@ export class MessagesDemoComponent {
   value3:number=15.00
   cities:any=[];
   editedalert:any;
+  spinner:boolean=false;
   cities2:any=[
   {
     "unit_name": "voltage",
@@ -131,14 +132,17 @@ export class MessagesDemoComponent {
       const apiUrl = this.api.baseUrl;
         const token = localStorage.getItem('token');
         const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
+        this.spinner=true;
         this.http.post(apiUrl+'/client/unit/list', { headers }).subscribe(
             (response) => {
+              this.spinner=false;
               console.log(response);
               this.units=response
               this.unitList=this.units.data 
               debugger
             },
             (error) => {
+              this.spinner=false;
               console.error(error);
             }
           );
@@ -151,8 +155,10 @@ export class MessagesDemoComponent {
           const credentials = {
               client_id:this.client_id
             };
+            this.spinner=true;
           this.http.post(apiUrl+'/client/manage_organization/list', credentials,{ headers }).subscribe(
               (response) => {
+                this.spinner=false;
                 console.log(response);
                 debugger
                 this.data1=response
@@ -160,6 +166,7 @@ export class MessagesDemoComponent {
                 debugger
               },
               (error) => {
+                this.spinner=false;
                 console.error(error);
               }
             );
@@ -171,14 +178,17 @@ export class MessagesDemoComponent {
     const credentials = {
       client_id:this.client_id
     };
+    this.spinner=true;
     this.http.post(apiUrl+'/client/alert/list',credentials, { headers }).subscribe(
         (response) => {
+          this.spinner=false;
           console.log(response);
           this.modelList=response
           this.models=this.modelList.data 
           debugger
         },
         (error) => {
+          this.spinner=false;
           console.error(error);
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'From Server Side!!', life: 3000 });
         }
@@ -189,14 +199,17 @@ export class MessagesDemoComponent {
     const apiUrl = this.api.baseUrl;
       const token = localStorage.getItem('token');
       const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
+      this.spinner=true;
       this.http.get(apiUrl+'/master/list-origination', { headers }).subscribe(
           (response) => {
+            this.spinner=false;
             console.log(response);
             this.companyList=response
             this.companys=this.companyList.data 
             debugger
           },
           (error) => {
+            this.spinner=false;
             console.error(error);
           }
         );
@@ -327,6 +340,7 @@ export class MessagesDemoComponent {
     }
   
     saveProduct() {
+      this.spinner=true;
       debugger
           debugger
           if(this.low){
@@ -417,6 +431,7 @@ export class MessagesDemoComponent {
         if(!this.ct.alert_id.value){
           this.http.post(apiUrl+'/client/alert/add', this.credentials,{ headers }).subscribe(
             (response) => {
+              this.spinner=false;
               console.log(response);
               debugger
               this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Alert Created', life: 3000 });
@@ -424,6 +439,7 @@ export class MessagesDemoComponent {
               this.hideDialog();
             },
             (error) => {
+              this.spinner=false;
               this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Data Related Issue!!', life: 3000 });
               console.error(error);
             }
@@ -432,6 +448,7 @@ export class MessagesDemoComponent {
         else{
           this.http.post(apiUrl+'/client/alert/edit',this.low? this.credentials1:this.c_low?this.credentials2:this.high?this.credentials3:this.c_high?this.credentials4:this.credentials5,{ headers }).subscribe(
             (response) => {
+              this.spinner=false;
               console.log(response);
               debugger
               this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Alert Updated', life: 3000 });
@@ -439,6 +456,7 @@ export class MessagesDemoComponent {
               this.hideDialog();
             },
             (error) => {
+              this.spinner=false;
               this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Data Related Issue!!', life: 3000 });
               console.error(error);
             }
@@ -473,14 +491,17 @@ export class MessagesDemoComponent {
         const token = localStorage.getItem('token');
         const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
         debugger
+        this.spinner=true;
         this.http.post(apiUrl+'/master/edit-user', credentials,{ headers }).subscribe(
             (response) => {
+              this.spinner=false;
               console.log(response);
               debugger
               this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'User Updated', life: 3000 });
               this.getAlertList();
             },
             (error) => {
+              this.spinner=false;
               this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Data Related Issue!!', life: 3000 });
               console.error(error);
             }
@@ -497,14 +518,17 @@ export class MessagesDemoComponent {
         const token = localStorage.getItem('token');
         const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
         debugger
+        this.spinner=true;
         this.http.post(apiUrl+'/master/add-user', credentials,{ headers }).subscribe(
             (response) => {
+              this.spinner=false;
               console.log(response);
               debugger
               this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'User Created', life: 3000 });
               this.getAlertList();
             },
             (error) => {
+              this.spinner=false;
               this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Data Related Issue!!', life: 3000 });
               console.error(error);
             }
@@ -521,8 +545,10 @@ export class MessagesDemoComponent {
         const token = localStorage.getItem('token');
         const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
         debugger
+        this.spinner=true;
         this.http.post(apiUrl+'/client/alert/delete', credentials,{ headers }).subscribe(
             (response) => {
+              this.spinner=false;
               console.log(response);
               debugger
               this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Alert Deleted', life: 3000 });
@@ -530,6 +556,7 @@ export class MessagesDemoComponent {
               this.hideDialog();
             },
             (error) => {
+              this.spinner=false;
               this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Data Related Issue!!', life: 3000 });
               console.error(error);
             }
@@ -543,8 +570,10 @@ export class MessagesDemoComponent {
     const credentials = {
       client_id:this.client_id
     };
+    this.spinner=true;
     this.http.post(apiUrl+'/client/devices/list',credentials, { headers }).subscribe(
         (response) => {
+          this.spinner=false;
           console.log(response,"ppp");
           
           this.data1=response
@@ -552,7 +581,7 @@ export class MessagesDemoComponent {
           
         },
         (error) => {
-          
+          this.spinner=false;
           console.error(error);
         }
       );

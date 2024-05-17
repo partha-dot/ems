@@ -51,7 +51,7 @@
 
            <div class="col-12 md:col-12" >
             <div style="float: right;">
-                <p-dropdown *ngIf="this.selectedDealer?.meter_type=='ENTF'"  [options]="cities2" [(ngModel)]="selectedPhase" optionLabel="unit_name" (onSelect)="setPhase()" placeholder="Select a Phase Type"></p-dropdown>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <p-dropdown *ngIf="this.selectedDealer?.meter_type=='ENTF'"  [options]="cities2" [(ngModel)]="selectedPhase" optionLabel="unit_name" (onChange)="setPhase($event)" placeholder="Select a Phase Type"></p-dropdown>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <p-autoComplete [(ngModel)]="selectedDealer" [ngModelOptions]="{standalone: true}" placeholder="Select a device" (onSelect)="setDevice()" [suggestions]="filteredDealer" (completeMethod)="filterDealer($event)" field="device" [dropdown]="true">
                 </p-autoComplete>
             </div>
@@ -82,8 +82,14 @@
                             <div style="padding-left: 40px; position: absolute;">
                         <h5 style="color: white;"> TODAY ENERGY</h5></div>
                             </div>
-                            <h3 style="text-align: center;">
-                                22.00 kWh
+                            <h3 style="text-align: center;" *ngIf="selectedPhase.unit=='single'">
+                                {{EnergyData?.e1?(EnergyData.e1-EnergyData.e1_yesterday):0}} kWh
+                            </h3>
+                            <h3 style="text-align: center;" *ngIf="selectedPhase.unit=='two'">
+                                {{EnergyData?.e2?(EnergyData.e2-EnergyData.e2_yesterday):0}} kWh
+                            </h3>
+                            <h3 style="text-align: center;" *ngIf="selectedPhase.unit=='three'">
+                                {{EnergyData?.e3?(EnergyData.e3-EnergyData.e3_yesterday):0}} kWh
                             </h3>
                             </div>
 
@@ -108,8 +114,14 @@
                             <div style="padding-left: 40px; position: absolute;">
                         <h5 style="color: white;"> MONTHLY ENERGY</h5></div>
                             </div>
-                            <h3 style="text-align: center;">
-                                700.00 kWh
+                            <h3 style="text-align: center;" *ngIf="selectedPhase.unit=='single'">
+                                {{EnergyData?.e1?(EnergyData.e1-EnergyData.e1_past_month):0}} kWh
+                            </h3>
+                            <h3 style="text-align: center;" *ngIf="selectedPhase.unit=='two'">
+                                {{EnergyData?.e2?(EnergyData.e2-EnergyData.e2_past_month):0}} kWh
+                            </h3>
+                            <h3 style="text-align: center;" *ngIf="selectedPhase.unit=='three'">
+                                {{EnergyData?.e3?(EnergyData.e3-EnergyData.e3_past_month):0}} kWh
                             </h3>
                             </div>
 
@@ -134,8 +146,14 @@
                             <div style="padding-left: 40px; position: absolute;">
                         <h5 style="color: white;"> YEARLY ENERGY</h5></div>
                             </div>
-                            <h3 style="text-align: center;">
-                                5000.00 kWh
+                            <h3 style="text-align: center;" *ngIf="selectedPhase.unit=='single'">
+                                {{EnergyData?.e1?(EnergyData.e1-EnergyData.e1_past_year):0}} kWh
+                            </h3>
+                            <h3 style="text-align: center;" *ngIf="selectedPhase.unit=='two'">
+                                {{EnergyData?.e2?(EnergyData.e2-EnergyData.e2_past_year):0}} kWh
+                            </h3>
+                            <h3 style="text-align: center;" *ngIf="selectedPhase.unit=='three'">
+                                {{EnergyData?.e3?(EnergyData.e3-EnergyData.e3_past_year):0}} kWh
                             </h3>
                             </div>
 
@@ -162,8 +180,14 @@
                             <div style="padding-left: 40px; position: absolute;">
                             <h5 style="color: white;"> TOTAL ENERGY</h5></div>
                             </div>
-                            <h3 style="text-align: center;">
-                                5000.00 kWh
+                            <h3 style="text-align: center;" *ngIf="selectedPhase.unit=='single'">
+                                {{EnergyData?.e1?EnergyData?.e1:0}} kWh
+                            </h3>
+                            <h3 style="text-align: center;" *ngIf="selectedPhase.unit=='two'">
+                                {{EnergyData?.e2?EnergyData?.e2:0}} kWh
+                            </h3>
+                            <h3 style="text-align: center;" *ngIf="selectedPhase.unit=='three'">
+                                {{EnergyData?.e3?EnergyData?.e3:0}} kWh
                             </h3>
                             </div>
 
@@ -190,7 +214,7 @@
                             <h5 style="color: white;"> VOLTAGE OF R</h5></div>
                                 </div>
                                 <h3 style="text-align: center;">
-                                    {{EnergyData?.b_y?EnergyData?.r:0.00}} V
+                                    {{EnergyData?.r?EnergyData?.r:0.00}} V
                                 </h3>
                                 </div>
     
@@ -216,7 +240,7 @@
                             <h5 style="color: white;">VOLTAGE OF Y</h5></div>
                                 </div>
                                 <h3 style="text-align: center;">
-                                    {{EnergyData?.b_y?EnergyData?.y:0.00}} V
+                                    {{EnergyData?.y?EnergyData?.y:0.00}} V
                                 </h3>
                                 </div>
     
@@ -242,7 +266,7 @@
                             <h5 style="color: white;"> VOLTAGE OF B</h5></div>
                                 </div>
                                 <h3 style="text-align: center;">
-                                    {{EnergyData?.b_y?EnergyData?.b:0.00}} V
+                                    {{EnergyData?.b?EnergyData?.b:0.00}} V
                                 </h3>
                                 </div>
     
@@ -270,7 +294,7 @@
                         <h5 style="color: white;">VOLTAGE OF R-Y</h5></div>
                             </div>
                             <h3 style="text-align: center;">
-                                {{EnergyData?.b_y?EnergyData?.r_y:0.00}} V
+                                {{EnergyData?.r_y?EnergyData?.r_y:0.00}} V
                             </h3>
                             </div>
 
@@ -296,7 +320,7 @@
                         <h5 style="color: white;">VOLTAGE OF Y-B</h5></div>
                             </div>
                             <h3 style="text-align: center;">
-                                {{EnergyData?.b_y?EnergyData?.y_b:0.00}} V
+                                {{EnergyData?.y_b?EnergyData?.y_b:0.00}} V
                             </h3>
                             </div>
 
@@ -322,7 +346,7 @@
                         <h5 style="color: white;"> VOLTAGE OF B-R</h5></div>
                             </div>
                             <h3 style="text-align: center;">
-                                {{EnergyData?.b_y?EnergyData?.b_y:0.00}} V
+                                {{EnergyData?.b_r?EnergyData?.b_r:0.00}} V
                             </h3>
                             </div>
 
@@ -349,9 +373,9 @@
                         <h5 style="color: white;"> CURRENT</h5></div>
                             </div>
                             <h3 style="text-align: center;">
-                                {{selectedPhase.unit=='single'?EnergyData?.curr1?EnergyData?.curr1:0.00:
+                                {{selectedPhase.unit=='single'?EnergyData?.curr1?EnergyData?.curr1:0:
                                 selectedPhase.unit=='two'?EnergyData?.curr2:
-                                selectedPhase.unit=='three'?EnergyData?.curr3:0.00}} A
+                                selectedPhase.unit=='three'?EnergyData?.curr3:0}} A
                             </h3>
                             </div>
 
@@ -377,9 +401,9 @@
                         <h5 style="color: white;"> ACTIVE POWER</h5></div>
                             </div>
                             <h3 style="text-align: center;">
-                                {{selectedPhase.unit=='single'?EnergyData?.activep1?EnergyData?.activep1:0.00:
+                                {{selectedPhase.unit=='single'?EnergyData?.activep1?EnergyData?.activep1:0:
                                 selectedPhase.unit=='two'?EnergyData?.activep2:
-                                selectedPhase.unit=='three'?EnergyData?.activep3:0.00}} kW
+                                selectedPhase.unit=='three'?EnergyData?.activep3:0}} kW
                             </h3>
                             </div>
 
@@ -414,7 +438,7 @@
 
                                                 <p class="unit">{{selectedPhase.unit=='single'?EnergyData?.apparentp1:
                                                 selectedPhase.unit=='two'?EnergyData?.apparentp2:
-                                                selectedPhase.unit=='three'?EnergyData?.apparentp3:0.00}} kVA</p>
+                                                selectedPhase.unit=='three'?EnergyData?.apparentp3:0}} kVA</p>
                                             </div>
                                             <div class="subCard">
                                                 <div class="subcard-icon">
@@ -424,9 +448,9 @@
                                                     <p>Power Factor</p>
                                                 </div>
 
-                                                <p class="unit">{{selectedPhase.unit=='single'?EnergyData?.pf1?EnergyData.pf1:0.00:
+                                                <p class="unit">{{selectedPhase.unit=='single'?EnergyData?.pf1?EnergyData.pf1:0:
                                                     selectedPhase.unit=='two'?EnergyData?.pf2:
-                                                    selectedPhase.unit=='three'?EnergyData?.pf3:0.00}}</p>
+                                                    selectedPhase.unit=='three'?EnergyData?.pf3:0}}</p>
                                             </div>
 
                                             <div class="subCard">
@@ -439,7 +463,7 @@
 
                                                 <p class="unit">{{selectedPhase.unit=='single'?EnergyData?.freq:
                                                     selectedPhase.unit=='two'?EnergyData?.freq:
-                                                    selectedPhase.unit=='three'?EnergyData?.freq:0.00}} Hz</p>
+                                                    selectedPhase.unit=='three'?EnergyData?.freq:0}} Hz</p>
                                             </div>
                                             <div class="subCard">
                                                 <div class="subcard-icon">
@@ -451,7 +475,7 @@
 
                                                 <p class="unit">{{selectedPhase.unit=='single'?EnergyData?.reactvp1:
                                                     selectedPhase.unit=='two'?EnergyData?.reactvp2:
-                                                    selectedPhase.unit=='three'?EnergyData?.reactvp3:0.00}} kVAR</p>
+                                                    selectedPhase.unit=='three'?EnergyData?.reactvp3:0}} kVAR</p>
                                             </div>
                                             <div class="subCard">
                                                 <div class="subcard-icon">
@@ -461,7 +485,7 @@
                                                     <p>Average pf</p>
                                                 </div>
 
-                                                <p class="unit">{{avgPF?avgPF:0.00 | number:'1.2-2'}}</p>
+                                                <p class="unit">{{avgPF?avgPF: 0 }}</p>
                                             </div>
                                             <div class="subCard">
                                                 <div class="subcard-icon">
@@ -473,7 +497,7 @@
 
                                                 <p class="unit">{{selectedPhase.unit=='single'?EnergyData?.avaragevln:
                                                     selectedPhase.unit=='two'?EnergyData?.avaragevln:
-                                                    selectedPhase.unit=='three'?EnergyData?.avaragevln:0.00}} V</p>
+                                                    selectedPhase.unit=='three'?EnergyData?.avaragevln:0}} V</p>
                                             </div>
                                             <div class="subCard">
                                                 <div class="subcard-icon">
@@ -558,7 +582,15 @@
                         </div>
 
                 </div>
-            </div><div *ngIf="spinner" class="spinner_overlay"><p-progressSpinner></p-progressSpinner></div>
+            </div>
+<div class="loader" *ngIf="spinner">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+</div><div class="overlay" *ngIf="spinner"></div>
+
         </div>
     <!-- </div> -->
 

@@ -258,6 +258,7 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
             console.log(energyData);
             this.EnergyData=energyData
             this.avgPF=this.EnergyData.pf1+this.EnergyData.pf2+this.EnergyData.pf3
+            this.avgPF=parseFloat(this.avgPF.toFixed(2))
             this.spinner=false;
             // Handle received message here
           },
@@ -278,8 +279,9 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
     //     this.subscription.unsubscribe();
     // }
     // }
-    setPhase(){
-
+    setPhase(i:any){
+        debugger
+        console.log(i,this.selectedPhase)
     }
 
     abc(){
@@ -303,6 +305,11 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
         this.spinner=false
         this.data1=response
         this.cities=this.data1.data
+        this.selectedDealer=this.cities.filter(e=>e.device_id==1)[0]
+        this.getDeviceLiveData(this.selectedDealer.device,this.selectedDealer.device_id);
+
+        console.log(this.selectedDealer);
+        
 
       },
       (error) => {

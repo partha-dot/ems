@@ -466,7 +466,7 @@ export class ChartsDemo2Component implements OnInit, OnDestroy,AfterViewInit {
     ch_val:number=0
     locations:any[]=[]
     loc:any={}
-
+    spinner:boolean=false;
 
     loginType:string=localStorage.getItem('loginType')
     constructor(private datePipe: DatePipe,public layoutService: LayoutService, private authservice:AuthenticationService,
@@ -547,14 +547,17 @@ export class ChartsDemo2Component implements OnInit, OnDestroy,AfterViewInit {
       const apiUrl = this.api.baseUrl;
         const token = localStorage.getItem('token');
         const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
+        this.spinner=true;
         this.http.post(apiUrl+'/client/unit/list', { headers }).subscribe(
             (response) => {
+              this.spinner=false;
               console.log(response);
               const units:any=response;
               this.cities2=units.data;
               debugger
             },
             (error) => {
+              this.spinner=false;
               console.error(error);
             }
           );
@@ -597,9 +600,10 @@ export class ChartsDemo2Component implements OnInit, OnDestroy,AfterViewInit {
     const apiUrl = this.api.baseUrl;
   const token = localStorage.getItem('token');
   const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
-
+  this.spinner=true;
   this.http.post(apiUrl+'/client/devices/list', credentials,{ headers }).subscribe(
       (response) => {
+        this.spinner=false;
         console.log(response);
         
         this.data1=response
@@ -607,7 +611,7 @@ export class ChartsDemo2Component implements OnInit, OnDestroy,AfterViewInit {
         
       },
       (error) => {
-        
+        this.spinner=false;
         console.error(error);
       }
     );
@@ -644,9 +648,10 @@ getDeviceLiveData(name:any,id:any){
                 device:name
             };
             this.data1=[];
+            this.spinner=true;
             this.http.post(this.api.baseUrl+'/client/devices/device_info', credentials, { headers }).subscribe(
                 (response) => {
-                    
+                  this.spinner=false;
                     console.log(response);
                     const res:any=response
                     const res2=res.data

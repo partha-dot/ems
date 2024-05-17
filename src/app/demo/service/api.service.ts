@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -33,10 +33,13 @@ export class ApiService {
    * @returns : retuns as Observable
    */
     call_api = (flag:number,api_name:string,data:any): Observable<any> => {
+        const token = localStorage.getItem('token');
+        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
         const api_url = `http://13.49.80.167:8000/${api_name}`;
+        // debugger
         if(flag > 0){
             /*** For Posting data into API */
-            return this.http.post(api_url,data);
+            return this.http.post(api_url,data,{ headers });
             /*** End */
         }
         else{

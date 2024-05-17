@@ -1,4 +1,8 @@
 
+.bg-style{
+  background-color: yellowgreen;
+  width: 23rem;
+}
 .dropdown {
     float: left;
     overflow: hidden;
