@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { MessageService, SelectItem } from 'primeng/api';
 import { ApiService } from 'src/app/demo/service/api.service';
 import { AuthenticationService } from 'src/app/demo/service/authentication.service';
@@ -50,7 +51,7 @@ export class InputDemoComponent implements OnInit {
     companys:any[]=[];
     
     client_id:number=(+localStorage.getItem('c_id'));
-    constructor(private authservice:AuthenticationService,private api:ApiService,private countryService: CountryService,private fb: FormBuilder,private http:HttpClient, private messageService: MessageService) { 
+    constructor(private router: Router,private authservice:AuthenticationService,private api:ApiService,private countryService: CountryService,private fb: FormBuilder,private http:HttpClient, private messageService: MessageService) { 
         this.stockIn = this.fb.group({
             org_id: ['', Validators.required],
             device_id: ['', [Validators.required]],
@@ -96,7 +97,12 @@ export class InputDemoComponent implements OnInit {
               this.users2=this.userList.data 
               debugger
             },
-            (error) => {
+            (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
               console.error(error);
               this.messageService.add({ severity: 'error', summary: 'Error', detail: 'From Server Side!!', life: 3000 });
             }
@@ -160,7 +166,12 @@ export class InputDemoComponent implements OnInit {
                     this.companys=this.companyList.data 
                     debugger
                   },
-                  (error) => {
+                  (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
                     console.error(error);
                   }
                 );
@@ -181,7 +192,12 @@ export class InputDemoComponent implements OnInit {
               this.models=this.modelList.data 
               
             },
-            (error) => {
+            (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
               
               console.error(error);
             }
@@ -197,7 +213,12 @@ export class InputDemoComponent implements OnInit {
           //         this.models=this.modelList.data;
           //         debugger
           //       },
-          //       (error) => {
+          //       (error) => { 
+        // if(error.status=='401'){
+        //   this.router.navigate(['/']);
+        //   debugger
+        //  }
+        // console.log(error.status);
           //         console.error(error);
           //       }
                 
@@ -224,7 +245,12 @@ export class InputDemoComponent implements OnInit {
                   this.stockList=this.stockApi.data;
                   debugger
                 },
-                (error) => {
+                (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
                   this.spinner=false;
                   console.error(error);
                 }
@@ -263,7 +289,12 @@ export class InputDemoComponent implements OnInit {
                 this.resetData();
                 this.loadPage();
               },
-              (error) => {
+              (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
                       this.spinner=false;
                       console.log(error);
                       
@@ -285,7 +316,12 @@ export class InputDemoComponent implements OnInit {
                 this.resetData();
                 this.getAllStock();
               },
-              (error) => {
+              (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
                       this.spinner=false;
                       console.error(error);
               }
@@ -386,7 +422,12 @@ export class InputDemoComponent implements OnInit {
             this.resetData();
             this.loadPage();
           },
-          (error) => {
+          (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
                   this.spinner=false;
                   console.error(error);
           }

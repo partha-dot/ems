@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, Renderer2,OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Company } from 'src/app/demo/api/company';
 import { ApiService } from 'src/app/demo/service/api.service';
@@ -51,7 +52,7 @@ export class FormLayoutDemoComponent implements OnInit{
     modelID:any
     @ViewChild('itemInput') itemInput: ElementRef;
 
-    constructor(private renderer:Renderer2,private fb: FormBuilder,private http:HttpClient ,private messageService: MessageService, 
+    constructor(private router: Router,private renderer:Renderer2,private fb: FormBuilder,private http:HttpClient ,private messageService: MessageService, 
         private confirmationService: ConfirmationService,private api:ApiService){
             this.stockIn = this.fb.group({
                 model_id: ['', Validators.required],
@@ -94,7 +95,12 @@ export class FormLayoutDemoComponent implements OnInit{
                 this.models=this.modelList.data 
                 debugger
               },
-              (error) => {
+              (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
                 console.error(error);
               }
               
@@ -112,7 +118,12 @@ export class FormLayoutDemoComponent implements OnInit{
               this.dealer=this.dealerList.data 
               debugger
             },
-            (error) => {
+            (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
               console.error(error);
             }
             
@@ -153,7 +164,12 @@ export class FormLayoutDemoComponent implements OnInit{
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Data Related Issue!!', life: 3000 });
           }
         },
-        (error) => {
+        (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
           console.error(error);
             this.spinner=false;
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'From Server Side !!', life: 3000 });

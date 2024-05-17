@@ -11,6 +11,7 @@ import { MessageService, ConfirmationService } from 'primeng/api';
 import { ApiService } from 'src/app/demo/service/api.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Company } from 'src/app/demo/api/company';
+import { Router } from '@angular/router';
 interface expandedRows {
     [key: string]: boolean;
 }
@@ -37,7 +38,7 @@ export class TreeDemoComponent implements OnInit {
     client_id:number=(+localStorage.getItem('c_id'))
 
     spinner:boolean=false;
-    constructor(private http:HttpClient ,private productService: ProductService, private messageService: MessageService, private confirmationService: ConfirmationService,private api:ApiService) { }
+    constructor(private router: Router,private http:HttpClient ,private productService: ProductService, private messageService: MessageService, private confirmationService: ConfirmationService,private api:ApiService) { }
 
     ngOnInit() {
     this.getDeviceDATA();
@@ -60,7 +61,12 @@ export class TreeDemoComponent implements OnInit {
           this.products=this.data1.data 
           debugger
         },
-        (error) => {
+        (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
           this.spinner=false;
           console.error(error);
         }
@@ -159,7 +165,12 @@ export class TreeDemoComponent implements OnInit {
               this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Organization Updated', life: 3000 });
               this.getDeviceDATA();
             },
-            (error) => {
+            (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
               this.spinner=false;
               console.error(error);
             }
@@ -184,7 +195,12 @@ export class TreeDemoComponent implements OnInit {
               this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Organization Created', life: 3000 });
               this.getDeviceDATA();
             },
-            (error) => {
+            (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
               this.spinner=false;
               console.error(error);
             }
@@ -208,7 +224,12 @@ export class TreeDemoComponent implements OnInit {
               this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Organization Deleted', life: 3000 });
               this.getDeviceDATA();
             },
-            (error) => {
+            (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
               this.spinner=false;
               console.error(error);
             }

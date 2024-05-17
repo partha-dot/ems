@@ -30,6 +30,7 @@ import {
 import { MessagesDemoComponent } from '../alert/messagesdemo.component';
 import { api_name } from 'src/app/demo/constants/apiName';
 import { IEnergyUsed } from './energy_chart.model';
+import { Router } from '@angular/router';
 
 
   export enum RANGE_TYPE{
@@ -317,7 +318,7 @@ export class ChartsDemo1Component implements OnInit, OnDestroy {
 
 
     loginType:string=localStorage.getItem('loginType')
-    constructor(private datePipe: DatePipe,public layoutService: LayoutService, private authservice:AuthenticationService,
+    constructor(private router: Router,private datePipe: DatePipe,public layoutService: LayoutService, private authservice:AuthenticationService,
         private fb: FormBuilder,private http:HttpClient ,private productService: ProductService,
         private messageService: MessageService, private confirmationService: ConfirmationService,private api:ApiService) {
         this.subscription = this.layoutService.configUpdate$.subscribe(config => {
@@ -800,7 +801,12 @@ export class ChartsDemo1Component implements OnInit, OnDestroy {
         this.cities=this.data1.data
 
       },
-      (error) => {
+      (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
         this.spinner=false;
         console.error(error);
       }
@@ -892,7 +898,12 @@ getDeviceLiveData(name:any){
 
 
                 },
-                (error) => {
+                (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
                   this.spinner=false;
                     console.error(error);
                 }

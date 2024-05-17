@@ -78,7 +78,12 @@ export class LoginComponent implements OnInit{
             console.log('Response:', response);
             // Handle response here
           },
-          (error) => {
+          (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
             console.error('Error:', error);
             this.spinner=false;
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Wrong username or password !!', life: 3000 });

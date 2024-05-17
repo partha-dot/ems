@@ -27,6 +27,7 @@ import {
     
   } from "ng-apexcharts";
 import { MessagesDemoComponent } from '../alert/messagesdemo.component';
+import { Router } from '@angular/router';
   
   export type ChartOptions = {
     series: ApexNonAxisChartSeries;
@@ -469,7 +470,7 @@ export class ChartsDemo2Component implements OnInit, OnDestroy,AfterViewInit {
     spinner:boolean=false;
 
     loginType:string=localStorage.getItem('loginType')
-    constructor(private datePipe: DatePipe,public layoutService: LayoutService, private authservice:AuthenticationService,
+    constructor(private router: Router,private datePipe: DatePipe,public layoutService: LayoutService, private authservice:AuthenticationService,
         private fb: FormBuilder,private http:HttpClient ,private productService: ProductService, 
         private messageService: MessageService, private confirmationService: ConfirmationService,private api:ApiService) {
         this.subscription = this.layoutService.configUpdate$.subscribe(config => {
@@ -556,7 +557,12 @@ export class ChartsDemo2Component implements OnInit, OnDestroy,AfterViewInit {
               this.cities2=units.data;
               debugger
             },
-            (error) => {
+            (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
               this.spinner=false;
               console.error(error);
             }
@@ -610,7 +616,12 @@ export class ChartsDemo2Component implements OnInit, OnDestroy,AfterViewInit {
         this.cities=this.data1.data 
         
       },
-      (error) => {
+      (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
         this.spinner=false;
         console.error(error);
       }
@@ -723,7 +734,12 @@ getDeviceLiveData(name:any,id:any){
                    
                     
                 },
-                (error) => {
+                (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
                     console.error(error);
                 }
                 );

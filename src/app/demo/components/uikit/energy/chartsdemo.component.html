@@ -115,13 +115,13 @@
                         <h5 style="color: white;"> MONTHLY ENERGY</h5></div>
                             </div>
                             <h3 style="text-align: center;" *ngIf="selectedPhase.unit=='single'">
-                                {{EnergyData?.e1?(EnergyData.e1-EnergyData.e1_past_month):0}} kWh
+                                {{m_e1}} kWh
                             </h3>
                             <h3 style="text-align: center;" *ngIf="selectedPhase.unit=='two'">
-                                {{EnergyData?.e2?(EnergyData.e2-EnergyData.e2_past_month):0}} kWh
+                                {{m_e2}} kWh
                             </h3>
                             <h3 style="text-align: center;" *ngIf="selectedPhase.unit=='three'">
-                                {{EnergyData?.e3?(EnergyData.e3-EnergyData.e3_past_month):0}} kWh
+                                {{m_e3}} kWh
                             </h3>
                             </div>
 

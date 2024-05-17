@@ -4,6 +4,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ApiService } from 'src/app/demo/service/api.service';
 import { ProductService } from 'src/app/demo/service/product.service';
 import { PrimeIcons } from 'primeng/api';
+import { Router } from '@angular/router';
 
 @Component({
     templateUrl: './timelinedemo.component.html',
@@ -12,7 +13,7 @@ import { PrimeIcons } from 'primeng/api';
 })
 export class TimelineDemoComponent implements OnInit {
 
-    constructor(private http:HttpClient ,private messageService: MessageService, private confirmationService: ConfirmationService,
+    constructor(private router: Router,private http:HttpClient ,private messageService: MessageService, private confirmationService: ConfirmationService,
         private api:ApiService, private bill:ProductService) { 
         this.id=this.bill.billing_id;
         }
@@ -76,7 +77,12 @@ export class TimelineDemoComponent implements OnInit {
             //   this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Company Updated', life: 3000 });
              
             },
-            (error) => {
+            (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
                   this.spinner=false;
                   console.error(error);
             }
@@ -135,7 +141,12 @@ export class TimelineDemoComponent implements OnInit {
             this.messageService.add({ severity: 'success', summary: 'Successfully', detail: 'Changed Product', life: 3000 });
             this.hideDialog();
           },
-          (error) => {
+          (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
                   this.spinner=false;
                   console.error(error);
                   this.hideDialog();

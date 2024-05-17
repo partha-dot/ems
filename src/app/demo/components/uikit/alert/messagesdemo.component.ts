@@ -10,6 +10,7 @@ import { ApiService } from 'src/app/demo/service/api.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Company } from 'src/app/demo/api/company';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 @Component({
     selector: 'app-messagesdemo',
     templateUrl: './messagesdemo.component.html',
@@ -99,7 +100,7 @@ export class MessagesDemoComponent {
   {"name":"critical low"},
   {"name":"Emergency"}]
 
-    constructor(private formBuilder: FormBuilder,private http:HttpClient ,private productService: ProductService,
+    constructor( private router: Router,private formBuilder: FormBuilder,private http:HttpClient ,private productService: ProductService,
        private messageService: MessageService, private confirmationService: ConfirmationService,private api:ApiService) {
       this.unitForm = this.formBuilder.group({
         alert_id:[''],
@@ -141,7 +142,12 @@ export class MessagesDemoComponent {
               this.unitList=this.units.data 
               debugger
             },
-            (error) => {
+            (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
               this.spinner=false;
               console.error(error);
             }
@@ -165,7 +171,12 @@ export class MessagesDemoComponent {
                 this.products=this.data1.data 
                 debugger
               },
-              (error) => {
+              (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
                 this.spinner=false;
                 console.error(error);
               }
@@ -187,7 +198,12 @@ export class MessagesDemoComponent {
           this.models=this.modelList.data 
           debugger
         },
-        (error) => {
+        (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
           this.spinner=false;
           console.error(error);
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'From Server Side!!', life: 3000 });
@@ -208,7 +224,12 @@ export class MessagesDemoComponent {
             this.companys=this.companyList.data 
             debugger
           },
-          (error) => {
+          (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
             this.spinner=false;
             console.error(error);
           }
@@ -438,7 +459,12 @@ export class MessagesDemoComponent {
               this.getAlertList();
               this.hideDialog();
             },
-            (error) => {
+            (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
               this.spinner=false;
               this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Data Related Issue!!', life: 3000 });
               console.error(error);
@@ -455,7 +481,12 @@ export class MessagesDemoComponent {
               this.getAlertList();
               this.hideDialog();
             },
-            (error) => {
+            (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
               this.spinner=false;
               this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Data Related Issue!!', life: 3000 });
               console.error(error);
@@ -500,7 +531,12 @@ export class MessagesDemoComponent {
               this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'User Updated', life: 3000 });
               this.getAlertList();
             },
-            (error) => {
+            (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
               this.spinner=false;
               this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Data Related Issue!!', life: 3000 });
               console.error(error);
@@ -527,7 +563,12 @@ export class MessagesDemoComponent {
               this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'User Created', life: 3000 });
               this.getAlertList();
             },
-            (error) => {
+            (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
               this.spinner=false;
               this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Data Related Issue!!', life: 3000 });
               console.error(error);
@@ -555,7 +596,12 @@ export class MessagesDemoComponent {
               this.getAlertList();
               this.hideDialog();
             },
-            (error) => {
+            (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
               this.spinner=false;
               this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Data Related Issue!!', life: 3000 });
               console.error(error);
@@ -580,7 +626,12 @@ export class MessagesDemoComponent {
           this.cities=this.data1.data 
           
         },
-        (error) => {
+        (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
           this.spinner=false;
           console.error(error);
         }

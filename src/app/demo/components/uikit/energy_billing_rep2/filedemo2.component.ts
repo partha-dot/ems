@@ -116,7 +116,12 @@ export class FileDemo2Component implements OnInit {
                 this.deviceList=this.data1.data
 
       },
-      (error) => {
+      (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
         this.spinner=false
         console.error(error);
       }

@@ -14,6 +14,7 @@ import { Device } from 'src/app/demo/api/deviceDetails';
 import { DatePipe } from '@angular/common';
 import { AuthenticationService } from 'src/app/demo/service/authentication.service';
 import { BooleanInput } from '@angular/cdk/coercion';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-product',
   templateUrl: './product.component.html',
@@ -67,7 +68,7 @@ export class ProductComponent implements OnInit{
     totkw: boolean = false;
     totkva: boolean = false;
     totkvar: boolean = false;
-  constructor(  private carService: ProductService, private cdr: ChangeDetectorRef,private authservice:AuthenticationService,private filterService: FilterService,private fb: FormBuilder,private http:HttpClient ,private productService: ProductService, private messageService: MessageService,private datePipe: DatePipe, private confirmationService: ConfirmationService,private api:ApiService) { }
+  constructor( private router: Router, private carService: ProductService, private cdr: ChangeDetectorRef,private authservice:AuthenticationService,private filterService: FilterService,private fb: FormBuilder,private http:HttpClient ,private productService: ProductService, private messageService: MessageService,private datePipe: DatePipe, private confirmationService: ConfirmationService,private api:ApiService) { }
 
   ngOnInit() {
     // this.openNew();
@@ -165,7 +166,12 @@ const apiUrl = this.api.baseUrl;
         this.cities=this.data2.data 
         
       },
-      (error) => {
+      (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
         console.error(error);
       }
     );
@@ -320,7 +326,12 @@ const apiUrl = this.api.baseUrl;
           // this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Get All Data', life: 3000 });
           
         },
-        (error) => {
+        (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
           if(error.status==401){
             // this.authservice.logout();
         }
@@ -349,7 +360,12 @@ const apiUrl = this.api.baseUrl;
             this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Company Updated', life: 3000 });
             this.getDeviceDATA();
           },
-          (error) => {
+          (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
             console.error(error);
           }
         );
@@ -369,7 +385,12 @@ const apiUrl = this.api.baseUrl;
             this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Company Created', life: 3000 });
             this.getDeviceDATA();
           },
-          (error) => {
+          (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
             console.error(error);
           }
         );
@@ -389,7 +410,12 @@ const apiUrl = this.api.baseUrl;
             this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Company Deleted', life: 3000 });
             this.getDeviceDATA();
           },
-          (error) => {
+          (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
             console.error(error);
           }
         );

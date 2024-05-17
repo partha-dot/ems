@@ -10,6 +10,7 @@ import { ProductService } from 'src/app/demo/service/product.service';
 import { CrudComponent } from '../../pages/crud/crud.component';
 import { Customer } from 'src/app/demo/api/customer';
 import { Seller } from 'src/app/demo/api/seller';
+import { Router } from '@angular/router';
 interface PageEvent {
     first: number;
     rows: number;
@@ -57,7 +58,7 @@ export class MediaDemoComponent implements OnInit,OnDestroy {
     data1:any=[]
     ref: DynamicDialogRef | undefined;
     @ViewChild('view', { static: true }) view: TemplateRef<any>;
-    constructor(private api:ApiService,private productService: ProductService,private http:HttpClient,private billID:ProductService,
+    constructor(private router: Router,private api:ApiService,private productService: ProductService,private http:HttpClient,private billID:ProductService,
       public dialogService: DialogService, public messageService: MessageService) { }
 
     ngOnInit() {
@@ -104,7 +105,12 @@ export class MediaDemoComponent implements OnInit,OnDestroy {
                   this.totalPGNO=this.stockApi.total
                   debugger
                 },
-                (error) => {
+                (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
                   this.spinner=false;
                   console.error(error);
                 }
@@ -169,7 +175,12 @@ export class MediaDemoComponent implements OnInit,OnDestroy {
               }
              
             },
-            (error) => {
+            (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
               console.error(error);
             }
           );
@@ -189,7 +200,12 @@ export class MediaDemoComponent implements OnInit,OnDestroy {
               this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Company Deleted', life: 3000 });
               this.getAllseller();
             },
-            (error) => {
+            (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
               console.error(error);
             }
           );
@@ -257,7 +273,12 @@ export class MediaDemoComponent implements OnInit,OnDestroy {
           this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Dealer Updated', life: 3000 });
           this.getAllseller();
         },
-        (error) => {
+        (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
           console.error(error);
         }
       );

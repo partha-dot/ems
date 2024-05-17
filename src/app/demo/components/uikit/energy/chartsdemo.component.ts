@@ -18,6 +18,7 @@ import {
 import { MessagesDemoComponent } from '../alert/messagesdemo.component';
 import { webSocket, WebSocketSubject  } from 'rxjs/webSocket';
 import { WebsocketService } from 'src/app/demo/service/web-socket.service';
+import { Router } from '@angular/router';
   export type ChartOptions = {
     series: ApexNonAxisChartSeries;
     chart: ApexChart;
@@ -200,7 +201,10 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
     loginType:string=localStorage.getItem('loginType');
     EnergyData:any=[]
     avgPF:number;
-    constructor(private datePipe: DatePipe,public layoutService: LayoutService, private authservice:AuthenticationService,
+    m_e1:number=0;
+    m_e2:number=0;
+    m_e3:number=0;
+    constructor(private router: Router,private datePipe: DatePipe,public layoutService: LayoutService, private authservice:AuthenticationService,
 
 
         private fb: FormBuilder,private http:HttpClient ,private productService: ProductService, private websocketService: WebsocketService,
@@ -255,14 +259,29 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
             console.log('Received message:', message);
             const jsonString = message
             const energyData: EnergyData = JSON.parse(jsonString);
+            this.m_e1=0
+            this.m_e2=0
+            this.m_e3=0
+            this.avgPF=0
             console.log(energyData);
             this.EnergyData=energyData
+            const m_e1=this.EnergyData.e1 - this.EnergyData.e1_past_month
+            const m_e2=this.EnergyData.e2 - this.EnergyData.e2_past_month
+            const m_e3=this.EnergyData.e3 - this.EnergyData.e3_past_month
+            this.m_e1=parseFloat(m_e1.toFixed(2));
+            this.m_e2=parseFloat(m_e2.toFixed(2));
+            this.m_e3=parseFloat(m_e3.toFixed(2));
             this.avgPF=this.EnergyData.pf1+this.EnergyData.pf2+this.EnergyData.pf3
             this.avgPF=parseFloat(this.avgPF.toFixed(2))
             this.spinner=false;
             // Handle received message here
           },
-          (error) => {
+          (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
             this.spinner=false;
             console.error('WebSocket error:', error);
           },
@@ -312,9 +331,18 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
         
 
       },
-      (error) => {
+      (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
         this.spinner=false
-        console.error(error);
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
       }
     );
 }
@@ -404,7 +432,12 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
 
 
         //         },
-        //         (error) => {
+        //         (error) => { 
+        // if(error.status=='401'){
+        //   this.router.navigate(['/']);
+        //   debugger
+        //  }
+        // console.log(error.status);
         //             console.error(error);
         //         }
         //         );

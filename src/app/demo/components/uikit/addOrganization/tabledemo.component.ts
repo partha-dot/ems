@@ -8,6 +8,7 @@ import { MessageService, ConfirmationService } from 'primeng/api';
 import { ApiService } from 'src/app/demo/service/api.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Company } from 'src/app/demo/api/company';
+import { Router } from '@angular/router';
 
 interface expandedRows {
     [key: string]: boolean;
@@ -31,7 +32,7 @@ export class TableDemoComponent implements OnInit {
     statuses!: any[];
     data1:any=[]
 
-    constructor(private http:HttpClient ,private productService: ProductService, private messageService: MessageService, private confirmationService: ConfirmationService,private api:ApiService) { }
+    constructor(private router: Router,private http:HttpClient ,private productService: ProductService, private messageService: MessageService, private confirmationService: ConfirmationService,private api:ApiService) { }
 
     ngOnInit() {
     this.getDeviceDATA();
@@ -49,7 +50,12 @@ export class TableDemoComponent implements OnInit {
           this.products=this.data1.data 
           debugger
         },
-        (error) => {
+        (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
           console.error(error);
         }
       );
@@ -143,7 +149,12 @@ export class TableDemoComponent implements OnInit {
               this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Organization Updated', life: 3000 });
               this.getDeviceDATA();
             },
-            (error) => {
+            (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
               console.error(error);
             }
           );
@@ -163,7 +174,12 @@ export class TableDemoComponent implements OnInit {
               this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Organization Created', life: 3000 });
               this.getDeviceDATA();
             },
-            (error) => {
+            (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
               console.error(error);
             }
           );
@@ -183,7 +199,12 @@ export class TableDemoComponent implements OnInit {
               this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Organization Deleted', life: 3000 });
               this.getDeviceDATA();
             },
-            (error) => {
+            (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
               console.error(error);
             }
           );

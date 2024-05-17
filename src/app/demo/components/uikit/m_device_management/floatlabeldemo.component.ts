@@ -12,6 +12,7 @@ import { Customer } from 'src/app/demo/api/customer';
 import { TreeNode } from 'primeng/api';
 import { AuthenticationService } from 'src/app/demo/service/authentication.service';
 import { CountryService } from 'src/app/demo/service/country.service';
+import { Router } from '@angular/router';
 interface PageEvent {
     first: number;
     rows: number;
@@ -65,7 +66,7 @@ export class FloatLabelDemoComponent implements OnInit  {
     { name: 'Three Phase', code: 'ENTF' }
   ];
 
-  constructor(private authservice:AuthenticationService,private api:ApiService,private countryService: CountryService,private http:HttpClient,private productService: ProductService,private fb: FormBuilder, private messageService: MessageService, private confirmationService: ConfirmationService) {
+  constructor(private router: Router,private authservice:AuthenticationService,private api:ApiService,private countryService: CountryService,private http:HttpClient,private productService: ProductService,private fb: FormBuilder, private messageService: MessageService, private confirmationService: ConfirmationService) {
     this.addDevice = this.fb.group({
       did: [''],
       deviceName: ['', Validators.required],
@@ -176,7 +177,12 @@ export class FloatLabelDemoComponent implements OnInit  {
           this.stockList=this.stockApi.data;
           debugger
         },
-        (error) => {
+        (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
           this.spinner=false;
           console.error(error);
         }
@@ -232,7 +238,12 @@ export class FloatLabelDemoComponent implements OnInit  {
               this.getAllStock();
               this.hideDialog();
             },
-            (error) => {
+            (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
                     this.spinner=false;
                     console.log(error);
                     this.hideDialog();
@@ -272,7 +283,12 @@ export class FloatLabelDemoComponent implements OnInit  {
               this.getAllStock();
               this.hideDialog();
             },
-            (error) => {
+            (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
                     this.spinner=false;
                     console.log(error);
                     this.hideDialog();

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class WebsocketService {
   device:string
   resData:string
   private baseURL:string="ws://13.49.80.167:8000/api/ws_routes/ws/EMS/"
-  constructor(private api:ApiService,private http:HttpClient) { }
+  constructor(private router: Router,private api:ApiService,private http:HttpClient) { }
 
   public connect(client_id,d_id,d_name): Observable<any> {
     this.client_id=client_id;
@@ -44,7 +45,7 @@ export class WebsocketService {
         }
       };
 
-      this.socket.onerror = (error) => {
+      this.socket.onerror = (error) => { 
         observer.error(error);
         console.log(error);
       };

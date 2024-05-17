@@ -7,6 +7,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ApiService } from 'src/app/demo/service/api.service';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { EmptyDemoComponent } from '../viewBill/emptydemo.component';
+import { Router } from '@angular/router';
 @Component({
     templateUrl: './crud.component.html',
     providers: [MessageService],
@@ -49,7 +50,7 @@ export class CrudComponent implements OnInit {
     dueAmt:any;
     advAmt:any;
     dueAfterPayment:Number=0;
-    constructor(public dialogService: DialogService,private http:HttpClient,private api:ApiService,private productService: ProductService, private messageService: MessageService) { }
+    constructor(private router: Router,public dialogService: DialogService,private http:HttpClient,private api:ApiService,private productService: ProductService, private messageService: MessageService) { }
 
     ngOnInit() {
         const Dt=new Date;
@@ -148,7 +149,12 @@ export class CrudComponent implements OnInit {
             this.dueP_flg=true;
             // this.BalanceAmount=this.dueAfterPayment;
           },
-          (error) => {
+          (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
                   this.spinner=false;
                   console.error(error);
                   this.hideDialog();
@@ -219,7 +225,12 @@ export class CrudComponent implements OnInit {
             this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Get Customer', life: 3000 });
             
           },
-          (error) => {
+          (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
                   this.spinner=false;
                   console.error(error);
           }

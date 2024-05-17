@@ -12,6 +12,7 @@ import { DatePipe } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { AuthenticationService } from 'src/app/demo/service/authentication.service';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
+import { Router } from '@angular/router';
 
 @Component({
     templateUrl: './buttondemo.component.html',
@@ -91,7 +92,7 @@ export class ButtonDemoComponent implements OnInit {
       "unit": "hertz"
     }];
   loginType:string=localStorage.getItem('loginType')
-  constructor(private datePipe: DatePipe,public layoutService: LayoutService, private authservice:AuthenticationService,
+  constructor(private router: Router,private datePipe: DatePipe,public layoutService: LayoutService, private authservice:AuthenticationService,
       private fb: FormBuilder,private http:HttpClient ,private productService: ProductService, 
       private messageService: MessageService, private confirmationService: ConfirmationService,private api:ApiService) {
       this.subscription = this.layoutService.configUpdate$.subscribe(config => {
@@ -151,7 +152,12 @@ this.http.get(apiUrl+this.DeviceUrl+'device/list', { headers }).subscribe(
       this.cities=this.data1.data 
       
     },
-    (error) => {
+    (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
       
       console.error(error);
     }
@@ -243,7 +249,12 @@ getDeviceLiveData(name:any){
                  
                   
               },
-              (error) => {
+              (error) => { 
+        if(error.status=='401'){
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
                   console.error(error);
               }
               );
