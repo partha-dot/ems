@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -15,10 +15,10 @@ export class ApiService {
 
   token:any;
     baseURL: any;
-  constructor(private http: HttpClient){ }
+  constructor(private http: HttpClient,@Inject('BASE_URL') private API_URL:string){ }
 
   login(data: any): Observable<any> {
-    const url = `${this.baseUrl}/auth/login`;
+    const url = `${this.API_URL}/auth/login`;
     return this.http.post(url, data);
   }
   showMsg(){
@@ -33,18 +33,16 @@ export class ApiService {
    * @returns : retuns as Observable
    */
     call_api = (flag:number,api_name:string,data:any): Observable<any> => {
-        const token = localStorage.getItem('token');
-        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
-        const api_url = `http://13.49.80.167:8000/${api_name}`;
-        // debugger
+        const api_url = `${this.API_URL}/${api_name}`;
+        const headers= localStorage.getItem('token') ? new HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem('token')}`) : null
         if(flag > 0){
             /*** For Posting data into API */
-            return this.http.post(api_url,data,{ headers });
+            return this.http.post(api_url,data,{headers:headers});
             /*** End */
         }
         else{
             /*** For getting data from API  */
-            return this.http.get(api_url,{params:data ? data : ''});
+            return this.http.get(api_url,{params:data ? data : '',headers:headers});
             /*** End */
         }
     }

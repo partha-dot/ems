@@ -204,6 +204,19 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
     m_e1:number=0;
     m_e2:number=0;
     m_e3:number=0;
+
+    td_e1:number=0;
+    td_e2:number=0;
+    td_e3:number=0;
+
+    ye_e1:number=0;
+    ye_e2:number=0;
+    ye_e3:number=0;
+
+    tot_e1:number=0;
+    tot_e2:number=0;
+    tot_e3:number=0;
+
     constructor(private router: Router,private datePipe: DatePipe,public layoutService: LayoutService, private authservice:AuthenticationService,
 
 
@@ -247,10 +260,8 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
         //     this.selectedDealer?.device_name ? this.getDeviceLiveData(this.selectedDealer?.device_name) : console.log('hii');
         //     this.getDevice();
         //   }, 20000);
-
-
-
     }
+    
     connectToWebSocket(c_id,d_id,d_name) {
       this.spinner=true;
       this.websocketSubscription = this.websocketService.connect(c_id,d_id,d_name)
@@ -271,6 +282,36 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
             this.m_e1=parseFloat(m_e1.toFixed(2));
             this.m_e2=parseFloat(m_e2.toFixed(2));
             this.m_e3=parseFloat(m_e3.toFixed(2));
+
+            this.td_e1=0
+            this.td_e2=0
+            this.td_e3=0
+            const td_e1=this.EnergyData.e1 - this.EnergyData.e1_yesterday
+            const td_e2=this.EnergyData.e2 - this.EnergyData.e2_yesterday
+            const td_e3=this.EnergyData.e3 - this.EnergyData.e3_yesterday
+            this.td_e1=parseFloat(td_e1.toFixed(2));
+            this.td_e2=parseFloat(td_e2.toFixed(2));
+            this.td_e3=parseFloat(td_e3.toFixed(2));
+
+            this.ye_e1=0
+            this.ye_e2=0
+            this.ye_e3=0
+            const ye_e1=this.EnergyData.e1 - this.EnergyData.e1_past_year
+            const ye_e2=this.EnergyData.e2 - this.EnergyData.e2_past_year
+            const ye_e3=this.EnergyData.e3 - this.EnergyData.e3_past_year
+            this.ye_e1=parseFloat(ye_e1.toFixed(2));
+            this.ye_e2=parseFloat(ye_e2.toFixed(2));
+            this.ye_e3=parseFloat(ye_e3.toFixed(2));
+
+            this.tot_e1=0
+            this.tot_e2=0
+            this.tot_e3=0
+            const tot_e1=this.EnergyData.e1 - this.EnergyData.e1_past_month
+            const tot_e2=this.EnergyData.e2 - this.EnergyData.e2_past_month
+            const tot_e3=this.EnergyData.e3 - this.EnergyData.e3_past_month
+            this.tot_e1=parseFloat(tot_e1.toFixed(2));
+            this.tot_e2=parseFloat(tot_e2.toFixed(2));
+            this.tot_e3=parseFloat(tot_e3.toFixed(2));
             this.avgPF=this.EnergyData.pf1+this.EnergyData.pf2+this.EnergyData.pf3
             this.avgPF=parseFloat(this.avgPF.toFixed(2))
             this.spinner=false;

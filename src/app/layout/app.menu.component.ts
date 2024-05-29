@@ -51,7 +51,7 @@ export class AppMenuComponent implements OnInit {
                     items: [
                        {
                             label: 'Master',
-                            icon: 'pi pi-spin pi-cog',
+                            icon: 'pi pi-user',
                             items: [
                                 {
                                     label: 'Add Organization',
@@ -88,16 +88,16 @@ export class AppMenuComponent implements OnInit {
                                     icon: 'pi pi-bolt',
                                     routerLink: ['/app/outlet/energy'] 
                                 },
-                                // {
-                                //     label: 'UPS',
-                                //     icon: 'pi pi-server',
-                                //     routerLink: ['/app/outlet/UPS'] 
-                                // },
-                                // {
-                                //     label: 'DG',
-                                //     icon: 'pi pi-exclamation-triangle',
-                                //     routerLink: ['/app/outlet/DG'] 
-                                // }
+                                {
+                                    label: 'UPS',
+                                    icon: 'pi pi-server',
+                                    routerLink: ['/app/outlet/UPS'] 
+                                },
+                                {
+                                    label: 'DG',
+                                    icon: 'pi pi-exclamation-triangle',
+                                    routerLink: ['/app/outlet/DG'] 
+                                }
                             ]
                         },
                        
@@ -108,6 +108,21 @@ export class AppMenuComponent implements OnInit {
                     items: [
                         { label: 'Device Management', icon: 'pi pi-sitemap', routerLink: ['/app/outlet/device_m'], permission:'N' },
                         { label: 'User Management', icon: 'pi pi-users', routerLink: ['/app/outlet/device_s'] , permission:'N'},
+                        {
+                        label:'Settings',
+                        icon: 'pi pi-spin pi-cog',
+                        items: [
+                            {
+                                label: 'Organization Settings',
+                                icon: 'pi pi-building',
+                                routerLink: ['/app/outlet/org_setting'] 
+                            },
+                            {
+                                label: 'Screen Settings',
+                                icon: 'pi pi-desktop',
+                                routerLink: ['/app/outlet/usrkhjhkj'] 
+                            },]
+                        }
                     ]
                 }]
             }

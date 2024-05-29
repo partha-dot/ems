@@ -48,7 +48,7 @@
 	[value]="products"
 	[rows]="20"
 	[paginator]="true"
-	[globalFilterFields]="['device_id', 'date', 'rpm', 'flow']"
+	[globalFilterFields]="['products.device_id', 'products.date', 'products.device', 'products.time']"
 	[tableStyle]="{ 'min-width': '75rem' }"
 	[(selection)]="selectedProducts"
 	[rowHover]="true"
@@ -111,7 +111,7 @@
             -->
         </ng-template>
         <ng-template pTemplate="summary">
-            <div class="flex align-items-center justify-content-between">In total there are {{ products ? products.length : 0 }} products.</div>
+            <div class="flex align-items-center justify-content-between">In total there are {{ products ? products.length : 0 }} device data.</div>
         </ng-template>
     </p-table>
 </div>

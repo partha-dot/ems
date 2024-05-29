@@ -614,7 +614,9 @@ export class ChartsDemo2Component implements OnInit, OnDestroy,AfterViewInit {
         
         this.data1=response
         this.cities=this.data1.data 
-        
+        this.selectedDealer=this.cities.filter(e=>e.device_id==1)[0]
+        this.getDeviceLiveData(this.selectedDealer.device,this.selectedDealer.device_id);
+
       },
       (error) => { 
         if(error.status=='401'){

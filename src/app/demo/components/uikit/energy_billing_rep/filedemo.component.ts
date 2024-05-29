@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -11,6 +11,7 @@ import {
   ApexChart,
   ChartComponent
 } from "ng-apexcharts";
+import * as XLSX from 'xlsx';
 
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -19,6 +20,10 @@ export type ChartOptions = {
   plotOptions: ApexPlotOptions;
 };
 
+export interface billingData {
+  billing_price?:number;
+  currency_symbol?:string;
+}
 @Component({
     templateUrl: './filedemo.component.html',
     styleUrls: ['./filedemo.component.css'],
@@ -35,7 +40,7 @@ export class FileDemoComponent implements OnInit {
         {id: 'b2', name: 'Billing & Income', link:'/usr' },
         {id: 'b3', name: 'Monthly bill forecast', link:'/usr'  },
         {id: 'b4', name: 'Multi months bill report', link:'/usr'  },
-        {id: 'b5', name: 'Battery Simulation and Billing Analysis', link:'/usr'  }
+        // {id: 'b5', name: 'Battery Simulation and Billing Analysis', link:'/usr'  }
       ];
       countries2 = [{
         id: 1, name: 'Hourly Energy Consumption', link:'/usr' },
@@ -54,6 +59,8 @@ export class FileDemoComponent implements OnInit {
       selectedCountry3: any;
       selectedDevice:any;
       person:any=[];
+      BillingList:any[]=[];
+      BillingDtls:billingData;
       showBillingSubMenu1:boolean=false;
       showBillingSubMenu2:boolean=false;
       showBillingSubMenu3:boolean=false;
@@ -61,7 +68,7 @@ export class FileDemoComponent implements OnInit {
       spinner:boolean=false;
       month:any;
       year:any;
-      datetime12h:any;
+      rangeDates:any;
       selectedName:string;
       data1:any=[];
       deviceList:any=[];
@@ -72,9 +79,18 @@ export class FileDemoComponent implements OnInit {
       showTable2:boolean=false;
       showTable4:boolean=false;
       selectedID:any;
+      datetype:any;
+      // dateType: FormGroup;
       constructor(private router: Router,private fb: FormBuilder,private http:HttpClient ,
 
         private messageService: MessageService, private confirmationService: ConfirmationService,private api:ApiService){
+          // this.dateType = this.fb.group({
+          //   org_id: ['', Validators.required],
+          //   device_id: ['', [Validators.required]],
+          //   device_name: ['', [Validators.required]],
+          //   user_id: ['', [Validators.required]],
+          //   manage_user_device_id:['']
+          // });
           this.chartOptions = {
             series: [100,73],
             chart: {
@@ -132,6 +148,10 @@ export class FileDemoComponent implements OnInit {
           }
       }
       ngOnInit(): void {
+        this.selectedCountry1={id: 'b1', name: 'Energy Usage and Billing', link:'/usr' }
+        this.selectedID='b1';
+        this.selectedName='Energy Usage and Billing';
+        this.datetype='M'
         this.getDevice();   
       }
       logMockData(data:any){
@@ -169,10 +189,74 @@ export class FileDemoComponent implements OnInit {
         // this.router.navigate(['/billingreport']);
         // this.router.navigate(location.target.value);
        }
+       convertDateString(dateString: string): string {
+        // Parse the date string to a Date object
+        const date = new Date(dateString);
+      
+        // Extract year, month, and day
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+        const day = String(date.getDate()).padStart(2, '0');
+      
+        // Format the date as 'yyyy-mm-dd'
+        return `${year}-${month}-${day}`;
+      }
+      
        ShowHideTable(){
-        this.showTable1=!this.showTable1
-        this.showTable2=!this.showTable2
-        this.showTable4=!this.showTable4
+        this.spinner=true;
+        console.log(this.datetype, this.selectedDevice, this.rangeDates);
+        debugger
+        if(this.datetype=='C'){
+          var firstFormattedDate: string;
+          var secondFormattedDate: string;
+          firstFormattedDate = this.convertDateString(this.rangeDates[0]);
+          secondFormattedDate = this.convertDateString(this.rangeDates[1]);
+        }
+        const apiUrl = this.api.baseUrl;
+        const token = localStorage.getItem('token');
+        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
+        const credentials = {
+          report_type: this.datetype,
+          device_id: this.selectedDevice?.device_id,
+          start_date_time: this.datetype=='M'?this.convertDateString(this.month):this.datetype=='Y'?this.convertDateString(this.year):firstFormattedDate,
+          end_date_time: this.datetype=='C'?secondFormattedDate:null
+        }
+        debugger
+        this.http.post(apiUrl+'/client/report_analysis/energy_usage_billing',credentials , { headers }).subscribe(
+            (response) => {
+              this.spinner=false
+              console.log(response);
+              const data:any=response;
+              this.BillingList=data.data.data;
+              this.BillingDtls=data.data.master_bill;
+              if(this.BillingList){
+                this.BillingList.forEach(e=>{
+                  e.total_energy=(e.e1+e.e2+e.e3).toFixed(2);
+                  e.price=((e.e1+e.e2+e.e3)*(this.BillingDtls.billing_price)).toFixed(2);
+                })
+              }
+              debugger
+              this.showTable1=true
+              this.showTable2=false
+              this.showTable4=false
+            },
+            (error) => { 
+        if(error.status=='401'){
+          this.spinner=false
+          this.router.navigate(['/']);
+          debugger
+         }
+        console.log(error.status);
+              console.error(error);
+              this.spinner=false
+              this.messageService.add({ severity: 'error', summary: 'Error', detail: 'From Server Side!!', life: 3000 });
+            }
+            
+          );
+
+
+        
+        
        }
        getDevice(){
         const credentials = {
@@ -201,6 +285,8 @@ export class FileDemoComponent implements OnInit {
       }
     )}
     dateTypeChange(val:any){
+      console.log(this.datetype);
+      
       if(val=="Y"){
         this.showyear=true;
         this.showMonth=false;
@@ -216,6 +302,12 @@ export class FileDemoComponent implements OnInit {
         this.showMonth=false;
         this.showDateTime=true;
       }
+    }
+    exportToExcel(): void {
+      const element = document.getElementById('my-table');
+      const worksheet: XLSX.WorkSheet = XLSX.utils.table_to_sheet(element);
+      const workbook: XLSX.WorkBook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+      XLSX.writeFile(workbook, 'billing-data.xlsx');
     }
 
 }

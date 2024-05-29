@@ -1,6 +1,6 @@
 <div class="grid">
   
-  <div class="col-12 lg:col-6 xl:col-3">
+  <div class="col-12 lg:col-6 xl:col-4">
     <p-dropdown (onChange)="onChange($event)"
     [options]="countries1" 
     [(ngModel)]="selectedCountry1"
@@ -9,7 +9,7 @@
     placeholder="Billing Report"
     styleClass="w-23rem" />
   </div>
-  <div class="col-12 lg:col-6 xl:col-3">
+  <!-- <div class="col-12 lg:col-6 xl:col-3">
     <p-dropdown 
     [options]="countries2" 
     [(ngModel)]="selectedCountry2"
@@ -28,8 +28,8 @@
     optionLabel="name"
     placeholder="Other Analysis" 
     styleClass="w-15rem"/>
-  </div>
-  <div class="col-12 lg:col-6 xl:col-4 text-blue-600 text-xl">
+  </div> -->
+  <div class="col-12 lg:col-6 xl:col-8 text-blue-600 text-xl">
     <p>{{selectedName?selectedName:''}}</p>
   </div>
   
@@ -106,17 +106,17 @@
           <tr>
             <td >Report Type</td>
             <td >
-              <form action="" class="form-select">
+              <form  class="form-select">
                   <label>
-                      <input type="radio" id="m-report" checked name="fav_language" (change)="dateTypeChange($event.target.value)" value="M">
+                      <input type="radio" id="m-report" [(ngModel)]="datetype" [ngModelOptions]="{standalone: true}"  checked name="fav_language" (change)="dateTypeChange($event.target.value)" value="M">
                       Monthly Report
                   </label>
                   <label>
-                      <input type="radio" id="y-report" name="fav_language" (change)="dateTypeChange($event.target.value)"  value="Y">
+                      <input type="radio" id="y-report" [(ngModel)]="datetype" [ngModelOptions]="{standalone: true}"  name="fav_language" (change)="dateTypeChange($event.target.value)"  value="Y">
                       Yearly Report
                   </label>
                   <label>
-                     <input type="radio" id="Customize" name="fav_language" (change)="dateTypeChange($event.target.value)"  value="C">
+                     <input type="radio" id="Customize" [(ngModel)]="datetype" [ngModelOptions]="{standalone: true}" name="fav_language" (change)="dateTypeChange($event.target.value)"  value="C">
                       Customize
                   </label>
               </form>
@@ -162,20 +162,16 @@
             </td>
             <td *ngIf="showDateTime">
               <p-calendar 
-                  inputId="calendar-12h" 
-                  [(ngModel)]="datetime12h" 
-                  [showTime]="true" 
-                  [hourFormat]="12" 
-                  placeholder="Select DateTime"
-                  [readonlyInput]="true" 
-                  [iconDisplay]="'input'" 
-                  [showIcon]="true" 
-                  inputId="icondisplay"/>
+              [(ngModel)]="rangeDates" 
+              selectionMode="range" 
+              [readonlyInput]="true"
+              [showIcon]="true"  />
+              
               <!-- <input type="datetime" id="bdaymonth" name="bdaymonth" value="2024-05-01 00:00" > -->
             </td>
             <td>
               <button class="button button1" (click)="ShowHideTable()">View</button>
-              <button class="button button2">Export</button>
+              <button class="button button2" (click)="exportToExcel()">Export</button>
   
             </td>
           </tr>
@@ -370,80 +366,26 @@
   <br>
   
   <div class="table" *ngIf="showTable1 && selectedID=='b1'">
-      <table style="width:100%">
+   <table style="width:100%"  id="my-table">
          <thead>
             <tr>
-              <th>Date</th>
+              <th>DateTime</th>
               <th>Total</th>
               <th >Electricity Bill</th>
           </tr>
          </thead>
        <tbody>
-        <tr>
-          <td>2024-05-01 </td>
-          <td>10.75 kWh</td>
-          <td>8.6 $</td>
+        <tr *ngFor="let data of BillingList">
+          <td>{{data.date}}&nbsp;&nbsp;{{data.time}}</td>
+          <td>{{data.total_energy}} kWh</td>
+          <td>{{BillingDtls?.currency_symbol}}{{data.price | number:'1.2-2'}}</td>
         </tr>
-        <tr>
-          <td>2024-05-02 </td>
-          <td>10.76 kWhg</td>
-          <td>8.61 $</td>
-        </tr>
-        <tr>
-            <td>2024-05-03 </td>
-            <td>10.77 kWh</td>
-            <td>8.62 $y</td>
-          </tr>
-          <tr>
-            <td>2024-05-04 </td>
-            <td>10.79 kWh</td>
-            <td>8.63 $</td>
-          </tr>
-          <tr>
-            <td>2024-05-05 </td>
-            <td>10.66 kWh</td>
-            <td>8.53 $</td>
-          </tr>
-          <tr>
-            <td>2024-05-01 </td>
-            <td>10.75 kWh</td>
-            <td>8.6 $</td>
-          </tr>
-          <tr>
-            <td>2024-05-01 </td>
-            <td>10.75 kWh</td>
-            <td>8.6 $</td>
-          </tr>
-          <tr>
-            <td>2024-05-01 </td>
-            <td>10.75 kWh</td>
-            <td>8.6 $</td>
-          </tr>
-          <tr>
-            <td>2024-05-01 </td>
-            <td>10.75 kWh</td>
-            <td>8.6 $</td>
-          </tr>
-          <tr>
-            <td>2024-05-01 </td>
-            <td>10.75 kWh</td>
-            <td>8.6 $</td>
-          </tr>
-          <tr>
-            <td>2024-05-01 </td>
-            <td>10.75 kWh</td>
-            <td>8.6 $</td>
-          </tr>
-          <tr>
-            <td>2024-05-01 </td>
-            <td>10.75 kWh</td>
-            <td>8.6 $</td>
-          </tr>
-          <tr>
+        
+          <!-- <tr>
             <td><b>Total</b> </td>
             <td><b>195.60 kWh</b></td>
             <td><b>58.60 $</b></td>
-          </tr>
+          </tr> -->
        </tbody>
         </table>
         

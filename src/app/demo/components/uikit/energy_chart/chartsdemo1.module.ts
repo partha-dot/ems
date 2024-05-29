@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, inject, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChartsDemo1RoutingModule } from './chartsdemo1-routing.module';
 import { ChartModule } from 'primeng/chart'
@@ -7,7 +7,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { AutoCompleteModule } from 'primeng/autocomplete';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ControlContainer, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { TabViewModule } from 'primeng/tabview';
@@ -15,7 +15,9 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { DropdownModule } from 'primeng/dropdown';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { TabMenuModule } from 'primeng/tabmenu';
-
+import { CardModule } from 'primeng/card';
+import { ChartContentHolderComponent } from './core/chart-content-holder/chart-content-holder.component';
+import { FilterFormComponent } from './core/filter-form/filter-form.component';
 @NgModule({
 	imports: [
 		TabViewModule,
@@ -33,10 +35,10 @@ import { TabMenuModule } from 'primeng/tabmenu';
 		ToastModule,
 		InputSwitchModule,
 		NgApexchartsModule,
-		TabMenuModule
-		
+		TabMenuModule,
+        CardModule
 	],
-	declarations: [ChartsDemo1Component],
+	declarations: [ChartsDemo1Component, ChartContentHolderComponent, FilterFormComponent],
 	schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
 export class ChartsDemo1Module { }

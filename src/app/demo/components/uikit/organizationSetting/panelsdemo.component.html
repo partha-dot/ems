@@ -1,0 +1,213 @@
+<div class="grid">
+<div class="col-12 ">
+	<div class="card">
+		<h5>Organization Settings</h5>
+		<form [formGroup]="stockIn">
+			<div class="p-fluid p-formgrid grid">
+				<!-- <div class="field col-12 md:col-6 custom-select" >
+					<label htmlFor="firstname2">Select Reagion</label>
+					<p-dropdown 
+					formControlName="region" 
+					[options]="regions"
+					optionLabel="name"
+					placeholder="Select a regions" 
+					(onChange)="setRegion()"/>
+				</div>
+				<div class="field col-12 md:col-6">
+					<label htmlFor="firstname2">Select Sub Reagion</label>
+					<p-dropdown 
+					formControlName="sub_region" 
+					[options]="subRegion"
+					optionLabel="name"
+					placeholder="Select Sub Region" 
+					(onChange)="setSubRegion()"/>
+				</div> -->
+				<div class="field col-12 md:col-3" >
+					<label htmlFor="firstname2">Select Organization</label>
+					<p-dropdown 
+					formControlName="org" 
+					[options]="orgList"
+					optionLabel="organization_name"
+					placeholder="Select a Organization" 
+					(onChange)="setOrg()"/>
+				</div>
+				<div class="field col-12 md:col-3">
+                    <label htmlFor="country">Select Country</label>
+                    <p-autoComplete [(ngModel)]="selectedCountries" [ngModelOptions]="{standalone: true}" placeholder="Select a Country" (onSelect)="setDevice()" [suggestions]="filteredDealer" (completeMethod)="filterDealer($event)" field="name" [dropdown]="true">
+                    </p-autoComplete>
+                </div>
+                <div class="field col-12 md:col-3">
+                    <label htmlFor="country">Select State</label>
+                    <p-autoComplete [(ngModel)]="selectedState" [ngModelOptions]="{standalone: true}" placeholder="Select a State" (onSelect)="setState()" [suggestions]="filteredState" (completeMethod)="filterState($event)" field="name" [dropdown]="true">
+                    </p-autoComplete>
+                </div>
+				
+                <div class="field col-12 md:col-3">
+					<label htmlFor="firstname2">Select City</label>
+					<p-autoComplete [(ngModel)]="selectedCity" [ngModelOptions]="{standalone: true}" placeholder="Select a City" (onSelect)="setCity()" [suggestions]="filteredCity" (completeMethod)="filterCity($event)" field="name" [dropdown]="true">
+                    </p-autoComplete>
+					<!-- <p-dropdown 
+					formControlName="city" 
+					[options]="cities"
+					optionLabel="name"
+					placeholder="Select a City" 
+					(onChange)="setCity()"/> -->
+				</div>
+                <!-- <div class="field col-12 md:col-6">
+					<label htmlFor="firstname2">Pin</label>
+					<input type="text" pInputText [(ngModel)]="first" />
+				</div> -->
+                <div class="field col-12 md:col-12">
+					<label htmlFor="firstname2">Address</label>
+					<textarea formControlName="address"
+                        rows="5"
+                        cols="30" 
+                        pInputTextarea >
+                    </textarea>
+				</div>
+				<div class="field col-12 md:col-3">
+					<label htmlFor="firstname2">Power Tariff</label>
+					<p-dropdown 
+					formControlName="power_tariff" 
+					[options]="powerTariff"
+					optionLabel="name"
+					placeholder="Select Option" 
+					(onChange)="setGrid()"/>
+				</div>
+				<div class="field col-12 md:col-3">
+					<label htmlFor="firstname2">Rate per Month ({{this.selectedCountries?this.selectedCountries.currency_symbol:''}})</label>
+					<p-inputNumber 
+					[(ngModel)]="pricePerMonth"
+					[ngModelOptions]="{standalone: true}"
+					mode="currency" 
+					inputId="currency-india" 
+					[currency]="this.selectedCountries?this.selectedCountries.currency:'INR'"
+					
+					locale="en-IN" /> 
+				</div>
+				<div class="field col-12 md:col-3" >
+					<label htmlFor="firstname2">Select Day of month</label>
+					<p-dropdown 
+					[(ngModel)]="dayOnly"
+					[ngModelOptions]="{standalone: true}"
+					[options]="dayPicker"
+					optionLabel="key"
+					placeholder="Select a date" 
+					/>
+				</div>
+				  <!-- <button type="button" (click)="addSkill()">Add Skill</button> -->
+				  <!-- <p-button label="Submit" icon="pi pi-check" styleClass="p-button-success"></p-button> -->
+				  <!-- <button type="submit" [disabled]="stockIn.invalid">Submit</button> -->
+				
+			</div>
+			<div class="p-fluid p-formgrid grid">
+				<div class="field col-12 md:col-2" >
+
+					<p-button icon="pi pi-check" (click)="insertSetting()" styleClass="p-button-primary " label="Save"></p-button>
+				
+				</div>
+				<div class="field col-12 md:col-2" >
+					<p-button icon="pi pi-refresh" (click)="resetData()" styleClass="p-button-danger" label="Reset"></p-button>
+	
+				</div>
+				
+			</div>
+			
+			
+		</form>
+		
+	</div>
+</div>
+<div class="col-12 ">
+	<p-table
+	#dt
+	[value]="settingList"
+	[rows]="4"
+	[paginator]="true"
+	[globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
+	[tableStyle]="{ 'min-width': '75rem' }"
+	[(selection)]="selectedSetting"
+	[rowHover]="true"
+	dataKey="origination_id"
+	currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+	[showCurrentPageReport]="true"
+    >
+        <ng-template pTemplate="caption">
+            <div class="flex align-items-center justify-content-between">
+                <h5 class="m-0">Manage Settings</h5>
+                <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Search..." />
+                </span>
+            </div>
+        </ng-template>
+		<!-- <p-sortIcon field="name"></p-sortIcon> -->
+        <ng-template pTemplate="header">
+            <tr>
+                
+				<th>ID</th>
+                <th pSortableColumn="name" style="min-width:15rem">Organization Name </th>
+                <th pSortableColumn="name" style="min-width:15rem">Country </th>
+                <th pSortableColumn="name" style="min-width:15rem">State </th>
+                <th pSortableColumn="name" style="min-width:15rem">City </th>
+                <th pSortableColumn="name" style="min-width:15rem">Billing Type </th>
+                <th pSortableColumn="name" style="min-width:15rem">Billing Price </th>
+				<th style="width: 4rem">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>Status
+                </th>
+                <th>Edit</th>
+                <!-- <th>Delete</th> -->
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product>
+            <tr>
+                
+                <td>{{ product.billing_organization }}</td>
+                <td>{{ product.orgName }}</td>
+                <td>{{ product.country }}</td>
+                <td>{{ product.state }}</td>
+                <td>{{ product.city }}</td>
+                <td>{{ product.billing_type=="FR"?"Fixed Rate":" " }}</td>
+                <td>{{ product.billing_price }}</td>
+                <td>
+                    <p-tableCheckbox  [checked]="product.billing_status=='Y'"></p-tableCheckbox>
+                </td>
+                <td>
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-primary mr-2" (click)="editSetting(product)"></button>
+                </td>
+				<!-- <td>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="settingList(product)"></button>
+				</td> -->
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div class="flex align-items-center justify-content-between">In total there are {{ settingList ? settingList.length : 0 }} Settings.</div>
+        </ng-template>
+    </p-table>
+</div>
+</div>
+<p-dialog header="Get Organization Settings" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem',height:'25rem' }">
+    <div class="flex align-items-center gap-3 mb-3">
+					<p-dropdown 
+					[(ngModel)]="selectedOrganization"
+					[ngModelOptions]="{standalone: true}"
+					[options]="orgList"
+					optionLabel="organization_name"
+					placeholder="Select a Organization" 
+					(onChange)="setOrg()"/>
+    </div>
+    <div class="flex justify-content-end gap-2" style="margin-top: 100px;">
+        <p-button label="Cancel" severity="secondary" (click)="visible = false" />
+        <p-button label="Submit" (click)="getSettingList()" />
+    </div>
+</p-dialog>
+<p-toast></p-toast>
+
+<div class="loader" *ngIf="spinner">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+</div><div class="overlay" *ngIf="spinner"></div>
+

@@ -20,7 +20,7 @@ import { AuthGuard } from '../../service/auth.guard';
         // { path: 'message', data: { breadcrumb: 'Message' }, loadChildren: () => import('./messages/messagesdemo.module').then(m => m.MessagesDemoModule) },
         { path: 'AddCustomer', data: { breadcrumb: 'Misc' }, loadChildren: () => import('./AddCustomer/miscdemo.module').then(m => m.MiscDemoModule) },
         // { path: 'overlay', data: { breadcrumb: 'Overlay' }, loadChildren: () => import('./overlays/overlaysdemo.module').then(m => m.OverlaysDemoModule) },
-        { path: 'barcode', data: { breadcrumb: 'Panel' }, loadChildren: () => import('./panels/panelsdemo.module').then(m => m.PanelsDemoModule) },
+        { path: 'org_setting', data: { breadcrumb: 'Panel' }, loadChildren: () => import('./organizationSetting/panelsdemo.module').then(m => m.PanelsDemoModule) },
         { path: 'alert', data: { breadcrumb: 'Table' }, loadChildren: () => import('./alert/messagesdemo.module').then(m => m.MessagesDemoModule) },
         { path: 'report', data: { breadcrumb: 'Product' }, loadChildren: () => import('./historicData/product.module').then(m => m.ProductModule) },
         { path: 'usr', data: { breadcrumb: 'Model' }, loadChildren: () => import('./UserMaster/model.module').then(m => m.ModelModule) },

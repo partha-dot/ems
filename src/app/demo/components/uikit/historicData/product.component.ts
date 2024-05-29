@@ -57,7 +57,7 @@ export class ProductComponent implements OnInit{
     b: boolean = false;
     r_y: boolean = false;
     y_b: boolean = false;
-    b_y: boolean = false;
+    b_r: boolean = false;
     curr1: boolean = false;
     curr2: boolean = false;
     curr3: boolean = false;
@@ -102,7 +102,7 @@ export class ProductComponent implements OnInit{
       {field: 'b', col:"Voltage B"},
       {field: 'r_y', col:"Voltage R_Y"},
       {field: 'y_b', col:"Voltage Y-B"},
-      {field: 'b_y', col:"Voltage B-R"},
+      {field: 'b_r', col:"Voltage B-R"},
       {field: 'curr1',col:"Current R"},
       {field: 'curr2',col:"Current Y"},
       {field: 'curr3',col:"Current B"},
@@ -201,8 +201,8 @@ const apiUrl = this.api.baseUrl;
       if(this.cols.some(p => p.field == "y_b")){
         this.y_b=true
       }
-      if(this.cols.some(p => p.field == "b_y")){
-        this.b_y=true
+      if(this.cols.some(p => p.field == "b_r")){
+        this.b_r=true
       }
       if(this.cols.some(p => p.field == "curr1")){
         this.curr1=true
@@ -231,7 +231,7 @@ const apiUrl = this.api.baseUrl;
       //   this.b= false;
       //   this.r_y= false;
       //   this.y_b= false;
-      //   this.b_y= false;
+      //   this.b_r= false;
       //   this.curr1= false;
       //   this.curr2= false;
       //   this.curr3= false;
@@ -422,26 +422,40 @@ const apiUrl = this.api.baseUrl;
   }
   exportToExcel() {
     const data: any[] = []; // Your table data array
-  
+    const hdd=[]
+    this.cols.forEach(e=>{
+      hdd.push(e.col)})
     // Add header row
-    const header = ['Sl No.', 'DATE', 'TIME', 'DEVICE ID', 'DC BUS VOLTAGE (V)', 'OUTPUT CURRENT (A)', 'SETTINGS FREQ. (HZ)', 'RUNNING FREQ. (HZ)', 'RPM', 'FLOW (%)'];
+    const header = ['Sl No.', 'DATE', 'TIME', 'DEVICE ID', 'Voltage R (V)','Voltage Y (V)','Voltage B (V)','Voltage R_Y','Voltage Y_B',
+    'Voltage B_R', 'Current R (A)','Current Y (A)', 'Current B (A)','Total Energy', 'Average PF (HZ)', 'Frequency', 'Runhr','TotkW','TotkVA','TotkVAr'];
     data.push(header);
-  
+    
     // Add data rows
     for (let i = 0; i < this.products.length; i++) {
-      const rowData = [
-        i + 1,
-        this.products[i].date,
-        this.products[i].time,
-        this.products[i].device_id,
-        this.products[i].dc_bus_voltage,
-        this.products[i].output_current,
-        this.products[i].settings_freq,
-        this.products[i].running_freq,
-        this.products[i].rpm,
-        this.products[i].flow
-      ];
-      data.push(rowData);
+      for (let j = 0; j < this.cols.length; j++){
+        const rowData = [
+          this.products[i].date,
+          this.products[i].time,
+          this.products[i].device_id,
+          this.products[i].flow,
+          this.products[i].output_current,
+          this.products[i].settings_freq,
+          this.products[i].running_freq,
+          this.products[i].rpm,
+          this.products[i].flow,
+          this.products[i].output_current,
+          this.products[i].settings_freq,
+          this.products[i].running_freq,
+          this.products[i].rpm,
+          this.products[i].flow,
+          this.products[i].settings_freq,
+          this.products[i].running_freq,
+          this.products[i].rpm,
+          this.products[i].flow
+        ];
+        data.push(rowData);
+      }
+      
     }
   
     // Create a worksheet
