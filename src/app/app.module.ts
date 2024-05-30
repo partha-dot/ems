@@ -14,7 +14,8 @@ import { PhotoService } from './demo/service/photo.service';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { AuthenticationService } from './demo/service/authentication.service';
 import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
-import { environment } from 'src/environments/environment';
+import { ApiService } from './demo/service/api.service';
+import { api_name } from './demo/constants/apiName';
 
 // import { InputGroupModule } from 'primeng/inputgroup';
 // import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
@@ -43,7 +44,7 @@ import { environment } from 'src/environments/environment';
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
-        {provide:'BASE_URL',useValue:environment.base_url},
+        {provide:'BASE_URL',useValue:api_name.base_url},
         CountryService, CustomerService, EventService, IconService, NodeService,
         PhotoService, ProductService,AuthenticationService,JwtHelperService
     ],
