@@ -271,7 +271,8 @@ export class FileDemoComponent implements OnInit {
                 console.log(response);
                 this.spinner=false
                 this.data1=response
-                this.deviceList=this.data1.data
+                this.deviceList=this.data1.data;
+                this.selectedDevice=this.deviceList[0];  
 
       },
       (error) => { 

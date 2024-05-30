@@ -88,16 +88,16 @@ export class AppMenuComponent implements OnInit {
                                     icon: 'pi pi-bolt',
                                     routerLink: ['/app/outlet/energy'] 
                                 },
-                                {
-                                    label: 'UPS',
-                                    icon: 'pi pi-server',
-                                    routerLink: ['/app/outlet/UPS'] 
-                                },
-                                {
-                                    label: 'DG',
-                                    icon: 'pi pi-exclamation-triangle',
-                                    routerLink: ['/app/outlet/DG'] 
-                                }
+                                // {
+                                //     label: 'UPS',
+                                //     icon: 'pi pi-server',
+                                //     routerLink: ['/app/outlet/UPS'] 
+                                // },
+                                // {
+                                //     label: 'DG',
+                                //     icon: 'pi pi-exclamation-triangle',
+                                //     routerLink: ['/app/outlet/DG'] 
+                                // }
                             ]
                         },
                        

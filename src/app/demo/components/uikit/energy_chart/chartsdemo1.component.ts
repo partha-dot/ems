@@ -1359,9 +1359,11 @@ export class ChartsDemo1Component implements OnInit, OnDestroy {
   this.http.post(apiUrl+'/client/devices/list', credentials,{ headers }).subscribe(
       (response) => {
         console.log(response);
-
-        this.data1=response
-        this.cities=this.data1.data
+        if(response){
+            this.data1=response
+            this.cities=this.data1.data;
+            this.selectedDealer=this.cities[0];  
+        }
 
       },
       (error) => {

@@ -146,16 +146,15 @@
             <tr>
                 
 				<th>ID</th>
-                <th pSortableColumn="name" style="min-width:15rem">Organization Name </th>
-                <th pSortableColumn="name" style="min-width:15rem">Country </th>
-                <th pSortableColumn="name" style="min-width:15rem">State </th>
-                <th pSortableColumn="name" style="min-width:15rem">City </th>
-                <th pSortableColumn="name" style="min-width:15rem">Billing Type </th>
-                <th pSortableColumn="name" style="min-width:15rem">Billing Price </th>
-				<th style="width: 4rem">
-                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>Status
-                </th>
-                <th>Edit</th>
+                <th pSortableColumn="name" >Organization Name </th>
+                <th pSortableColumn="name" >Country </th>
+                <th pSortableColumn="name" >State </th>
+                <th pSortableColumn="name" >City </th>
+                <th pSortableColumn="name" >Billing Type </th>
+                <th pSortableColumn="name" >Billing Price </th>
+                <th pSortableColumn="name" >address</th>
+				<th >Status</th>
+                <!-- <th>Edit</th> -->
                 <!-- <th>Delete</th> -->
             </tr>
         </ng-template>
@@ -164,17 +163,18 @@
                 
                 <td>{{ product.billing_organization }}</td>
                 <td>{{ product.orgName }}</td>
-                <td>{{ product.country }}</td>
+                <td>{{ product.countries }}</td>
                 <td>{{ product.state }}</td>
-                <td>{{ product.city }}</td>
+                <td>{{ product.cityes }}</td>
                 <td>{{ product.billing_type=="FR"?"Fixed Rate":" " }}</td>
                 <td>{{ product.billing_price }}</td>
+                <td>{{ product.address }}</td>
                 <td>
-                    <p-tableCheckbox  [checked]="product.billing_status=='Y'"></p-tableCheckbox>
+                    <input type="checkbox"  [checked]="product.billing_status=='Y'"/>
                 </td>
-                <td>
+                <!-- <td>
                     <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-primary mr-2" (click)="editSetting(product)"></button>
-                </td>
+                </td> -->
 				<!-- <td>
                     <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="settingList(product)"></button>
 				</td> -->

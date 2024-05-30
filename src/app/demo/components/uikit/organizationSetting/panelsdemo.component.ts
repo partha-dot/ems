@@ -98,7 +98,7 @@ export class PanelsDemoComponent implements OnInit {
         {key:1},{key:2},{key:3},{key:4},{key:5},{key:6},{key:7},{key:8},
         {key:9},{key:10},{key:11},{key:12},{key:13},{key:14},{key:15},{key:16},
         {key:17},{key:18},{key:19},{key:20},{key:21},{key:22},{key:23},{key:24},
-        {key:25},{key:26},{key:27},{key:28},{key:29},{key:30}
+        {key:25},{key:26},{key:27},{key:28},{key:29},{key:30},{key:31},{key:32}
       ]
              
   }
@@ -523,8 +523,8 @@ setDevice(){
       const obj={
         "billing_type": "FR",
         "billing_price":this.pricePerMonth,
-        "billing_status": this.dayOnly,
-        "billing_day": 1
+        "billing_status": 'Y',
+        "billing_day": this.dayOnly.key
       }
       const arr=[];
       arr.push(obj)
@@ -688,10 +688,6 @@ setDevice(){
           const dt:any=response;
           this.settingList=dt.data;
           this.settingList.forEach(p=>{
-            debugger
-            p.country=this.countries.filter(e=>e.id==p.countries_id)[0].name
-            p.city=this.cities.filter(e=>e.id==p.cities_id)[0].name
-            p.state=this.states.filter(e=>e.id==p.state_id)[0].name
             p.orgName=this.orgList.filter(e=>e.organization_id==p.organization_id)[0].organization_name
           })
           debugger
