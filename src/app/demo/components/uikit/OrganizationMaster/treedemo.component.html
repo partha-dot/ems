@@ -49,20 +49,20 @@
         </ng-template>
         <ng-template pTemplate="header">
             <tr>
-                <th style="width: 4rem">
+                <!-- <th style="width: 4rem">
                     <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                </th>
-				<th>ID</th>
+                </th> -->
+				<th>Sl No.</th>
                 <th pSortableColumn="name" style="min-width:15rem">Name <p-sortIcon field="name"></p-sortIcon></th>
                 <th>Action</th>
             </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-product>
+        <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
             <tr>
-                <td>
+                <!-- <td>
                     <p-tableCheckbox [value]="product"></p-tableCheckbox>
-                </td>
-                <td>{{ product.organization_id }}</td>
+                </td> -->
+                <td>{{ rowIndex+1 }}</td>
                 <td>{{ product.organization_name }}</td>
                 
                 <td>
@@ -76,7 +76,7 @@
         </ng-template>
     </p-table>
 </div>
-<p-dialog [(visible)]="productDialog" [style]="{ width: '450px' }" header="Product Details" [modal]="true" styleClass="p-fluid">
+<p-dialog [(visible)]="productDialog" [style]="{ width: '450px' }" header="Organization Details" [modal]="true" styleClass="p-fluid">
     <ng-template pTemplate="content">
         <!-- <img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + product.image" [alt]="product.image" class="block m-auto pb-3" *ngIf="product.image" /> -->
         <div class="field">

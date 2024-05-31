@@ -9,7 +9,7 @@ import { MessageService, ConfirmationService } from 'primeng/api';
 import { ApiService } from 'src/app/demo/service/api.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Company } from 'src/app/demo/api/company';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 @Component({
   selector: 'app-model',
@@ -45,11 +45,11 @@ client_id:number=(+localStorage.getItem('c_id'))
   constructor(private router: Router,private formBuilder: FormBuilder,private http:HttpClient ,private productService: ProductService,
      private messageService: MessageService, private confirmationService: ConfirmationService,private api:ApiService) {
     this.userForm = this.formBuilder.group({
-      organization_id: [''],
-      name: [''],
-      user_id:[''],
-      email: [''],
-      password: [''],
+      organization_id: ['', Validators.required],
+      name: ['', Validators.required],
+      user_id:['', Validators.required],
+      email: ['', Validators.required],
+      password: ['', Validators.required],
     });
    }
  
@@ -118,8 +118,9 @@ getDeviceCompany(){
   }
 
   openNew() {
-    this.editMode=false
-    this.userForm.reset();
+      this.editMode=false;
+      this.userForm.reset();
+      this.value='';
       this.product = {};
       this.submitted = false;
       this.productDialog = true;
@@ -169,6 +170,7 @@ getDeviceCompany(){
   }
 
   hideDialog() {
+    this.value=''
       this.productDialog = false;
       // this.submitted = false;
   }

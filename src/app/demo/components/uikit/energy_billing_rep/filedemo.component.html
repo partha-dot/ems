@@ -375,7 +375,8 @@
           </tr>
          </thead>
        <tbody>
-        <tr *ngFor="let data of BillingList">
+        <tr *ngFor="let data of BillingList; index as i">
+          <td>{{i+1}}</td>
           <td>{{data.date}}&nbsp;&nbsp;{{data.time}}</td>
           <td>{{data.total_energy}} kWh</td>
           <td>{{BillingDtls?.currency_symbol}}{{data.price | number:'1.2-2'}}</td>

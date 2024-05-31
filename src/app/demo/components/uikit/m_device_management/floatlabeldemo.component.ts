@@ -47,7 +47,9 @@ export class FloatLabelDemoComponent implements OnInit  {
   stockApi:any;
   stockList:any[]=[];
   statuses!: any[];
-  loginType:string=localStorage.getItem('loginType')
+  loginType:string=localStorage.getItem('loginType');
+  totOnline:number=0
+  totOffilne:number=0
  
   DeviceModel = [
     { name: 'Energy', code: 'EN' },
@@ -57,9 +59,9 @@ export class FloatLabelDemoComponent implements OnInit  {
 ];
   DeviceType = [
     { name: 'Energy', code: 'EN' },
-    { name: 'Water', code: 'WA' },
-    { name: 'Power', code: 'PO' },
-    { name: 'Wind', code: 'WI' }
+    // { name: 'Water', code: 'WA' },
+    // { name: 'Power', code: 'PO' },
+    // { name: 'Wind', code: 'WI' }
   ];
   meterType = [
     { name: 'Single Phase', code: 'ENSF' },
@@ -69,7 +71,7 @@ export class FloatLabelDemoComponent implements OnInit  {
   constructor(private router: Router,private authservice:AuthenticationService,private api:ApiService,private countryService: CountryService,private http:HttpClient,private productService: ProductService,private fb: FormBuilder, private messageService: MessageService, private confirmationService: ConfirmationService) {
     this.addDevice = this.fb.group({
       did: [''],
-      deviceName: ['', Validators.required],
+      deviceName: ['', [Validators.required]],
       deviceId: ['', [Validators.required]],
       dmodel: ['', [Validators.required]],
       lat: ['', [Validators.required]],
@@ -161,6 +163,21 @@ export class FloatLabelDemoComponent implements OnInit  {
       this.productDialog = false;
       this.submitted = false;
   }
+  calculateDifference(date1Str: string): number {
+    
+    // const date1 = new Date("2024-05-31 15:15:21");
+    const date1 = new Date(date1Str);
+    const date2 = new Date();
+
+    // Get the time difference in milliseconds
+    const timeDifference = Math.abs(date2.getTime() - date1.getTime());
+
+    // Convert the time difference to minutes
+    const differenceInMinutes = Math.floor(timeDifference / (1000 * 60));
+    console.log(differenceInMinutes);
+    debugger
+    return differenceInMinutes;
+  }
   getAllStock(){
     this.spinner=true;
     const apiUrl = this.api.baseUrl;
@@ -175,6 +192,20 @@ export class FloatLabelDemoComponent implements OnInit  {
           console.log(response);
           this.stockApi=response
           this.stockList=this.stockApi.data;
+          // device_updated_atlog
+          this.totOffilne=0;
+          this.totOffilne=0;
+          this.stockList.forEach(e=>{
+            debugger
+            if(this.calculateDifference(e.device_updated_at)<=60){
+                e.status='Y';
+                this.totOnline+=1
+            }
+            else{
+              e.status='N'
+              this.totOffilne+=1
+            }
+          })
           debugger
         },
         (error) => { 
@@ -206,96 +237,103 @@ export class FloatLabelDemoComponent implements OnInit  {
     }
   saveProduct() {
       this.submitted = true;
-      if(this.operationType=="I"){
-        debugger
-        const apiUrl = this.api.baseUrl;
-        const token = localStorage.getItem('token');
-        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-        const credentials = {
-          client_id:this.client_id,
-          device_name:this.ct.deviceName.value,
-          device:this.ct.deviceId.value,
-          model:this.ct.dmodel.value,
-          lat:this.ct.lat.value,
-          lon:this.ct.long.value,
-          imei_no:this.ct.imeiNo.value,
-          device_type:this.ct.device_type.value,
-          meter_type:this.ct.meter_type.value,
-          do_channel:1,
-          last_maintenance:this.convDt()
-
-          
-        };
-        const credentials2=[credentials]
-        debugger
-        this.http.post(apiUrl+'/client/manage/devices/add', credentials2,{ headers }).subscribe(
-            (response) => {
-              console.log(response);
-                    this.spinner=false;
-                    debugger
-              this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Device Created', life: 3000 });
-              this.resetData();
-              this.getAllStock();
-              this.hideDialog();
-            },
-            (error) => { 
-        if(error.status=='401'){
-          this.router.navigate(['/']);
-          debugger
-         }
-        console.log(error.status);
-                    this.spinner=false;
-                    console.log(error);
-                    this.hideDialog();
-                    
-            }
-          );
+      if(this.addDevice.invalid){
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Please fill all the required field!!', life: 3000 });
       }
       else{
-        debugger
-        const apiUrl = this.api.baseUrl;
-        const token = localStorage.getItem('token');
-        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-        const credentials = {
-          device_id:this.ct.did.value,
-          client_id:this.client_id,
-          device_name:this.ct.deviceName.value,
-          device:this.ct.deviceId.value,
-          model:this.ct.dmodel.value,
-          lat:this.ct.lat.value,
-          lon:this.ct.long.value,
-          imei_no:this.ct.imeiNo.value,
-          device_type:this.ct.device_type.value,
-          meter_type:this.ct.meter_type.value,
-          do_channel:1,
-          // last_maintenance:this.convDt()
-
-          
-        };
-        debugger
-        this.http.post(apiUrl+'/client/manage/devices/edit', credentials,{ headers }).subscribe(
-            (response) => {
-              console.log(response);
-                    this.spinner=false;
-                    debugger
-              this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Device Updated', life: 3000 });
-              this.resetData();
-              this.getAllStock();
-              this.hideDialog();
-            },
-            (error) => { 
-        if(error.status=='401'){
-          this.router.navigate(['/']);
+        if(this.operationType=="I"){
           debugger
-         }
-        console.log(error.status);
-                    this.spinner=false;
-                    console.log(error);
-                    this.hideDialog();
-                    
-            }
-          );
+          const apiUrl = this.api.baseUrl;
+          const token = localStorage.getItem('token');
+          const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+          const credentials = {
+            client_id:this.client_id,
+            device_name:this.ct.deviceName.value,
+            device:this.ct.deviceId.value,
+            model:this.ct.dmodel.value,
+            lat:this.ct.lat.value,
+            lon:this.ct.long.value,
+            imei_no:this.ct.imeiNo.value,
+            device_type:this.ct.device_type.value,
+            meter_type:this.ct.meter_type.value,
+            do_channel:1,
+            last_maintenance:this.convDt()
+  
+            
+          };
+          const credentials2=[credentials]
+          debugger
+          this.http.post(apiUrl+'/client/manage/devices/add', credentials2,{ headers }).subscribe(
+              (response) => {
+                console.log(response);
+                      this.spinner=false;
+                      debugger
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Device Created', life: 3000 });
+                this.resetData();
+                this.getAllStock();
+                this.hideDialog();
+              },
+              (error) => { 
+          if(error.status=='401'){
+            this.router.navigate(['/']);
+            debugger
+           }
+          console.log(error.status);
+                      this.spinner=false;
+                      console.log(error);
+                      this.hideDialog();
+                      this.messageService.add({ severity: 'error', summary: 'Error', detail: ':Unknown Error', life: 3000 });
+              }
+            );
+        }
+        else{
+          debugger
+          const apiUrl = this.api.baseUrl;
+          const token = localStorage.getItem('token');
+          const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+          const credentials = {
+            device_id:this.ct.did.value,
+            client_id:this.client_id,
+            device_name:this.ct.deviceName.value,
+            device:this.ct.deviceId.value,
+            model:this.ct.dmodel.value,
+            lat:this.ct.lat.value,
+            lon:this.ct.long.value,
+            imei_no:this.ct.imeiNo.value,
+            device_type:this.ct.device_type.value,
+            meter_type:this.ct.meter_type.value,
+            do_channel:1,
+            // last_maintenance:this.convDt()
+  
+            
+          };
+          debugger
+          this.http.post(apiUrl+'/client/manage/devices/edit', credentials,{ headers }).subscribe(
+              (response) => {
+                console.log(response);
+                      this.spinner=false;
+                      debugger
+                this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Device Updated', life: 3000 });
+                this.resetData();
+                this.getAllStock();
+                this.hideDialog();
+              },
+              (error) => { 
+          if(error.status=='401'){
+            this.router.navigate(['/']);
+            debugger
+           }
+          console.log(error.status);
+                      this.spinner=false;
+                      console.log(error);
+                      this.hideDialog();
+                      this.messageService.add({ severity: 'error', summary: 'Error', detail: ':Unknown Error', life: 3000 });
+                      
+              }
+            );
+        }
       }
+      
       
   }
   resetData(){
