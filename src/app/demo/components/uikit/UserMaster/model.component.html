@@ -75,7 +75,7 @@
             </tr>
         </ng-template>
         <ng-template pTemplate="summary">
-            <div class="flex align-items-center justify-content-between">In total there are {{ model ? model.length : 0 }} Models.</div>
+            <div class="flex align-items-center justify-content-between">In total there are {{ models ? models.length : 0 }} Users.</div>
         </ng-template>
     </p-table>
 </div>
@@ -86,7 +86,7 @@
         <div class="field">
             <label for="company">Organization Name</label>
             <select formControlName="organization_id" style="width: 100%;height: 39px;border-color: lightgray;border-radius: 5px;">
-                <option selected>Select a Organization</option>
+                <option selected disabled [value]="0">Select a Organization</option>
                 <option *ngFor="let dt of companys" [value]="dt.organization_id">{{dt.organization_name}}</option>
              </select>
         </div>
@@ -101,13 +101,13 @@
         </div>
         <div class="field">
             <label for="product">Email</label>
-            <input type="text" pInputText id="email" formControlName="email" required  />
+            <input type="text" pInputText id="email" formControlName="email" required autocomplete="new-username" />
         </div>
         <a *ngIf="editMode" style="color: darkgreen;" (click)="changePass()">Change Password</a>
         <div *ngIf="!editMode">
             <div class="field">
                 <label for="product">New Password</label>
-                <p-password formControlName="password" [toggleMask]="true"></p-password>
+                <p-password formControlName="password" [toggleMask]="true" autocomplete="new-password"></p-password>
             </div>
             <div class="field">
                 <label for="product">Confirm Password</label>

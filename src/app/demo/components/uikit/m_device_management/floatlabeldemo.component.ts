@@ -71,12 +71,12 @@ export class FloatLabelDemoComponent implements OnInit  {
   constructor(private router: Router,private authservice:AuthenticationService,private api:ApiService,private countryService: CountryService,private http:HttpClient,private productService: ProductService,private fb: FormBuilder, private messageService: MessageService, private confirmationService: ConfirmationService) {
     this.addDevice = this.fb.group({
       did: [''],
-      deviceName: ['', [Validators.required]],
-      deviceId: ['', [Validators.required]],
+      deviceName: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(15)]],
+      deviceId: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
       dmodel: ['', [Validators.required]],
       lat: ['', [Validators.required]],
       long: ['', [Validators.required]],
-      imeiNo: ['', [Validators.required]],
+      imeiNo: ['', [Validators.required, Validators.minLength(15), Validators.maxLength(15)]],
       device_type: ['', [Validators.required]],
       meter_type: ['', [Validators.required]]
       // sl_no: this.fb.array([]) 
@@ -103,6 +103,10 @@ export class FloatLabelDemoComponent implements OnInit  {
   }
   openNew2() {
     this.addDevice.reset();
+    this.addDevice.patchValue({
+      device_type:0,
+      meter_type:0
+    })
     this.operationType="I"
     this.product = {};
     this.submitted = false;
@@ -140,6 +144,8 @@ export class FloatLabelDemoComponent implements OnInit  {
         long:product.lon,
         imeiNo:product.imei_no
         })
+      this.addDevice.controls['deviceId'].disable()
+      this.addDevice.controls['imeiNo'].disable()
       this.AddproductDialog = true;
   }
 
@@ -197,7 +203,7 @@ export class FloatLabelDemoComponent implements OnInit  {
           this.totOffilne=0;
           this.stockList.forEach(e=>{
             debugger
-            if(this.calculateDifference(e.device_updated_at)<=60){
+            if(this.calculateDifference(e.energy_data_created_at)<=60){
                 e.status='Y';
                 this.totOnline+=1
             }
@@ -360,5 +366,4 @@ export class FloatLabelDemoComponent implements OnInit  {
       return id;
   }
 
- 
 }

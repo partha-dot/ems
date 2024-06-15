@@ -31,7 +31,7 @@
 	[value]="models"
 	[rows]="4"
 	[paginator]="true"
-	[globalFilterFields]="['device', 'unit_name', 'alert_type', 'alert_status']"
+	[globalFilterFields]="['organization_id','device', 'unit_name', 'alert_type', 'alert_status']"
 	[tableStyle]="{ 'min-width': '75rem' }"
 	[(selection)]="selectedProducts"
 	[rowHover]="true"
@@ -52,7 +52,8 @@
             <tr>
                 
 				<!-- <th style="text-align: center;">Sl No.</th> -->
-                <th pSortableColumn="device" >Device Id <p-sortIcon field="device"></p-sortIcon></th>
+                <th pSortableColumn="organization_id" >Organization<p-sortIcon field="organization_id"></p-sortIcon></th>
+                <th pSortableColumn="device" >Device<p-sortIcon field="device"></p-sortIcon></th>
                 <th pSortableColumn="unit_name" >Unit Name <p-sortIcon field="unit_name"></p-sortIcon></th>
                 <th pSortableColumn="alert_type" >Alert Type <p-sortIcon field="alert_type"></p-sortIcon></th>
                 <th pSortableColumn="alert_status" >Alert Status <p-sortIcon field="alert_status"></p-sortIcon></th>
@@ -65,9 +66,10 @@
         </ng-template>
         <ng-template pTemplate="body" let-alert >
 			<tr>
+                <td>{{alert.organization_id}}</td>
 				<td>{{ alert.device }}</td>
 				<td>{{ alert.unit_name }}</td>
-				<td>{{ alert.alert_type }}</td>
+				<td>{{ alert.alert_type=="1CL"?"Cretical Low":alert.alert_type=="2L"?"Low":alert.alert_type=="3H"?"High":"Cretical High" }}</td>
 				<!-- <td>{{ alert.alert_status }}</td> -->
                 <!-- <td style="text-align: left;">
 					<p-badge  [severity]="alert.alert_status=='Y'?'success':'danger '">{{alert.alert_status=='Y'?'Active':'Deactive'}}</p-badge>
@@ -94,7 +96,7 @@
 					<button type="button" pButton pRipple icon="pi pi-pencil" (click)="editAlert(alert)"></button>
 				</td> 
                 <td style="text-align: center;">
-					<button type="button" pButton pRipple icon="pi pi-trash" (click)="deleteAlert(alert)"></button>
+					<button type="button" pButton pRipple icon="pi pi-trash" class=" p-button-danger" (click)="deleteAlert(alert)"></button>
 				</td> 
 			</tr>
 		</ng-template>
@@ -103,34 +105,38 @@
         </ng-template>
     </p-table>
 </div>
-<p-dialog [(visible)]="productDialog" [style]="{ width: '550px', height:'540px'}" header="Alert Details" [modal]="true" styleClass="p-fluid">
+<p-dialog [(visible)]="productDialog" [style]="{ width: '600px', height:'750px'}" header="Alert Details" [modal]="true" styleClass="p-fluid">
     <ng-template pTemplate="content">
         <from [formGroup]="unitForm">
+            
         <!-- <img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + product.image" [alt]="product.image" class="block m-auto pb-3" *ngIf="product.image" /> -->
         <div class="field">
-            <label for="company">Select Organization</label>
-            <!-- <p-dropdown formControlName="organization_id" [options]="products" optionLabel="organization_name" placeholder="Select a Organization"></p-dropdown> -->
-            <select formControlName="organization_id" style="width: 100%;height: 39px;border-color: lightgray;border-radius: 5px;">
-                <option selected>Select an Organization</option>
-                <option *ngFor="let dt of products" [value]="dt.organization_id">{{dt.organization_name}}</option>
+            <label for="company">Select Organization<span style="color: red;">*</span></label>
+                    <!-- <p-dropdown formControlName="organization_id" [options]="products" optionLabel="organization_name" placeholder="Select a Organization"></p-dropdown> -->
+                    <select formControlName="organization_id"  style="width: 100%;height: 39px;border-color: lightgray;border-radius: 5px;">
+                        <option selected disabled [value]="0">Select an Organization</option>
+                        <option *ngFor="let dt of products" [value]="dt.organization_id">{{dt.organization_name}}</option>
+                     </select>
+        </div>
+        <div class="field">
+            <label for="product">Unit<span style="color: red;">*</span></label>
+            <select formControlName="unit_id" style="width: 100%;height: 39px;border-color: lightgray;border-radius: 5px;">
+                <option selected disabled value="0">Select a Unit</option>
+                <option *ngFor="let dt of unitList" [value]="dt.unit_id">{{dt.unit_name}}</option>
              </select>
         </div>
         <div class="field">
-            <label for="company">Select Device</label>
+            <label for="company">Select Device<span style="color: red;">*</span></label>
             <!-- <p-dropdown formControlName="device_id" [options]="cities" optionLabel="device" placeholder="Select a Device"></p-dropdown> -->
             <select formControlName="device_id" style="width: 100%;height: 39px;border-color: lightgray;border-radius: 5px;">
-                <option selected>Select a Device</option>
+                <option selected disabled value="0">Select a Device</option>
                 <option *ngFor="let dt of cities" [value]="dt.device_id">{{dt.device}}</option>
              </select>
         </div>
         <div class="field">
-            <label for="product">Unit</label>
-            <select formControlName="unit_id" style="width: 100%;height: 39px;border-color: lightgray;border-radius: 5px;">
-                <option selected>Select a Unit</option>
-                <option *ngFor="let dt of unitList" [value]="dt.unit_id">{{dt.unit_name}}</option>
-             </select>
-            <!-- <p-dropdown formControlName="unit_id" [options]="unitList" optionLabel="unit_name" placeholder="Select a unit"></p-dropdown> -->
-        </div> 
+            <label for="product">Email<span style="color: red;">*</span></label>
+            <input type="text" pInputText id="email" placeholder="Enter a mail id" formControlName="email" required  />
+        </div>
         <div class="field">
             <label for="product">Alert Type</label>
             <div class="flex flex-column md:flex-row gap-3"*ngIf="editMode">
@@ -174,17 +180,14 @@
                 </div>
             </div>
         </div>
-        <div class="field">
-            <label for="product">Email</label>
-            <input type="text" pInputText id="email" formControlName="email" required  />
-        </div>
+       
         
         </from>
     </ng-template>
 
     <ng-template pTemplate="footer">
         <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-        <button pButton pRipple label="Create" icon="pi pi-check" class="p-button-text" (click)="saveProduct()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveProduct()"></button>
     </ng-template>
 </p-dialog>
 

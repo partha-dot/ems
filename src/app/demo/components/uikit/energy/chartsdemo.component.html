@@ -436,9 +436,9 @@
                                                     <p>Apparent Power</p>
                                                 </div>
 
-                                                <p class="unit">{{selectedPhase.unit=='single'?EnergyData?.apparentp1:
-                                                selectedPhase.unit=='two'?EnergyData?.apparentp2:
-                                                selectedPhase.unit=='three'?EnergyData?.apparentp3:0}} kVA</p>
+                                                <p class="unit">{{selectedPhase.unit=='single'?EnergyData?.apparentp1?EnergyData?.apparentp1:0                                                :
+                                                selectedPhase.unit=='two'?EnergyData?.apparentp2?EnergyData?.apparentp2:0:
+                                                selectedPhase.unit=='three'?EnergyData?.apparentp3?EnergyData?.apparentp3:0:0}} kVA</p>
                                             </div>
                                             <div class="subCard">
                                                 <div class="subcard-icon">
@@ -449,8 +449,8 @@
                                                 </div>
 
                                                 <p class="unit">{{selectedPhase.unit=='single'?EnergyData?.pf1?EnergyData.pf1:0:
-                                                    selectedPhase.unit=='two'?EnergyData?.pf2:
-                                                    selectedPhase.unit=='three'?EnergyData?.pf3:0}}</p>
+                                                    selectedPhase.unit=='two'?EnergyData?.pf2?EnergyData?.pf2:0:
+                                                    selectedPhase.unit=='three'?EnergyData?.pf3?EnergyData?.pf3:0:0}}</p>
                                             </div>
 
                                             <div class="subCard">
@@ -461,9 +461,9 @@
                                                     <p>Frequency</p>
                                                 </div>
 
-                                                <p class="unit">{{selectedPhase.unit=='single'?EnergyData?.freq:
-                                                    selectedPhase.unit=='two'?EnergyData?.freq:
-                                                    selectedPhase.unit=='three'?EnergyData?.freq:0}} Hz</p>
+                                                <p class="unit">{{selectedPhase.unit=='single'?EnergyData?.freq?EnergyData?.freq:0:
+                                                    selectedPhase.unit=='two'?EnergyData?.freq?EnergyData?.freq:0:
+                                                    selectedPhase.unit=='three'?EnergyData?.freq?EnergyData?.freq:0:0}} Hz</p>
                                             </div>
                                             <div class="subCard">
                                                 <div class="subcard-icon">
@@ -473,9 +473,9 @@
                                                     <p>Reactivepower</p>
                                                 </div>
 
-                                                <p class="unit">{{selectedPhase.unit=='single'?EnergyData?.reactvp1:
-                                                    selectedPhase.unit=='two'?EnergyData?.reactvp2:
-                                                    selectedPhase.unit=='three'?EnergyData?.reactvp3:0}} kVAR</p>
+                                                <p class="unit">{{selectedPhase.unit=='single'?EnergyData?.reactvp1?EnergyData?.reactvp1:0:
+                                                    selectedPhase.unit=='two'?EnergyData?.reactvp2?EnergyData?.reactvp2:0:
+                                                    selectedPhase.unit=='three'?EnergyData?.reactvp3?EnergyData?.reactvp3:0:0}} kVAR</p>
                                             </div>
                                             <div class="subCard">
                                                 <div class="subcard-icon">
@@ -495,9 +495,9 @@
                                                     <p>{{selectedPhase.unit=='single'?"Average Voltage R":selectedPhase.unit=='two'?"Average Voltage Y":"Average Voltage B"}}</p>
                                                 </div>
 
-                                                <p class="unit">{{selectedPhase.unit=='single'?EnergyData?.avaragevln:
-                                                    selectedPhase.unit=='two'?EnergyData?.avaragevln:
-                                                    selectedPhase.unit=='three'?EnergyData?.avaragevln:0}} V</p>
+                                                <p class="unit">{{selectedPhase.unit=='single'?EnergyData?.avaragevln?EnergyData?.avaragevln:0:
+                                                    selectedPhase.unit=='two'?EnergyData?.avaragevln?EnergyData?.avaragevln:0:
+                                                    selectedPhase.unit=='three'?EnergyData?.avaragevln?EnergyData?.avaragevln:0:0}} V</p>
                                             </div>
                                             <div class="subCard">
                                                 <div class="subcard-icon">
@@ -507,9 +507,9 @@
                                                     <p>{{selectedPhase.unit=='single'?"Average Voltage R_Y":selectedPhase.unit=='two'?"Average Voltage Y_B":"Average Voltage B_R"}}</p>
                                                 </div>
 
-                                                <p class="unit">{{selectedPhase.unit=='single'?EnergyData?.avaragevll:
-                                                    selectedPhase.unit=='two'?EnergyData?.avaragevll:
-                                                    selectedPhase.unit=='three'?EnergyData?.avaragevll:0.00}} V</p>
+                                                <p class="unit">{{selectedPhase.unit=='single'?EnergyData?.avaragevll?EnergyData?.avaragevll:0:
+                                                    selectedPhase.unit=='two'?EnergyData?.avaragevll?EnergyData?.avaragevll:0:
+                                                    selectedPhase.unit=='three'?EnergyData?.avaragevll?EnergyData?.avaragevll:0:0}} V</p>
                                             </div>
                                             <div class="subCard">
                                                 <div class="subcard-icon">
@@ -519,57 +519,57 @@
                                                     <p>Avarage current </p>
                                                 </div>
 
-                                                <p class="unit">{{selectedPhase.unit=='single'?EnergyData?.avaragecurrent:
-                                                    selectedPhase.unit=='two'?EnergyData?.avaragecurrent:
-                                                    selectedPhase.unit=='three'?EnergyData?.avaragecurrent:0.00}} A</p>
+                                                <p class="unit">{{selectedPhase.unit=='single'?EnergyData?.avaragecurrent?EnergyData?.avaragecurrent:0:
+                                                    selectedPhase.unit=='two'?EnergyData?.avaragecurrent?EnergyData?.avaragecurrent:0:
+                                                    selectedPhase.unit=='three'?EnergyData?.avaragecurrent?EnergyData?.avaragecurrent:0:0}} A</p>
                                             </div>
                                             <div class="subCard">
                                                 <div class="subcard-icon">
                                                     <div class="icon">
-                                                        <i class="pi pi-sun text-blue-600 text-xl"></i>
+                                                        <i class="pi pi-sitemap text-blue-600 text-xl"></i>
                                                     </div>
                                                     <p>TOTAL kVA</p>
                                                 </div>
 
-                                                <p class="unit"> {{selectedPhase.unit=='single'?EnergyData?.totkva:
-                                                    selectedPhase.unit=='two'?EnergyData?.totkva:
-                                                    selectedPhase.unit=='three'?EnergyData?.totkva:0.00}} kVA</p>
+                                                <p class="unit"> {{selectedPhase.unit=='single'?EnergyData?.totkva?EnergyData?.totkva:0:
+                                                    selectedPhase.unit=='two'?EnergyData?.totkva?EnergyData?.totkva:0:
+                                                    selectedPhase.unit=='three'?EnergyData?.totkva?EnergyData?.totkva:0:0}} kVA</p>
                                             </div>
                                             <div class="subCard">
                                                 <div class="subcard-icon">
                                                     <div class="icon">
-                                                        <i class="pi pi-sun text-blue-600 text-xl"></i>
+                                                        <i class="pi pi-arrows-alt text-blue-600 text-xl"></i>
                                                     </div>
                                                     <p>TOTAL kW</p>
                                                 </div>
 
-                                                <p class="unit"> {{selectedPhase.unit=='single'?EnergyData?.totkw:
-                                                    selectedPhase.unit=='two'?EnergyData?.totkw:
-                                                    selectedPhase.unit=='three'?EnergyData?.totkw:0.00}} kW</p>
+                                                <p class="unit"> {{selectedPhase.unit=='single'?EnergyData?.totkw?EnergyData?.totkw:0:
+                                                    selectedPhase.unit=='two'?EnergyData?.totkw?EnergyData?.totkw:0:
+                                                    selectedPhase.unit=='three'?EnergyData?.totkw?EnergyData?.totkw:0:0}} kW</p>
                                             </div>
                                             <div class="subCard">
                                                 <div class="subcard-icon">
                                                     <div class="icon">
-                                                        <i class="pi pi-sun text-blue-600 text-xl"></i>
+                                                        <i class="pi pi-slack text-blue-600 text-xl"></i>
                                                     </div>
                                                     <p>TOTAL kVAR</p>
                                                 </div>
 
-                                                <p class="unit"> {{selectedPhase.unit=='single'?EnergyData?.totkvar:
-                                                    selectedPhase.unit=='two'?EnergyData?.totkvar:
-                                                    selectedPhase.unit=='three'?EnergyData?.totkvar:0.00}} kVAR</p>
+                                                <p class="unit"> {{selectedPhase.unit=='single'?EnergyData?.totkvar?EnergyData?.totkvar:0:
+                                                    selectedPhase.unit=='two'?EnergyData?.totkvar?EnergyData?.totkvar:0:
+                                                    selectedPhase.unit=='three'?EnergyData?.totkvar?EnergyData?.totkvar:0:0}} kVAR</p>
                                             </div>
                                             <div class="subCard">
                                                 <div class="subcard-icon">
                                                     <div class="icon">
-                                                        <i class="pi pi-sun text-blue-600 text-xl"></i>
+                                                        <i class="pi pi-clock text-blue-600 text-xl"></i>
                                                     </div>
                                                     <p>Run Hour</p>
                                                 </div>
 
                                                 <p class="unit">{{selectedPhase.unit=='single'?EnergyData?.runhr?EnergyData.runhr:0:
                                                     selectedPhase.unit=='two'?EnergyData?.runhr:
-                                                    selectedPhase.unit=='three'?EnergyData?.runhr:0.00}}</p>
+                                                    selectedPhase.unit=='three'?EnergyData?.runhr:0}}</p>
                                             </div>
 
                                         </div>

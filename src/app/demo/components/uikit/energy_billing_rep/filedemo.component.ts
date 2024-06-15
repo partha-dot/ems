@@ -80,6 +80,7 @@ export class FileDemoComponent implements OnInit {
       showTable4:boolean=false;
       selectedID:any;
       datetype:any;
+      lastRowData:any;
       // dateType: FormGroup;
       constructor(private router: Router,private fb: FormBuilder,private http:HttpClient ,
 
@@ -222,18 +223,33 @@ export class FileDemoComponent implements OnInit {
           end_date_time: this.datetype=='C'?secondFormattedDate:null
         }
         debugger
-        this.http.post(apiUrl+'/client/report_analysis/energy_usage_billing',credentials , { headers }).subscribe(
+        this.http.post(apiUrl+'/client/report_analysis/new_energy_usage_billing',credentials , { headers }).subscribe(
             (response) => {
               this.spinner=false
               console.log(response);
               const data:any=response;
               this.BillingList=data.data.data;
+              this.lastRowData= data.data.end_date_last_row
               this.BillingDtls=data.data.master_bill;
               if(this.BillingList){
-                this.BillingList.forEach(e=>{
-                  e.total_energy=(e.e1+e.e2+e.e3).toFixed(2);
-                  e.price=((e.e1+e.e2+e.e3)*(this.BillingDtls.billing_price)).toFixed(2);
-                })
+                this.processBillingData();
+                // const totLastEnergy=(this.lastRowData.e1+this.lastRowData.e2+this.lastRowData.e3).toFixed(2)
+                // for(let i=0;i<this.BillingList.length; i++){
+                //   if(i==0){
+                //     this.BillingList[i].total_energy=
+                //   }
+                // }
+                // this.BillingList.forEach(e=>{
+                //   if(e.length==0){debugger
+                //     e.total_energy=(((e.e1+e.e2+e.e3) - totLastEnergy)).toFixed(2);
+                //     e.price=(((e.e1+e.e2+e.e3) - totLastEnergy) *(this.BillingDtls.billing_price)).toFixed(2);
+                //   }
+                //   else{
+                //     e.total_energy=(e.e1+e.e2+e.e3).toFixed(2);
+                //     e.price=((e.e1+e.e2+e.e3)*(this.BillingDtls.billing_price)).toFixed(2);
+                //   }
+                  
+                // })
               }
               debugger
               this.showTable1=true
@@ -258,6 +274,26 @@ export class FileDemoComponent implements OnInit {
         
         
        }
+       processBillingData() {
+        let previousTotalEnergy = this.calculateTotalEnergy(this.lastRowData);
+    
+        this.BillingList.forEach((item, index) => {
+          const currentTotalEnergy = this.calculateTotalEnergy(item);
+    
+          if (index === 0) {
+            item.total_energy = (currentTotalEnergy - previousTotalEnergy).toFixed(2);
+          } else {
+            item.total_energy = (currentTotalEnergy - previousTotalEnergy).toFixed(2);
+          }
+    
+          item.price = item.total_energy * this.BillingDtls.billing_price;
+    
+          previousTotalEnergy = currentTotalEnergy;
+        });
+      }
+       calculateTotalEnergy(data) {
+        return data.e1 + data.e2 + data.e3;
+      }
        getDevice(){
         const credentials = {
             client_id:this.client_id

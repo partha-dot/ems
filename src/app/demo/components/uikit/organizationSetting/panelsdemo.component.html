@@ -1,7 +1,7 @@
 <div class="grid">
 <div class="col-12 ">
 	<div class="card">
-		<h5>Organization Settings</h5>
+		<h5>Location Details</h5>
 		<form [formGroup]="stockIn">
 			<div class="p-fluid p-formgrid grid">
 				<!-- <div class="field col-12 md:col-6 custom-select" >
@@ -27,6 +27,7 @@
 					<p-dropdown 
 					formControlName="org" 
 					[options]="orgList"
+					[readonly]="true"
 					optionLabel="organization_name"
 					placeholder="Select a Organization" 
 					(onChange)="setOrg()"/>
@@ -60,54 +61,25 @@
                 <div class="field col-12 md:col-12">
 					<label htmlFor="firstname2">Address</label>
 					<textarea formControlName="address"
-                        rows="5"
-                        cols="30" 
+                        rows="1"
+                        cols="10" 
                         pInputTextarea >
                     </textarea>
 				</div>
-				<div class="field col-12 md:col-3">
-					<label htmlFor="firstname2">Power Tariff</label>
-					<p-dropdown 
-					formControlName="power_tariff" 
-					[options]="powerTariff"
-					optionLabel="name"
-					placeholder="Select Option" 
-					(onChange)="setGrid()"/>
-				</div>
-				<div class="field col-12 md:col-3">
-					<label htmlFor="firstname2">Rate per Month ({{this.selectedCountries?this.selectedCountries.currency_symbol:''}})</label>
-					<p-inputNumber 
-					[(ngModel)]="pricePerMonth"
-					[ngModelOptions]="{standalone: true}"
-					mode="currency" 
-					inputId="currency-india" 
-					[currency]="this.selectedCountries?this.selectedCountries.currency:'INR'"
-					
-					locale="en-IN" /> 
-				</div>
-				<div class="field col-12 md:col-3" >
-					<label htmlFor="firstname2">Select Day of month</label>
-					<p-dropdown 
-					[(ngModel)]="dayOnly"
-					[ngModelOptions]="{standalone: true}"
-					[options]="dayPicker"
-					optionLabel="key"
-					placeholder="Select a date" 
-					/>
-				</div>
+				
 				  <!-- <button type="button" (click)="addSkill()">Add Skill</button> -->
 				  <!-- <p-button label="Submit" icon="pi pi-check" styleClass="p-button-success"></p-button> -->
 				  <!-- <button type="submit" [disabled]="stockIn.invalid">Submit</button> -->
 				
 			</div>
-			<div class="p-fluid p-formgrid grid">
+			<div class="p-fluid p-formgrid grid" *ngIf="editMode">
 				<div class="field col-12 md:col-2" >
 
-					<p-button icon="pi pi-check" (click)="insertSetting()" styleClass="p-button-primary " label="Save"></p-button>
+					<p-button icon="pi pi-check" (click)="UpdateLocation()" styleClass="p-button-primary " label="Update"></p-button>
 				
 				</div>
 				<div class="field col-12 md:col-2" >
-					<p-button icon="pi pi-refresh" (click)="resetData()" styleClass="p-button-danger" label="Reset"></p-button>
+					<p-button icon="pi pi-refresh" (click)="resetLocation()" styleClass="p-button-danger" label="Reset"></p-button>
 	
 				</div>
 				
@@ -117,76 +89,142 @@
 		</form>
 		
 	</div>
+	<br><br>
+				<div class="card">
+					<h5>Billing Details</h5>
+					<div class="p-fluid p-formgrid grid">
+						<div class="col-12 md:col-4">
+							<div class="field">
+								<label htmlFor="firstname2">Power Tariff</label>
+								<p-dropdown 
+								formControlName="power_tariff" 
+								[options]="powerTariff"
+								optionLabel="name"
+								placeholder="Select Option" 
+								(onChange)="setGrid()"/>
+							</div>
+							<div class="field">
+								<label htmlFor="firstname2">Rate per Month ({{this.selectedCountries?this.selectedCountries.currency_symbol:''}})</label>
+								<p-inputNumber 
+								[(ngModel)]="pricePerMonth"
+								[ngModelOptions]="{standalone: true}"
+								mode="currency" 
+								inputId="currency-india" 
+								[currency]="this.selectedCountries?this.selectedCountries.currency:'INR'"
+								
+								locale="en-IN" /> 
+							</div>
+							<div class="field" >
+								<label htmlFor="firstname2">Select Day of month</label>
+								<p-dropdown 
+								[(ngModel)]="dayOnly"
+								[ngModelOptions]="{standalone: true}"
+								[options]="dayPicker"
+								optionLabel="key"
+								placeholder="Select a date" 
+								/>
+							</div>
+						</div>
+						<div class="col-12 md:col-8">
+							<p-table
+							#dt
+							[value]="AllsettingList"
+							[rows]="4"
+							[paginator]="true"
+							[globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
+							[tableStyle]="{ 'min-width': '35rem' }"
+							[(selection)]="selectedSetting"
+							[rowHover]="true"
+							dataKey="origination_id"
+							currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+							[showCurrentPageReport]="true"
+							>
+								<ng-template pTemplate="caption">
+									<div class="flex align-items-center justify-content-between">
+										<h5 class="m-0">Details</h5>
+										<span class="p-input-icon-left">
+											<!-- <i class="pi pi-search"></i>
+											<input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Search..." /> -->
+										</span>
+									</div>
+								</ng-template>
+								<!-- <p-sortIcon field="name"></p-sortIcon> -->
+								<ng-template pTemplate="header">
+									<tr>
+										
+										<!-- <th>ID</th> -->
+										<th pSortableColumn="name" >No</th>
+										<th pSortableColumn="name" >Organization</th>
+										<th pSortableColumn="name" >Billing Type </th>
+										<th pSortableColumn="name" >Billing Price </th>
+										<!-- <th pSortableColumn="name" >address</th> -->
+										<th >Status</th>
+										<!-- <th>Edit</th> -->
+										<!-- <th>Delete</th> -->
+									</tr>
+								</ng-template>
+								<ng-template pTemplate="body" let-rowIndex="rowIndex" let-product>
+									<tr>
+										
+										<td>{{ rowIndex+1 }}</td>
+										<td>{{product.orgName}}</td>
+										<td>{{ product.billing_type=="FR"?"Fixed Rate":" " }}</td>
+										<td>{{ product.billing_price }}</td>
+										<!-- <td>{{ product.address }}</td> -->
+										<!-- <td>
+											<input type="checkbox"  [checked]="product.billing_status=='Y'"/>
+										</td> -->
+										<td style="text-align: center;">
+											<p-badge [value]="product.billing_status=='Y'?'Online':'Offline'" [severity]="product.billing_status=='Y'?'success':'danger'"></p-badge>
+										</td>
+										<!-- <td>
+											<button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-primary mr-2" (click)="editSetting(product)"></button>
+										</td> -->
+										<!-- <td>
+											<button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="settingList(product)"></button>
+										</td> -->
+									</tr>
+								</ng-template>
+								<ng-template pTemplate="summary">
+									<div class="flex align-items-center justify-content-between">In total there are {{ settingList ? settingList.length : 0 }} Settings.</div>
+								</ng-template>
+							</p-table>
+						</div>
+						
+					</div>
+					<div class="col-12 "  *ngIf="editMode">
+						<div class="p-fluid p-formgrid grid">
+							<div class="field col-12 md:col-2" >
+			
+								<p-button icon="pi pi-check" (click)="addBilling()" styleClass="p-button-primary " label="Add New"></p-button>
+							
+							</div>
+							<div class="field col-12 md:col-2" >
+								<p-button icon="pi pi-refresh" (click)="resetBilling()" styleClass="p-button-danger" label="Reset"></p-button>
+				
+							</div>
+							
+						</div>
+					</div>
+					<div class="col-12 "  *ngIf="!editMode">
+						<div class="p-fluid p-formgrid grid">
+							<div class="field col-12 md:col-2" >
+			
+								<p-button icon="pi pi-check" (click)="insertSetting()" styleClass="p-button-primary " label="Add New"></p-button>
+							
+							</div>
+							<div class="field col-12 md:col-2" >
+								<p-button icon="pi pi-refresh" (click)="resetData()" styleClass="p-button-danger" label="Reset"></p-button>
+				
+							</div>
+							
+						</div>
+					</div>
+				</div>
 </div>
-<div class="col-12 ">
-	<p-table
-	#dt
-	[value]="settingList"
-	[rows]="4"
-	[paginator]="true"
-	[globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
-	[tableStyle]="{ 'min-width': '75rem' }"
-	[(selection)]="selectedSetting"
-	[rowHover]="true"
-	dataKey="origination_id"
-	currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-	[showCurrentPageReport]="true"
-    >
-        <ng-template pTemplate="caption">
-            <div class="flex align-items-center justify-content-between">
-                <h5 class="m-0">Manage Settings</h5>
-                <span class="p-input-icon-left">
-                    <i class="pi pi-search"></i>
-                    <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Search..." />
-                </span>
-            </div>
-        </ng-template>
-		<!-- <p-sortIcon field="name"></p-sortIcon> -->
-        <ng-template pTemplate="header">
-            <tr>
-                
-				<th>ID</th>
-                <th pSortableColumn="name" >Organization Name </th>
-                <th pSortableColumn="name" >Country </th>
-                <th pSortableColumn="name" >State </th>
-                <th pSortableColumn="name" >City </th>
-                <th pSortableColumn="name" >Billing Type </th>
-                <th pSortableColumn="name" >Billing Price </th>
-                <th pSortableColumn="name" >address</th>
-				<th >Status</th>
-                <!-- <th>Edit</th> -->
-                <!-- <th>Delete</th> -->
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-product>
-            <tr>
-                
-                <td>{{ product.billing_organization }}</td>
-                <td>{{ product.orgName }}</td>
-                <td>{{ product.countries }}</td>
-                <td>{{ product.state }}</td>
-                <td>{{ product.cityes }}</td>
-                <td>{{ product.billing_type=="FR"?"Fixed Rate":" " }}</td>
-                <td>{{ product.billing_price }}</td>
-                <td>{{ product.address }}</td>
-                <td>
-                    <input type="checkbox"  [checked]="product.billing_status=='Y'"/>
-                </td>
-                <!-- <td>
-                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-primary mr-2" (click)="editSetting(product)"></button>
-                </td> -->
-				<!-- <td>
-                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="settingList(product)"></button>
-				</td> -->
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="summary">
-            <div class="flex align-items-center justify-content-between">In total there are {{ settingList ? settingList.length : 0 }} Settings.</div>
-        </ng-template>
-    </p-table>
+
 </div>
-</div>
-<p-dialog header="Get Organization Settings" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem',height:'25rem' }">
+<p-dialog header="Get Organization Settings" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem',height:'20rem' }">
     <div class="flex align-items-center gap-3 mb-3">
 					<p-dropdown 
 					[(ngModel)]="selectedOrganization"
@@ -199,6 +237,7 @@
     <div class="flex justify-content-end gap-2" style="margin-top: 100px;">
         <p-button label="Cancel" severity="secondary" (click)="visible = false" />
         <p-button label="Submit" (click)="getSettingList()" />
+        <!-- <p-button label="Submit" (click)="getSettingList()" />getSettingListWithAllData -->
     </div>
 </p-dialog>
 <p-toast></p-toast>

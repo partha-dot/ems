@@ -24,9 +24,10 @@
         
         <ng-template pTemplate="right">
             <!-- <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="mr-2 inline-block"></p-fileUpload> -->
-            <button pButton pRipple label="Export as CSV" icon="pi pi-upload"  (click)="exportToExcel()" class="p-button-help"></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <button pButton pRipple label="Export as PDF" icon="pi pi-upload"  (click)="exportToExcel()" class="p-button-help"></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <button pButton pRipple label="Change Column" icon="pi pi-spin pi-cog"  (click)="showDragandDrop=!showDragandDrop" class="p-button-help"></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button pButton pRipple label="Export to excel" icon="pi pi-upload"  (click)="exportToExcel()" class="p-button-primary"></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button pButton pRipple label="Change Column" icon="pi pi-spin pi-cog"  (click)="showDragandDrop=!showDragandDrop" class="p-button-danger"></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button pButton pRipple label="Retrive" icon="pi pi-angle-double-down"  (click)="productDialog = true" class="p-button-help"></button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        
         </ng-template>
     </p-toolbar>
 

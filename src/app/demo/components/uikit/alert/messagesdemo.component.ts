@@ -9,7 +9,7 @@ import { MessageService, ConfirmationService } from 'primeng/api';
 import { ApiService } from 'src/app/demo/service/api.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Company } from 'src/app/demo/api/company';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 @Component({
     selector: 'app-messagesdemo',
@@ -104,15 +104,15 @@ export class MessagesDemoComponent {
        private messageService: MessageService, private confirmationService: ConfirmationService,private api:ApiService) {
       this.unitForm = this.formBuilder.group({
         alert_id:[''],
-        organization_id:[''],
-        device_id: [''],
+        organization_id:['0', Validators.required],
+        device_id: ['0', Validators.required],
         device: [''],
-        unit_id: [''],
+        unit_id: ['0', Validators.required],
         low_val:[''],
         high_val: [''],
         c_high_val: [''],
         c_low_val: [''],
-        email: [''],
+        email: ['',  Validators.required],
       });
      }
    
@@ -123,8 +123,13 @@ export class MessagesDemoComponent {
     this.getUnit();
     this.getAlertList();
     // this.getDeviceModel();
-  
-    }
+    this.unitForm.patchValue({organization_id:0,device_id:0,unit_id:0})
+    // this.ct.organization_id.setValue(0)
+    // this.unitForm.setValue({
+    //   organization_id: 0, 
+    // });
+    };
+
     abc(){
       debugger
       
@@ -195,7 +200,10 @@ export class MessagesDemoComponent {
           this.spinner=false;
           console.log(response);
           this.modelList=response
-          this.models=this.modelList.data 
+          this.models=this.modelList.data ;
+          this.models.forEach(e=>{
+            e.organization_id=this.products.filter(p=>p.organization_id==e.organization_id)[0].organization_name
+          })
           debugger
         },
         (error) => { 
@@ -246,6 +254,8 @@ export class MessagesDemoComponent {
         this.c_low=false;
         this.high=false;
         this.c_high=false;
+        this.unitForm.patchValue({organization_id:0,device_id:0,unit_id:0})
+
     }
   
     deleteSelectedProducts() {
@@ -449,7 +459,9 @@ export class MessagesDemoComponent {
         const token = localStorage.getItem('token');
         const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
         debugger
-        if(!this.ct.alert_id.value){
+        if(!this.unitForm.invalid)
+          {
+            if(!this.ct.alert_id.value){
           this.http.post(apiUrl+'/client/alert/add', this.credentials,{ headers }).subscribe(
             (response) => {
               this.spinner=false;
@@ -493,6 +505,11 @@ export class MessagesDemoComponent {
             }
           );
         }
+      }
+      else{
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Please fill all the required field!', life: 3000 });
+        
+      }
         
         
     }

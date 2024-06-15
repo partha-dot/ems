@@ -109,15 +109,15 @@
               <form  class="form-select">
                   <label>
                       <input type="radio" id="m-report" [(ngModel)]="datetype" [ngModelOptions]="{standalone: true}"  checked name="fav_language" (change)="dateTypeChange($event.target.value)" value="M">
-                      Monthly Report
+                      Monthly
                   </label>
                   <label>
                       <input type="radio" id="y-report" [(ngModel)]="datetype" [ngModelOptions]="{standalone: true}"  name="fav_language" (change)="dateTypeChange($event.target.value)"  value="Y">
-                      Yearly Report
+                      Yearly
                   </label>
                   <label>
                      <input type="radio" id="Customize" [(ngModel)]="datetype" [ngModelOptions]="{standalone: true}" name="fav_language" (change)="dateTypeChange($event.target.value)"  value="C">
-                      Customize
+                      Custom
                   </label>
               </form>
             </td>
@@ -366,11 +366,60 @@
   <br>
   
   <div class="table" *ngIf="showTable1 && selectedID=='b1'">
-   <table style="width:100%"  id="my-table">
+    <div class="card">
+      <p-toast></p-toast>
+      <h5 class="m-2">Billing Details</h5>
+      <p-table id="my-table"
+          #dt
+          [value]="BillingList"
+          [rows]="10"
+          [paginator]="true"
+          [globalFilterFields]="['total_energy', 'price', 'date', 'time']"
+          [tableStyle]="{ 'min-width': '75rem' }"
+          [(selection)]="selectedProducts"
+          [rowHover]="true"
+          dataKey="id"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+          [showCurrentPageReport]="true"
+      >
+      
+         
+          <ng-template pTemplate="header">
+              <tr>
+
+                <th>Sl No.</th>
+                <th>DateTime</th>
+                <th>Energy Used</th>
+                <th >Electricity Bill</th>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowIndex="rowIndex" let-product>
+              <tr>
+                 <td>{{rowIndex+1}}</td>
+                  <td>{{product.date}}&nbsp;&nbsp;{{product.time}}</td>
+                  <td>{{product.total_energy}} kWh</td>
+                  <td>{{BillingDtls?.currency_symbol}}{{product.price | number:'1.2-2'}}</td>
+                  <!-- <td>
+                      <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editProduct(product)"></button>
+                      <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteProduct(product.device_id)"></button>
+                  </td> -->
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="summary">
+              <div class="flex align-items-center justify-content-between">In total there are {{ BillingList ? BillingList.length : 0 }} Bills.</div>
+          </ng-template>
+      </p-table>
+  </div>
+
+
+
+
+   <!-- <table style="width:100%"  id="my-table">
          <thead>
             <tr>
+              <th>Sl No.</th>
               <th>DateTime</th>
-              <th>Total</th>
+              <th>Energy Used</th>
               <th >Electricity Bill</th>
           </tr>
          </thead>
@@ -381,14 +430,8 @@
           <td>{{data.total_energy}} kWh</td>
           <td>{{BillingDtls?.currency_symbol}}{{data.price | number:'1.2-2'}}</td>
         </tr>
-        
-          <!-- <tr>
-            <td><b>Total</b> </td>
-            <td><b>195.60 kWh</b></td>
-            <td><b>58.60 $</b></td>
-          </tr> -->
        </tbody>
-        </table>
+        </table> -->
         
   </div>
   <div class="table" *ngIf="showTable2 && selectedID=='b2'">

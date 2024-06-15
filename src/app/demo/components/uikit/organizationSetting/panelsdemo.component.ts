@@ -78,9 +78,11 @@ export class PanelsDemoComponent implements OnInit {
   dayPicker:any[]=[];
   selectedSetting:any;
   settingList:any[]=[];
+  AllsettingList:any[]=[];
   selectedOrganization:any;
   client_id:number=(+localStorage.getItem('c_id'));
   user_id:number=(+localStorage.getItem('user_id'));
+  editMode:boolean=false;
   constructor(private router: Router,private authservice:AuthenticationService,private api:ApiService,private countryService: CountryService,private fb: FormBuilder,private http:HttpClient, private messageService: MessageService) { 
       this.stockIn = this.fb.group({
           org: ['', Validators.required],
@@ -98,7 +100,7 @@ export class PanelsDemoComponent implements OnInit {
         {key:1},{key:2},{key:3},{key:4},{key:5},{key:6},{key:7},{key:8},
         {key:9},{key:10},{key:11},{key:12},{key:13},{key:14},{key:15},{key:16},
         {key:17},{key:18},{key:19},{key:20},{key:21},{key:22},{key:23},{key:24},
-        {key:25},{key:26},{key:27},{key:28},{key:29},{key:30},{key:31},{key:32}
+        {key:25},{key:26},{key:27},{key:28}
       ]
              
   }
@@ -108,6 +110,8 @@ export class PanelsDemoComponent implements OnInit {
       this.ct=this.stockIn.controls;
       // this.getRegion();
       this.getCountres();
+      this.getStates();
+      this.getCity();
       this.getOrg();
       this.visible = true;
       // this.getSubRegion(); 
@@ -184,7 +188,7 @@ setDevice(){
   }
   setOrg(){
     debugger
-    this.ct.org.value.organization_id
+    this.selectedOrganization.organization_id
   }
   getOrg(){
     const apiUrl = this.api.baseUrl;
@@ -303,22 +307,33 @@ setDevice(){
             // const subRegion_id= this.ct.sub_region.value.id;
             let strng=''
             if(country_id ){
+              // strng=`/common/location/states?country_id`
               strng=`/common/location/states?country_id=${country_id}`
             }
             else{
               this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Select Country first', life: 3000 });
               return
             }
+            this.spinner=true;
             this.http.get(apiUrl+strng, { headers }).subscribe(
                 (response) => {
                   console.log(response);
                   const res:any=response
                   this.states=res.data 
                   console.log(this.states);
+                  this.spinner=false;
                   debugger
+                  if(this.settingList.length>0){
+                    debugger;
+                    this.selectedState=this.states.filter(e=>e.id==this.settingList[0].states_id)[0];
+                  this.spinner=false;
+
+                    this.getCity();
+                  }
                 },
                 (error) => { 
                   if(error.status=='401'){
+                    this.spinner=false;
                     this.router.navigate(['/']);
                     debugger
                   }
@@ -338,21 +353,29 @@ setDevice(){
               let strng=''
               if(state_id ){
                 strng=`/common/location/cities?state_id=${state_id}`
+                // strng=`/common/location/cities?state_id`
               }
               else{
                 this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Select State first', life: 3000 });
                 return
               }
+              this.spinner=true;
               this.http.get(apiUrl+strng, { headers }).subscribe(
                   (response) => {
                     console.log(response);
                     const res:any=response
                     this.cities=res.data 
                     console.log(this.cities);
+                    this.spinner=false;
                     debugger
+                    if(this.settingList.length>0){
+                      this.spinner=false;
+                      this.selectedCity=this.cities.filter(e=>e.id==this.settingList[0].cities_id)[0];
+                    }
                   },
                   (error) => { 
                     if(error.status=='401'){
+                    this.spinner=false;
                       this.router.navigate(['/']);
                       debugger
                     }
@@ -421,6 +444,7 @@ setDevice(){
                   console.log(response);
                   this.companyList=response
                   this.companys=this.companyList.data 
+                  this.ct.org.setValue(this.selectedOrganization);
                   debugger
                 },
                 (error) => { 
@@ -533,7 +557,7 @@ setDevice(){
                 this.spinner=true;
                 const credentials = {
                   client_id:this.client_id,
-                  organization_id:Number(this.ct.org.value.organization_id),
+                  organization_id:Number(this.selectedOrganization.organization_id),
                   billing_data:arr,
                   countries_id:this.selectedCountries.id,
                   regions_id:this.selectedCountries.region_id,
@@ -671,6 +695,7 @@ setDevice(){
     }
     getSettingList(){
      this.visible = false;
+     this.ct.org.setValue(this.selectedOrganization);
       debugger
       const credentials = {
         organization_id:this.selectedOrganization.organization_id,
@@ -691,6 +716,36 @@ setDevice(){
             p.orgName=this.orgList.filter(e=>e.organization_id==p.organization_id)[0].organization_name
           })
           debugger
+          if(this.settingList.length>0){
+            this.getSettingListWithAllData();
+            this.editMode=true
+            debugger
+            this.selectedCountries=this.countries.filter(e=>e.id==this.settingList[0]?.countries_id)[0];
+            debugger
+            if(this.selectedCountries){
+              debugger
+              this.getStates();
+             
+                this.stockIn.patchValue({
+        
+                  org:this.orgList.filter(e=>e.organization_id==this.settingList[0].organization_id)[0],
+                  address:this.settingList[0].address,
+                  // power_tariff:this.powerTariff.filter(e=>e.code==this.settingList[0].billing_type)[0],
+                })
+                // this.dayOnly=this.dayPicker.filter(e=>e.key==this.settingList[0].billing_day)[0];
+                // this.pricePerMonth=this.settingList[0].billing_price;
+    
+                this.selectedCountries=this.countries.filter(e=>e.id==this.settingList[0].countries_id)[0];
+                this.selectedState=this.states.filter(e=>e.id==this.settingList[0].states_id)[0];
+                this.selectedCity=this.cities.filter(e=>e.id==this.settingList[0].cit)[0];
+                
+              }debugger
+          }
+          else{
+            this.editMode=false;
+          }
+          
+          debugger
           // this.messageService.add({ severity: 'Success', summary: 'Successful', detail: 'Assign Device Deleted', life: 3000 });
           // this.resetData();
           // this.loadPage();
@@ -706,7 +761,46 @@ setDevice(){
         }
       );
     }
+    getSettingListWithAllData(){
+      this.visible = false;
+       debugger
+       const credentials = {
+         organization_id:this.selectedOrganization.organization_id,
+       };
+       debugger
+                 this.spinner=true;
+                 const apiUrl = this.api.baseUrl;
+     const token = localStorage.getItem('token');
+     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
+     debugger
+     this.http.post(apiUrl+'/client/organization_settings/old_bill_list', credentials,{ headers }).subscribe(
+         (response) => {
+           console.log(response);
+           this.spinner=false;
+           const dt:any=response;
+           this.AllsettingList=dt.data;
+           this.AllsettingList.forEach(p=>{
+             p.orgName=this.orgList.filter(e=>e.organization_id==p.organization_id)[0].organization_name
+           })
+           
+           debugger
+           // this.messageService.add({ severity: 'Success', summary: 'Successful', detail: 'Assign Device Deleted', life: 3000 });
+           // this.resetData();
+           // this.loadPage();
+         },
+         (error) => { 
+       if(error.status=='401'){
+         this.router.navigate(['/']);
+         debugger
+        }
+       console.log(error.status);
+                 this.spinner=false;
+                 console.error(error);
+         }
+       );
+     }
     editSetting(data:any){
+      
       this.stockIn.patchValue({
         
         org:this.orgList.filter(e=>e.organization_id==data.organization_id)[0],
@@ -720,8 +814,100 @@ setDevice(){
       this.selectedCity=this.cities.filter(e=>e.cities_id==data.cit)[0];
 
     }
-    deleteSetting(data:any){
-      
+    UpdateLocation(){
+      this.spinner=true;
+      const credentials = {
+        // client_id:this.client_id,
+        organization_id:Number(this.selectedOrganization.organization_id),
+        countries_id:this.selectedCountries.id,
+        regions_id:this.selectedCountries.region_id,
+        subregions_id:this.selectedCountries.subregion_id,
+        states_id:this.selectedState.id,
+        cities_id:this.selectedCity.id,
+        address:this.ct.address.value,
+        // created_by:this.user_id
+      };
+      debugger
+      const apiUrl = this.api.baseUrl;
+      const token = localStorage.getItem('token');
+      const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
+      debugger
+      this.http.post(apiUrl+'/client/organization_settings/edit_organization_info', credentials,{ headers }).subscribe(
+        (response) => {
+          console.log(response);
+                this.spinner=false;
+                debugger
+          this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Location Updated', life: 3000 });
+          // this.resetData();
+          // this.loadPage();
+        },
+        (error) => { 
+      if(error.status=='401'){
+      this.router.navigate(['/']);
+      debugger
+      }
+      console.log(error.status);
+                this.spinner=false;
+                console.log(error);
+                
+        }
+      );
+    }
+    
+    resetLocation(){
+      this.stockIn.patchValue({
+        org:{},
+        address:''
+      })
+      this.selectedCountries={}
+      this.selectedState={}
+      this.selectedCity={}
+
+
+    }
+    addBilling(){
+      this.spinner=true;
+      const credentials = {
+        // client_id:this.client_id,
+        organization_id:Number(this.selectedOrganization.organization_id),
+        billing_type: "FR",
+        billing_price:this.pricePerMonth,
+        billing_status: 'Y',
+        billing_day: this.dayOnly.key
+        // created_by:this.user_id
+      };
+      debugger
+      const apiUrl = this.api.baseUrl;
+      const token = localStorage.getItem('token');
+      const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`)
+      debugger
+      this.http.post(apiUrl+'/client/organization_settings/add_bill', credentials,{ headers }).subscribe(
+        (response) => {
+          console.log(response);
+                this.spinner=false;
+                debugger
+          this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'New Bill Added', life: 3000 });
+          this.getSettingListWithAllData();
+        },
+        (error) => { 
+      if(error.status=='401'){
+      this.router.navigate(['/']);
+      debugger
+      }
+      console.log(error.status);
+                this.spinner=false;
+                console.log(error);
+                
+        }
+      );
+    }
+    resetBilling(){
+      this.stockIn.patchValue({
+       power_tariff:{},
+      })
+      this.dayOnly={};
+      this.pricePerMonth=0.00
+
     }
       
     

@@ -93,16 +93,16 @@
         <ng-template pTemplate="header">
             <tr>
                 <th>Sl No.</th>
-                <th pSortableColumn="device" style="min-width:15rem">Device<p-sortIcon field="name"></p-sortIcon></th>
-                <th pSortableColumn="device_name" style="min-width:15rem">Device Name <p-sortIcon field="name"></p-sortIcon></th>
-                <th pSortableColumn="device_type" style="min-width:15rem">Device Type <p-sortIcon field="name"></p-sortIcon></th>
-                <th pSortableColumn="meter_type" style="min-width:15rem">Meter Type <p-sortIcon field="name"></p-sortIcon></th>
+                <th pSortableColumn="device">Device<p-sortIcon field="name"></p-sortIcon></th>
+                <th pSortableColumn="device_name">Device Name <p-sortIcon field="name"></p-sortIcon></th>
+                <th pSortableColumn="device_type">Device Type <p-sortIcon field="name"></p-sortIcon></th>
+                <th pSortableColumn="meter_type">Meter Type <p-sortIcon field="name"></p-sortIcon></th>
                 <!-- <th pSortableColumn="price">Device ID <p-sortIcon field="price"></p-sortIcon></th> -->
                 <th pSortableColumn="model">Model<p-sortIcon field="price"></p-sortIcon></th>
-                <th pSortableColumn="lat" style="min-width:10rem">Latitude <p-sortIcon field="category"></p-sortIcon></th>
-                <th pSortableColumn="lon" style="min-width:10rem">Longitude <p-sortIcon field="category"></p-sortIcon></th>
-                <th pSortableColumn="imei_no" style="min-width:10rem">IMEI NO <p-sortIcon field="category"></p-sortIcon></th>
-				<th pSortableColumn="energy_data_created_at" style="min-width:10rem">Status <p-sortIcon field="inventoryStatus"></p-sortIcon></th>
+                <th pSortableColumn="lat" >Latitude <p-sortIcon field="category"></p-sortIcon></th>
+                <th pSortableColumn="lon" >Longitude <p-sortIcon field="category"></p-sortIcon></th>
+                <th pSortableColumn="imei_no" >IMEI NO <p-sortIcon field="category"></p-sortIcon></th>
+				<th pSortableColumn="energy_data_created_at" >Status <p-sortIcon field="inventoryStatus"></p-sortIcon></th>
                 <th>Edit</th>
             </tr>
         </ng-template>
@@ -197,12 +197,17 @@
             <div class=" col-6 lg:col-6 xl:col-6">
                 <label for="name"><span style="color: red;">*</span>Device Name</label>
                 <input type="text" pInputText id="name" formControlName="deviceName" required autofocus />
-                
+                <small *ngIf="addDevice.get('deviceName')?.errors?.['minlength'] || addDevice.get('deviceName')?.errors?.['maxlength']">
+                    <span style="color: red;">Device Name must be between 5 and 15 characters long.</span>
+                </small>
+
             </div>
             <div class="col-6 lg:col-6 xl:col-6">
-                <label for="name"><span style="color: red;">*</span>Device ID</label>
+                <label for="name"><span style="color: red;">*</span>Device</label>
                 <input type="text" pInputText id="name" formControlName="deviceId" required autofocus />
-                <!-- <small class="p-error" *ngIf="submitted && !product.name">Name is required.</small> -->
+                <small *ngIf="addDevice.get('deviceId')?.errors?.['minlength'] || addDevice.get('deviceId')?.errors?.['maxlength']">
+                    <span style="color: red;">Device must be 10 characters long.</span> 
+                </small>
             </div>
             <div class="col-6 lg:col-6 xl:col-6">
                 <label for="name"><span style="color: red;">*</span>Model</label>
@@ -212,7 +217,7 @@
             <div class="col-6 lg:col-6 xl:col-6">
                 <label htmlFor="firstname2"><span style="color: red;">*</span>Device Type</label>
                 <select formControlName="device_type" style="width: 100%;height: 42px;border-color: lightgray;border-radius: 5px;">
-                    <option value="" disabled selected>Select an option</option>
+                    <option [value]="0" disabled selected>Select an option</option>
                       <option *ngFor="let option of DeviceType" [value]="option.code">
                         {{option.name}}
                       </option>
@@ -221,7 +226,7 @@
             <div class="col-6 lg:col-6 xl:col-6">
                 <label htmlFor="firstname2"><span style="color: red;">*</span>Meter Type</label>
                 <select formControlName="meter_type" style="width: 100%;height: 42px;border-color: lightgray;border-radius: 5px;">
-                    <option value="" disabled selected>Select an option</option>
+                    <option [value]="0" disabled selected>Select an option</option>
                       <option *ngFor="let option2 of meterType" [value]="option2.code">
                         {{option2.name}}
                       </option>
@@ -240,7 +245,10 @@
             <div class="col-6 lg:col-6 xl:col-6">
                 <label for="name"><span style="color: red;">*</span> IMEI NO</label>
                 <input type="text" pInputText id="name" formControlName="imeiNo" required autofocus />
-                <!-- <small class="p-error" *ngIf="submitted && !product.name">Name is required.</small> -->
+                <!-- <small *ngIf="addDevice.get('imeiNo')?.errors?.['required']">Device Name is required.</small> -->
+                <small *ngIf="addDevice.get('imeiNo')?.errors?.['minlength'] || addDevice.get('imeiNo')?.errors?.['maxlength']">
+                    <span style="color: red;">Device IMEI-NO must be 15 characters long.</span>
+                </small>
             </div>
         </form>
         

@@ -45,7 +45,7 @@ client_id:number=(+localStorage.getItem('c_id'))
   constructor(private router: Router,private formBuilder: FormBuilder,private http:HttpClient ,private productService: ProductService,
      private messageService: MessageService, private confirmationService: ConfirmationService,private api:ApiService) {
     this.userForm = this.formBuilder.group({
-      organization_id: ['', Validators.required],
+      organization_id: ['0', Validators.required],
       name: ['', Validators.required],
       user_id:['', Validators.required],
       email: ['', Validators.required],
@@ -120,6 +120,9 @@ getDeviceCompany(){
   openNew() {
       this.editMode=false;
       this.userForm.reset();
+      this.userForm.patchValue({
+        organization_id:0
+      });
       this.value='';
       this.product = {};
       this.submitted = false;
@@ -180,19 +183,29 @@ getDeviceCompany(){
       // if(this.ct.password.value==this.value){
         debugger
         if (this.product.user_id) {
-
-            debugger
-            this.updateCompany(this.ct.organization_id.value,this.ct.user_id.value,this.ct.name.value,this.ct.email.value,this.ct.password.value?this.ct.password.value:'')
-            debugger
+            if(!this.editMode && this.ct.password.value != this.value){
+              this.messageService.add({ severity: 'error', summary: 'Error', detail: 'password and Confirm password can not matched', life: 3000 });
+            }
+            else{
+              this.updateCompany(this.ct.organization_id.value,this.ct.user_id.value,this.ct.name.value,this.ct.email.value,this.ct.password.value?this.ct.password.value:'')
+              this.productDialog = false;
+              this.product = {};
+            }
             // this.products[this.findIndexById(this.product.organization_id)] = this.product;
         } else {
-            this.AddCompany(this.ct.organization_id.value,this.ct.name.value,this.ct.email.value,this.ct.password.value,)
+            if(this.ct.password.value != this.value){
+              this.messageService.add({ severity: 'error', summary: 'Error', detail: 'password and Confirm password can not matched', life: 3000 });
+            }
+            else{
+            this.AddCompany(this.ct.organization_id.value,this.ct.name.value,this.ct.email.value,this.ct.password.value);
+            this.productDialog = false;
+            this.product = {};
+            }
             
         }
 
         // this.products = [...this.products];
-        this.productDialog = false;
-        this.product = {};
+        
     //   }
     //  else{
     //   this.messageService.add({ severity: 'error', summary: 'Error', detail: 'password and Confirm password can not matched', life: 3000 });

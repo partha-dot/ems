@@ -52,6 +52,7 @@ export class ProductComponent implements OnInit{
   user_type:any;
   DeviceUrl:any;
   cols:any[]=[];
+  excelData:any[]=[];
   r: boolean = false;
     y: boolean = false;
     b: boolean = false;
@@ -316,6 +317,7 @@ const apiUrl = this.api.baseUrl;
           console.log(response);
           this.data1=response
           this.products=this.data1.data
+          this.excelData=this.data1.data
           this.products.forEach(e=>{
             e.time=this.convertToISTDateTime(e.created_at)
           })
@@ -426,35 +428,35 @@ const apiUrl = this.api.baseUrl;
     this.cols.forEach(e=>{
       hdd.push(e.col)})
     // Add header row
-    const header = ['Sl No.', 'DATE', 'TIME', 'DEVICE ID', 'Voltage R (V)','Voltage Y (V)','Voltage B (V)','Voltage R_Y','Voltage Y_B',
+    const header = ['Sl No.', 'DATE', 'TIME','Voltage R (V)','Voltage Y (V)','Voltage B (V)','Voltage R_Y','Voltage Y_B',
     'Voltage B_R', 'Current R (A)','Current Y (A)', 'Current B (A)','Total Energy', 'Average PF (HZ)', 'Frequency', 'Runhr','TotkW','TotkVA','TotkVAr'];
     data.push(header);
     
     // Add data rows
-    for (let i = 0; i < this.products.length; i++) {
-      for (let j = 0; j < this.cols.length; j++){
+    for (let i = 0; i < this.excelData.length; i++) {
         const rowData = [
-          this.products[i].date,
-          this.products[i].time,
-          this.products[i].device_id,
-          this.products[i].flow,
-          this.products[i].output_current,
-          this.products[i].settings_freq,
-          this.products[i].running_freq,
-          this.products[i].rpm,
-          this.products[i].flow,
-          this.products[i].output_current,
-          this.products[i].settings_freq,
-          this.products[i].running_freq,
-          this.products[i].rpm,
-          this.products[i].flow,
-          this.products[i].settings_freq,
-          this.products[i].running_freq,
-          this.products[i].rpm,
-          this.products[i].flow
+          i+1,
+          this.excelData[i].date,
+          this.excelData[i].time,
+          this.excelData[i].r,
+          this.excelData[i].y,
+          this.excelData[i].b,
+          this.excelData[i].r_y,
+          this.excelData[i].y_b,
+          this.excelData[i].b_r,
+          this.excelData[i].curr1,
+          this.excelData[i].curr2,
+          this.excelData[i].curr3,
+          (this.excelData[i].e1+this.excelData[i].e2+this.excelData[i].e3).toFixed(2),
+          (this.excelData[i].pf1+this.excelData[i].pf2+this.excelData[i].pf3).toFixed(2),
+          this.excelData[i].freq,
+          this.excelData[i].runhr,
+          this.excelData[i].totkw,
+          this.excelData[i].totkva,
+          this.excelData[i].totkvar
         ];
         data.push(rowData);
-      }
+      
       
     }
   

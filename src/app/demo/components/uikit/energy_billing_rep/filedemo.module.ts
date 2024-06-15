@@ -8,7 +8,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CalendarModule } from 'primeng/calendar';
 import { NgApexchartsModule } from "ng-apexcharts";
-
+import { TableModule } from 'primeng/table';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -18,7 +18,8 @@ import { NgApexchartsModule } from "ng-apexcharts";
 		DropdownModule,
 		ConfirmDialogModule,
 		CalendarModule,
-		NgApexchartsModule
+		NgApexchartsModule,
+		TableModule
 	],
 	declarations: [FileDemoComponent],
 })

@@ -53,17 +53,17 @@ export class InputDemoComponent implements OnInit {
     client_id:number=(+localStorage.getItem('c_id'));
     constructor(private router: Router,private authservice:AuthenticationService,private api:ApiService,private countryService: CountryService,private fb: FormBuilder,private http:HttpClient, private messageService: MessageService) { 
         this.stockIn = this.fb.group({
-            org_id: ['', Validators.required],
-            device_id: ['', [Validators.required]],
+            org_id: ['0', Validators.required],
+            device_id: ['0', [Validators.required]],
             device_name: ['', [Validators.required]],
-            user_id: ['', [Validators.required]],
+            user_id: ['0', [Validators.required]],
             manage_user_device_id:['']
           });
           this.stockIn2 = this.fb.group({
-            org_id: ['', Validators.required],
-            device_id: ['', [Validators.required]],
+            org_id: ['0', Validators.required],
+            device_id: ['0', [Validators.required]],
             device_name: ['', [Validators.required]],
-            user_id: ['', [Validators.required]],
+            user_id: ['0', [Validators.required]],
             manage_user_device_id:['']
           });
     }
@@ -151,6 +151,11 @@ export class InputDemoComponent implements OnInit {
     
     resetData(){
         this.stockIn.reset();
+        this.stockIn.patchValue({
+          device_id:0,
+          org_id:0,
+          user_id:0
+        });
           }
           getOrganization(){
             const apiUrl = this.api.baseUrl;
@@ -314,7 +319,8 @@ export class InputDemoComponent implements OnInit {
                       debugger
                 this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Device created', life: 3000 });
                 this.resetData();
-                this.getAllStock();
+                this.loadPage();
+
               },
               (error) => { 
         if(error.status=='401'){
@@ -418,9 +424,10 @@ export class InputDemoComponent implements OnInit {
             console.log(response);
             this.spinner=false;
             debugger
-            this.messageService.add({ severity: 'Success', summary: 'Successful', detail: 'Assign Device Deleted', life: 3000 });
+            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Device Deleted', life: 3000 });
             this.resetData();
             this.loadPage();
+            this.getuser();
           },
           (error) => { 
         if(error.status=='401'){

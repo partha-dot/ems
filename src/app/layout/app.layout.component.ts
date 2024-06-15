@@ -79,7 +79,7 @@ export class AppLayoutComponent implements OnDestroy , OnInit{
                             this.router.url.includes('/app/outlet/energy_devInfo')|| 
                             this.router.url.includes('/app/outlet/energy_chart')|| 
                             this.router.url.includes('/app/outlet/alert') || 
-                            this.router.url.includes('/app/outlet/schedul') || 
+                            // this.router.url.includes('/app/outlet/schedul') || 
                             this.router.url.includes('/app/outlet/report')|| 
                             this.router.url.includes('/app/outlet/energy_billing')) {
                                 this.show_energy=true;
@@ -97,7 +97,7 @@ export class AppLayoutComponent implements OnDestroy , OnInit{
                                     // { label: 'Graphical View', icon: 'pi pi-fw pi-chart-pie',routerLink: ['/app/outlet/UPS'], visible:this.show_ups },
                                     { label: 'Create Alert', icon: 'pi pi-fw pi-bell',routerLink: ['/app/outlet/alert'] , visible:true },
                                     { label: 'Historic Data', icon: 'pi pi-fw pi-book',routerLink: ['/app/outlet/report'],visible:true  },
-                                    { label: 'Scheduling', icon: 'pi pi-fw pi-calendar',routerLink: ['/app/outlet/schedul'] ,visible:true },
+                                    // { label: 'Scheduling', icon: 'pi pi-fw pi-calendar',routerLink: ['/app/outlet/schedul'] ,visible:true },
                                     { label: 'Report Analysis', icon: 'pi pi-fw pi-chart-line',routerLink: ['/app/outlet/energy_billing'] ,visible:true }
                                 ];
                              }
