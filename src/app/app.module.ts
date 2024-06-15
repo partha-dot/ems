@@ -18,7 +18,6 @@ import { JwtModule, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { environment } from 'src/environments/environment';
 import { common } from './demo/api/common';
 
-
 // import { InputGroupModule } from 'primeng/inputgroup';
 // import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 @NgModule({
@@ -46,9 +45,7 @@ import { common } from './demo/api/common';
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
-
         {provide:'BASE_URL',useValue:common.base_url},
-
         CountryService, CustomerService, EventService, IconService, NodeService,
         PhotoService, ProductService,AuthenticationService,JwtHelperService
     ],
