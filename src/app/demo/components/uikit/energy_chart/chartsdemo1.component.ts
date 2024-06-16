@@ -958,6 +958,7 @@ export class ChartsDemo1Component implements OnInit, OnDestroy {
      * Changes effected when kVA,kW,kVAR dropdown value changes
      */
     get_kVA_kW_kVAR_ChartDataByFilter = (ev:Required<IFilterMenus>) =>{
+        this.chartOptions5 = null;
         const payload = this.getPayload(ev);
         this.api.call_api(1,api_name.KVAR_KVA_KW,payload)
         .pipe(map((x: any) => x.data))
@@ -1022,11 +1023,12 @@ export class ChartsDemo1Component implements OnInit, OnDestroy {
 
     /***Changes effected when Power dropdown value changes */
     getPowerChartDataByFilter = (ev:Required<IFilterMenus>) =>{
+        this.chartOptions8 = null;
         const payload = this.getPayload(ev);
         this.api.call_api(1,api_name.POWER_USED,payload)
         .pipe(map((x: any) => x.data))
         .subscribe((res:Required<IPower>[]) =>{
-            if(res.length > 0){
+            // if(res.length > 0){
                 let arr :Required<{name:string,type:string,data:number[],filtered:string}>[] =
                 [
                         {name: "Active Power-1",type: "line",data: [],filtered:'activep1'},
@@ -1102,17 +1104,18 @@ export class ChartsDemo1Component implements OnInit, OnDestroy {
                             }
 
                           };
-                    }
+                    // }
         })
     }
 
     /***Changes effected when Current dropdown value changes */
     getCurrentChartDataByFilter = (ev:Required<IFilterMenus>) =>{
+        this.chartOptions7 = null;
         const payload = this.getPayload(ev);
         this.api.call_api(1,api_name.CURRENT_USED,payload)
         .pipe(map((x: any) => x.data))
         .subscribe((res:Required<ICurrent>[]) =>{
-            if(res.length > 0){
+            // if(res.length > 0){
                 let arr :Required<{name:string,type:string,data:number[],filteredBy:string}>[] =
                 [
                         {name: "Current Phase-1",type: "line",data: [],filteredBy:'curr1'},
@@ -1167,17 +1170,18 @@ export class ChartsDemo1Component implements OnInit, OnDestroy {
                               }
                             }
                         }
-                    }
+                    // }
         })
     }
 
     /** Changes effected when Voltage dropdown value changes */
     getVoltageChartDataByFilter = (ev:Required<IFilterMenus>) =>{
+        this.chartOptions6 = null;
         const payload = this.getPayload(ev);
         this.api.call_api(1,api_name.VOLTAGE_USED,payload)
         .pipe(map((x: any) => x.data))
         .subscribe((res:Required<IVoltage>[]) =>{
-            if(res.length > 0){
+            // if(res.length > 0){
                 let arr :Required<{name:string,type:string,data:number[]}>[] =
                 [
                         {name: "R",type: "line",data: []},
@@ -1239,19 +1243,20 @@ export class ChartsDemo1Component implements OnInit, OnDestroy {
                             }
                             }
                         };
-            }
+            // }
         })
     }
     /** End */
 
     /** Changes effected when Energy used dropdown value changes */
     getEnergyUsedChartDataByFilter = (ev:Required<IFilterMenus>) =>{
+            this.chartOptions2 = null;
             const payload = this.getPayload(ev);
             this.api.call_api(1,api_name.ENERGY_USED,payload)
             .pipe(map((x: any) => x.data))
             .subscribe((res:Required<IEnergyUsed>[]) =>{
                 // this.energyUsed = res;
-                if(res.length > 0){
+                // if(res.length > 0){
                     let date = [];
                     let arr:Required<{name:string,data:number[],filtered:string}>[] =
                     [
@@ -1270,58 +1275,59 @@ export class ChartsDemo1Component implements OnInit, OnDestroy {
                             })
                         })
                     })
-                        this.chartOptions2 = {
-                        series: arr,
-                        chart: {
-                            type: "bar",
-                            height: 350
-                        },
-                        plotOptions: {
-                            bar: {
-                            horizontal: false,
-                            columnWidth: "70%",
-                            borderRadius: 0,
-                            borderRadiusApplication: 'around',
-                            borderRadiusWhenStacked: 'last',
-                            }
-                        },
-                        dataLabels: {
-                            enabled: true
-                        },
-                        stroke: {
-                            show: true,
-                            width: 1,
-                            colors: ["transparent"]
-                        },
-                        xaxis: {
-                            categories: date,
-                            labels:{
-                                style:{
-                                    fontSize:'10px',
-                                    fontWeight:'500'
-                                }
-                            }
-
-                        },
-                        yaxis: {
-                            labels: {
-                            formatter: (val) => {
-                                return val / 100 + "kWh";
-                            }
-                            }
-                        },
-                        fill: {
-                            opacity: 1
-                        },
-                        tooltip: {
-                            y: {
-                            formatter: function(val) {
-                                return "" + val/100 + " kWh";
-                            }
+                    // this.chartOptions2.series = [];
+                    this.chartOptions2 = {
+                    series: arr,
+                    chart: {
+                        type: "bar",
+                        height: 350
+                    },
+                    plotOptions: {
+                        bar: {
+                        horizontal: false,
+                        columnWidth: "70%",
+                        borderRadius: 0,
+                        borderRadiusApplication: 'around',
+                        borderRadiusWhenStacked: 'last',
+                        }
+                    },
+                    dataLabels: {
+                        enabled: true
+                    },
+                    stroke: {
+                        show: true,
+                        width: 1,
+                        colors: ["transparent"]
+                    },
+                    xaxis: {
+                        categories: date,
+                        labels:{
+                            style:{
+                                fontSize:'10px',
+                                fontWeight:'500'
                             }
                         }
-                        };
+
+                    },
+                    yaxis: {
+                        labels: {
+                        formatter: (val) => {
+                            return val / 100 + "kWh";
+                        }
+                        }
+                    },
+                    fill: {
+                        opacity: 1
+                    },
+                    tooltip: {
+                        y: {
+                        formatter: function(val) {
+                            return "" + val/100 + " kWh";
+                        }
+                        }
                     }
+                    };
+                    // }
             })
     }
     /** End */
@@ -1362,7 +1368,8 @@ export class ChartsDemo1Component implements OnInit, OnDestroy {
         if(response){
             this.data1=response
             this.cities=this.data1.data;
-            this.selectedDealer=this.cities[0];  
+            this.selectedDealer=this.cities[0];
+            this.setDevice()
         }
 
       },

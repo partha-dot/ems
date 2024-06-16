@@ -82,7 +82,7 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
     @ViewChild("chart2", { static: false }) chart2: ChartComponent
     public chartOptions: Partial<ChartOptions>;
 
-  
+
   public activeOptionButton = "all";
   public updateOptionsData = {
     "1m": {
@@ -261,7 +261,7 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
         //     this.getDevice();
         //   }, 20000);
     }
-    
+
     connectToWebSocket(c_id,d_id,d_name) {
       this.spinner=true;
       this.websocketSubscription = this.websocketService.connect(c_id,d_id,d_name)
@@ -317,7 +317,7 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
             this.spinner=false;
             // Handle received message here
           },
-          (error) => { 
+          (error) => {
         if(error.status=='401'){
           this.router.navigate(['/']);
           debugger
@@ -369,10 +369,10 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
         this.getDeviceLiveData(this.selectedDealer.device,this.selectedDealer.device_id);
 
         console.log(this.selectedDealer);
-        
+
 
       },
-      (error) => { 
+      (error) => {
         if(error.status=='401'){
           this.router.navigate(['/']);
           debugger
@@ -402,13 +402,13 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
       return result
       }
       getDeviceLiveData(name:any,id:number){
-      
+
       this.connectToWebSocket(this.client_id,id,name);
       console.log(this.websocketService.socketStatus);
       this.spinner=true
       if(this.websocketService.resData){
         console.log(this.websocketService.resData);
-        
+
       }
       debugger
         //  if(name){
@@ -473,7 +473,7 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
 
 
         //         },
-        //         (error) => { 
+        //         (error) => {
         // if(error.status=='401'){
         //   this.router.navigate(['/']);
         //   debugger
@@ -584,7 +584,7 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
         if (this.subscription) {
           this.subscription.unsubscribe();
       }
-        
+
     }
 
 
