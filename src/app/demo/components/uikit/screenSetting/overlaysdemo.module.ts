@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OverlaysDemoComponent } from './overlaysdemo.component';
 import { OverlaysDemoRoutingModule } from './overlaysdemo-routing.module';
 import { ToastModule } from 'primeng/toast';
@@ -14,6 +14,8 @@ import { RippleModule } from 'primeng/ripple';
 import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { TooltipModule } from 'primeng/tooltip';
 import { InputTextModule } from 'primeng/inputtext';
+import { ToggleButtonModule } from 'primeng/togglebutton';
+import { DropdownModule } from 'primeng/dropdown';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -29,7 +31,10 @@ import { InputTextModule } from 'primeng/inputtext';
 		ConfirmDialogModule,
 		SidebarModule,
 		RippleModule,
-		ConfirmPopupModule
+		ConfirmPopupModule,
+		ToggleButtonModule,
+		ReactiveFormsModule,
+		DropdownModule
 	],
 	declarations: [OverlaysDemoComponent]
 })

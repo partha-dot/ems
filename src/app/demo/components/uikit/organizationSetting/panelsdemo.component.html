@@ -114,7 +114,7 @@
 								
 								locale="en-IN" /> 
 							</div>
-							<div class="field" >
+							<!-- <div class="field" >
 								<label htmlFor="firstname2">Select Day of month</label>
 								<p-dropdown 
 								[(ngModel)]="dayOnly"
@@ -123,13 +123,13 @@
 								optionLabel="key"
 								placeholder="Select a date" 
 								/>
-							</div>
+							</div> -->
 						</div>
 						<div class="col-12 md:col-8">
 							<p-table
 							#dt
 							[value]="AllsettingList"
-							[rows]="4"
+							[rows]="3"
 							[paginator]="true"
 							[globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
 							[tableStyle]="{ 'min-width': '35rem' }"
@@ -186,7 +186,7 @@
 									</tr>
 								</ng-template>
 								<ng-template pTemplate="summary">
-									<div class="flex align-items-center justify-content-between">In total there are {{ settingList ? settingList.length : 0 }} Settings.</div>
+									<div class="flex align-items-center justify-content-between">In total there are {{ AllsettingList ? AllsettingList.length : 0 }} Settings.</div>
 								</ng-template>
 							</p-table>
 						</div>

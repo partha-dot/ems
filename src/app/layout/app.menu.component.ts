@@ -120,7 +120,7 @@ export class AppMenuComponent implements OnInit {
                             {
                                 label: 'Screen Settings',
                                 icon: 'pi pi-desktop',
-                                routerLink: ['/app/outlet/usrkhjhkj'] 
+                                routerLink: ['/app/outlet/screen_Setting'] 
                             },]
                         }
                     ]

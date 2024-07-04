@@ -209,7 +209,7 @@
                                 height: 23px;
                                 width: 23px;">
                                     <i class="pi pi-bolt text-white-600 text-xl" style="position: absolute;padding-top: 3px;padding-left: 2px;"></i></div>
-    
+
                                 <div style="padding-left: 40px; position: absolute;">
                             <h5 style="color: white;"> VOLTAGE OF R</h5></div>
                                 </div>
@@ -217,7 +217,7 @@
                                     {{EnergyData?.r?EnergyData?.r:0.00}} V
                                 </h3>
                                 </div>
-    
+
                             </div>
                             <div class="col-12 lg:col-6 xl:col-3" *ngIf="selectedPhase.unit=='two'">
                                 <div class="card mb-0" style="
@@ -235,7 +235,7 @@
                                 height: 23px;
                                 width: 23px;">
                                     <i class="pi pi-bolt text-white-600 text-xl" style="position: absolute;padding-top: 3px;padding-left: 2px;"></i></div>
-    
+
                                 <div style="padding-left: 40px; position: absolute;">
                             <h5 style="color: white;">VOLTAGE OF Y</h5></div>
                                 </div>
@@ -243,7 +243,7 @@
                                     {{EnergyData?.y?EnergyData?.y:0.00}} V
                                 </h3>
                                 </div>
-    
+
                             </div>
                             <div class="col-12 lg:col-6 xl:col-3" *ngIf="selectedPhase.unit=='three'">
                                 <div class="card mb-0" style="
@@ -261,7 +261,7 @@
                                 height: 23px;
                                 width: 23px;">
                                     <i class="pi pi-bolt text-white-600 text-xl" style="position: absolute;padding-top: 3px;padding-left: 2px;"></i></div>
-    
+
                                 <div style="padding-left: 40px; position: absolute;">
                             <h5 style="color: white;"> VOLTAGE OF B</h5></div>
                                 </div>
@@ -269,10 +269,10 @@
                                     {{EnergyData?.b?EnergyData?.b:0.00}} V
                                 </h3>
                                 </div>
-    
+
                             </div>
                         <!-- voltage -->
-                       
+
                         <div class="col-12 lg:col-6 xl:col-3" *ngIf="selectedPhase.unit=='single'">
                             <div class="card mb-0" style="
                             box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
@@ -415,10 +415,10 @@
                                         <div id="chart" >
                                             <h4>Weekly Energy Used</h4>
                                             <apx-chart
-                                                [series]="chartOptions.series"
-                                                [chart]="chartOptions.chart"
-                                                [labels]="chartOptions.labels"
-                                                [responsive]="chartOptions.responsive"
+                                                [series]="chartOptions?.series"
+                                                [chart]="chartOptions?.chart"
+                                                [labels]="chartOptions?.labels"
+                                                [responsive]="chartOptions?.responsive"
                                             ></apx-chart>
                                         </div>
                                     </div>
