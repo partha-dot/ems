@@ -548,7 +548,7 @@ setDevice(){
         "billing_type": "FR",
         "billing_price":this.pricePerMonth,
         "billing_status": 'Y',
-        "billing_day": this.dayOnly.key
+        "billing_day": 1
       }
       const arr=[];
       arr.push(obj)
@@ -873,7 +873,7 @@ setDevice(){
         billing_type: "FR",
         billing_price:this.pricePerMonth,
         billing_status: 'Y',
-        billing_day: this.dayOnly.key
+        billing_day: 1
         // created_by:this.user_id
       };
       debugger

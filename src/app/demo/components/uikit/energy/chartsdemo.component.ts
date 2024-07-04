@@ -216,7 +216,9 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
     tot_e1:number=0;
     tot_e2:number=0;
     tot_e3:number=0;
-
+    weeklyPaiData:any[]=[];
+    weekdayName: any[]=[];
+    weekData: any[]=[];
     constructor(private router: Router,private datePipe: DatePipe,public layoutService: LayoutService, private authservice:AuthenticationService,
 
 
@@ -248,7 +250,7 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
       ];
       this.activeItem = this.items[0];
         // //debugger
-        this.initCharts();
+        // this.initCharts();
         this.getDevice();
 
         // setInterval(()=>{
@@ -269,12 +271,18 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
           (message) => {
             console.log('Received message:', message);
             const jsonString = message
-            const energyData: EnergyData = JSON.parse(jsonString);
+            const AllData: any = JSON.parse(jsonString);
+            const energyData: EnergyData = AllData.lastdata;
+            this.weeklyPaiData = AllData.lastdata_weekdata;
+            if(this.weeklyPaiData.length>0){
+            this.initCharts();
+            }
             this.m_e1=0
             this.m_e2=0
             this.m_e3=0
             this.avgPF=0
             console.log(energyData);
+            console.log(this.weeklyPaiData);
             this.EnergyData=energyData
             const m_e1=this.EnergyData.e1 - this.EnergyData.e1_past_month
             const m_e2=this.EnergyData.e2 - this.EnergyData.e2_past_month
@@ -313,7 +321,7 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
             this.tot_e2=parseFloat(this.EnergyData?.e2?this.EnergyData?.e2.toFixed(2):0);
             this.tot_e3=parseFloat(this.EnergyData?.e3?this.EnergyData?.e3.toFixed(2):0);
             this.avgPF=this.EnergyData.pf1+this.EnergyData.pf2+this.EnergyData.pf3
-            this.avgPF=parseFloat(this.avgPF?this.avgPF.toFixed(2):'0')
+            this.avgPF=parseFloat(this.avgPF?this.avgPF.toFixed(2):'0');
             this.spinner=false;
             // Handle received message here
           },
@@ -533,15 +541,30 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
         this.filteredDealer = filtered;
 
     }
-
+    getWeekdayName(dateString: string): string {
+      const date = new Date(dateString);
+      const options:any = { weekday: 'long' };
+      return date.toLocaleDateString('en-US', options);
+    }
+    
     initCharts() {
+      this.weekdayName=[];
+      this.weekData=[];
+      this.weeklyPaiData.forEach(e=>{
+        e.day=this.getWeekdayName(e.date);
+        this.weekdayName.push(this.getWeekdayName(e.date));
+        this.weekData.push(Number(e.e1_diff+e.e2_diff+e.e3_diff));
+      })
+      if(this.weekdayName.length>0 && this.weekData.length>0){
+        console.log(this.weekdayName,this.weekData);
+      
         this.chartOptions = {
-            series: [44, 55, 13, 43, 22, 34, 65],
+            series: this.weekData,
             chart: {
             //   width: 480,
               type: "pie"
             },
-            labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+            labels:this.weekdayName,
 
             responsive: [
                 {
@@ -558,6 +581,35 @@ export class ChartsDemoComponent implements OnInit, OnDestroy {
               ]
 
           };
+      }
+      else{
+        console.log(this.weekdayName,this.weekData);
+      
+        this.chartOptions = {
+            series: [100],
+            chart: {
+            //   width: 480,
+              type: "pie"
+            },
+            labels:['Sunday'],
+
+            responsive: [
+                {
+                  breakpoint: 1349,
+                  options: {
+                    // chart: {
+                    //   width: 480
+                    // },
+                    legend: {
+                      position: "bottom"
+                    }
+                  }
+                }
+              ]
+
+          };
+      }
+      
 
 
     }

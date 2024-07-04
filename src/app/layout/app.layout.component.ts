@@ -68,7 +68,9 @@ export class AppLayoutComponent implements OnDestroy , OnInit{
             });
                             router.events.subscribe((val) => {
                             console.log(val instanceof NavigationEnd) 
-                            if (this.router.url.includes('/app/outlet/device_m') || this.router.url.includes('/app/outlet/device_s')|| this.router.url.includes('/app/outlet/org') || this.router.url.includes('/app/outlet/usr')) {
+                            if (this.router.url.includes('/app/outlet/device_m') || this.router.url.includes('/app/outlet/device_s')||
+                             this.router.url.includes('/app/outlet/org') || this.router.url.includes('/app/outlet/usr')||
+                             this.router.url.includes('/app/outlet/screen_Setting')) {
                                 this.hideTopMenu=true;
                               }
                               else{
