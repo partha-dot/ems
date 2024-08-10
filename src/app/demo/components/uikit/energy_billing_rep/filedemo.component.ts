@@ -153,7 +153,7 @@ export class FileDemoComponent implements OnInit {
         this.selectedID='b1';
         this.selectedName='Energy Usage and Billing';
         this.datetype='M'
-        this.getDevice();   
+        this.getDevice();
       }
       logMockData(data:any){
         console.log(data)
@@ -184,8 +184,8 @@ export class FileDemoComponent implements OnInit {
         console.log(i.value);
         debugger
       }
-      
-      navigate(location: any){ 
+
+      navigate(location: any){
         debugger
         // this.router.navigate(['/billingreport']);
         // this.router.navigate(location.target.value);
@@ -193,16 +193,16 @@ export class FileDemoComponent implements OnInit {
        convertDateString(dateString: string): string {
         // Parse the date string to a Date object
         const date = new Date(dateString);
-      
+
         // Extract year, month, and day
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
         const day = String(date.getDate()).padStart(2, '0');
-      
+
         // Format the date as 'yyyy-mm-dd'
         return `${year}-${month}-${day}`;
       }
-      
+
        ShowHideTable(){
         this.spinner=true;
         console.log(this.datetype, this.selectedDevice, this.rangeDates);
@@ -248,7 +248,7 @@ export class FileDemoComponent implements OnInit {
                 //     e.total_energy=(e.e1+e.e2+e.e3).toFixed(2);
                 //     e.price=((e.e1+e.e2+e.e3)*(this.BillingDtls.billing_price)).toFixed(2);
                 //   }
-                  
+
                 // })
               }
               debugger
@@ -256,7 +256,7 @@ export class FileDemoComponent implements OnInit {
               this.showTable2=false
               this.showTable4=false
             },
-            (error) => { 
+            (error) => {
         if(error.status=='401'){
           this.spinner=false
           this.router.navigate(['/']);
@@ -267,27 +267,27 @@ export class FileDemoComponent implements OnInit {
               this.spinner=false
               this.messageService.add({ severity: 'error', summary: 'Error', detail: 'From Server Side!!', life: 3000 });
             }
-            
+
           );
 
 
-        
-        
+
+
        }
        processBillingData() {
         let previousTotalEnergy = this.calculateTotalEnergy(this.lastRowData);
-    
+
         this.BillingList.forEach((item, index) => {
           const currentTotalEnergy = this.calculateTotalEnergy(item);
-    
+
           if (index === 0) {
-            item.total_energy = (currentTotalEnergy - previousTotalEnergy).toFixed(2);
+            item.total_energy = (currentTotalEnergy - previousTotalEnergy?previousTotalEnergy:0).toFixed(2);
           } else {
-            item.total_energy = (currentTotalEnergy - previousTotalEnergy).toFixed(2);
+            item.total_energy = (currentTotalEnergy - previousTotalEnergy?previousTotalEnergy:0).toFixed(2);
           }
-    
+
           item.price = item.total_energy * this.BillingDtls.billing_price;
-    
+
           previousTotalEnergy = currentTotalEnergy;
         });
       }
@@ -308,10 +308,10 @@ export class FileDemoComponent implements OnInit {
                 this.spinner=false
                 this.data1=response
                 this.deviceList=this.data1.data;
-                this.selectedDevice=this.deviceList[0];  
+                this.selectedDevice=this.deviceList[0];
 
       },
-      (error) => { 
+      (error) => {
         if(error.status=='401'){
           this.router.navigate(['/']);
           debugger
@@ -323,7 +323,7 @@ export class FileDemoComponent implements OnInit {
     )}
     dateTypeChange(val:any){
       console.log(this.datetype);
-      
+
       if(val=="Y"){
         this.showyear=true;
         this.showMonth=false;

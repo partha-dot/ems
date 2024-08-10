@@ -36,9 +36,9 @@ export class AppLayoutComponent implements OnDestroy , OnInit{
         this.overlayMenuOpenSubscription = this.layoutService.overlayOpen$.subscribe(() => {
             if (!this.menuOutsideClickListener) {
                 this.menuOutsideClickListener = this.renderer.listen('document', 'click', event => {
-                    const isOutsideClicked = !(this.appSidebar.el.nativeElement.isSameNode(event.target) || this.appSidebar.el.nativeElement.contains(event.target) 
+                    const isOutsideClicked = !(this.appSidebar.el.nativeElement.isSameNode(event.target) || this.appSidebar.el.nativeElement.contains(event.target)
                         || this.appTopbar.menuButton.nativeElement.isSameNode(event.target) || this.appTopbar.menuButton.nativeElement.contains(event.target));
-                    
+
                     if (isOutsideClicked) {
                         this.hideMenu();
                     }
@@ -67,7 +67,7 @@ export class AppLayoutComponent implements OnDestroy , OnInit{
                 this.hideProfileMenu();
             });
                             router.events.subscribe((val) => {
-                            console.log(val instanceof NavigationEnd) 
+                            console.log(val instanceof NavigationEnd)
                             if (this.router.url.includes('/app/outlet/device_m') || this.router.url.includes('/app/outlet/device_s')||
                              this.router.url.includes('/app/outlet/org') || this.router.url.includes('/app/outlet/usr')||
                              this.router.url.includes('/app/outlet/screen_Setting')) {
@@ -77,12 +77,12 @@ export class AppLayoutComponent implements OnDestroy , OnInit{
                                 this.hideTopMenu=false;
                               }
 
-                            if (this.router.url.includes('/app/outlet/energy')|| 
-                            this.router.url.includes('/app/outlet/energy_devInfo')|| 
-                            this.router.url.includes('/app/outlet/energy_chart')|| 
-                            this.router.url.includes('/app/outlet/alert') || 
-                            // this.router.url.includes('/app/outlet/schedul') || 
-                            this.router.url.includes('/app/outlet/report')|| 
+                            if (this.router.url.includes('/app/outlet/energy')||
+                            this.router.url.includes('/app/outlet/energy_devInfo')||
+                            this.router.url.includes('/app/outlet/energy_chart')||
+                            this.router.url.includes('/app/outlet/alert') ||
+                            this.router.url.includes('/app/outlet/schedul') ||
+                            this.router.url.includes('/app/outlet/report')||
                             this.router.url.includes('/app/outlet/energy_billing')) {
                                 this.show_energy=true;
                                 this.show_dg=false;
@@ -99,7 +99,7 @@ export class AppLayoutComponent implements OnDestroy , OnInit{
                                     // { label: 'Graphical View', icon: 'pi pi-fw pi-chart-pie',routerLink: ['/app/outlet/UPS'], visible:this.show_ups },
                                     { label: 'Create Alert', icon: 'pi pi-fw pi-bell',routerLink: ['/app/outlet/alert'] , visible:true },
                                     { label: 'Historic Data', icon: 'pi pi-fw pi-book',routerLink: ['/app/outlet/report'],visible:true  },
-                                    // { label: 'Scheduling', icon: 'pi pi-fw pi-calendar',routerLink: ['/app/outlet/schedul'] ,visible:true },
+                                    { label: 'Scheduling', icon: 'pi pi-fw pi-calendar',routerLink: ['/app/outlet/schedul'] ,visible:true },
                                     { label: 'Report Analysis', icon: 'pi pi-fw pi-chart-line',routerLink: ['/app/outlet/energy_billing'] ,visible:true }
                                 ];
                              }
@@ -161,11 +161,11 @@ export class AppLayoutComponent implements OnDestroy , OnInit{
                             //     ];
                             //   }
                         });
-                        
+
     }
     ngOnInit(): void {
-       
-         
+
+
     }
 
     hideMenu() {
