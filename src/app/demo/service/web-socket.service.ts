@@ -14,7 +14,7 @@ export class WebsocketService {
   device_id:number
   device:string
   resData:string
-  private baseURL:string="ws://13.49.80.167:8000/api/ws_routes/ws/EMS/"
+  private baseURL:string="wss://msapi.iotblitz.com/api/ws_routes/ws/EMS/"
   constructor(private router: Router,private api:ApiService,private http:HttpClient) { }
 
   public connect(client_id,d_id,d_name): Observable<any> {
@@ -29,7 +29,7 @@ export class WebsocketService {
         this.socketStatus=true;
         console.log('WebSocket connected');
         this.callData()
-        
+
       };
 
       this.socket.onmessage = (event) => {
@@ -37,15 +37,15 @@ export class WebsocketService {
           const data = JSON.parse(event.data);
           observer.next(data);
           console.log(data);
-          
+
         } catch (error) {
           observer.error(error);
           console.log(error);
-          
+
         }
       };
 
-      this.socket.onerror = (error) => { 
+      this.socket.onerror = (error) => {
         observer.error(error);
         console.log(error);
       };
@@ -82,7 +82,7 @@ export class WebsocketService {
         const res:any=response
         this.resData=res.data;
           console.log(response);
-      
+
       })
     }
   }

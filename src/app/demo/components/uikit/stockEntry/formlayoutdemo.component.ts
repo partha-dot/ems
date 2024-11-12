@@ -138,7 +138,6 @@ export class FormLayoutDemoComponent implements OnInit{
             this.data=response
             this.models=this.data.data
             this.filteredCountries=this.cities1[0]
-            // this.getDeviceLiveData(this.selectedDealer.device,this.selectedDealer.device_id);
 
             console.log(this.selectedDealer);
 

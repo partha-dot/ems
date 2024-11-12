@@ -1,53 +1,162 @@
 <div class="card">
-    <h5>Invalid State</h5>
-    <p>All form components have an invalid state style to display the validation errors when ng-invalid ng-dirty combination is applied by Angular.</p>
+    <h5>Input</h5>
     <div class="grid p-fluid">
-        <div class="col-12 md:col-6">
-            <div class="field mt-3">
-                <label for="inputtext">InputText</label>
-                <input type="text" id="inputtext" pInputText class="ng-invalid ng-dirty">
+        <div style="text-align: center;">
+            <div class="col-12 lg:col-12 xl:col-12">
+                <h4 >DI 1</h4>
+                <div class="null led" *ngIf="!led1"></div>
+                <div class="green led"  *ngIf="led1"></div>
             </div>
-            <div class="field">
-                <label for="autocomplete">AutoComplete</label>
-                <p-autoComplete inputId="autocomplete" [(ngModel)]="value1" [suggestions]="filteredCountries" (completeMethod)="searchCountry($event)" field="name" class="ng-invalid ng-dirty"></p-autoComplete>
+        </div>
+        <div  style="text-align: center;">
+            <div class="col-12 lg:col-12 xl:col-12">
+                <h4 >DI 2</h4>
+                <div class="null led" *ngIf="!led2"></div>
+                <div class="red led" *ngIf="led2"></div>
+            </div>
+        </div>
+        <div  style="text-align: center;">
+            <div class="col-12 lg:col-12 xl:col-12">
+                <h4 >DI 3</h4>
+                <div class="null led" *ngIf="!led3"></div>
+                <div class="yellow led" *ngIf="led3"></div>
+            </div>
+        </div>
+        <div  style="text-align: center;">
+            <div class="col-12 lg:col-12 xl:col-12">
+                <h4 >DI 4</h4>
+                <div class="null led" *ngIf="!led4"></div>
+                <div class="pink led" *ngIf="led4"></div>
+            </div>
 
+        </div>
+        <div  style="text-align: center;">
+            <div class="col-12 lg:col-12 xl:col-12">
+                <h4 >DI 5</h4>
+                <div class="null led" *ngIf="!led5"></div>
+                <div class="merun led" *ngIf="led5"></div>
             </div>
-            <div class="field">
-                <label for="calendar">Calendar</label>
-                <p-calendar inputId="calendar" [(ngModel)]="value2" class="ng-invalid ng-dirty" [showIcon]="true"></p-calendar>
+
+        </div>
+        <div  style="text-align: center;">
+            <div class="col-12 lg:col-12 xl:col-12">
+                <h4 >DI 6</h4>
+                <div class="null led" *ngIf="!led6"></div>
+                <div class="orange led" *ngIf="led6"></div>
             </div>
-            <div class="field">
-                <label for="chips">Chips</label>
-                <p-chips inputId="chips" [(ngModel)]="value3" class="ng-invalid ng-dirty"></p-chips>
-            </div>
-            <div class="field">
-                <label for="password">Password</label>
-                <p-password [(ngModel)]="value8" class="ng-invalid ng-dirty"></p-password>
+
+        </div>
+        <div  style="text-align: center;">
+            <div class="col-12 lg:col-12 xl:col-12">
+                <h4 >DI 7</h4>
+                <div class="null led" *ngIf="!led7"></div>
+                <div class="sky led" *ngIf="led7"></div>
             </div>
         </div>
-        
-        <div class="col-12 md:col-6">                    
-            <div class="field mt-3">
-                <label for="inputmask">InputMask</label>
-                <p-inputMask inputId="inputmask" mask="99/99/9999" [(ngModel)]="value5" class="ng-invalid ng-dirty"></p-inputMask>
-            </div>
-            <div class="field">
-                <label for="inputnumber">InputNumber</label>
-                <p-inputNumber inputId="inputnumber" [(ngModel)]="value6" class="ng-invalid ng-dirty"></p-inputNumber>
-            </div>
-            <div class="field">
-                <label for="dropdown">Dropdown</label>
-                <p-dropdown inputId="dropdown" [autoDisplayFirst]="false" [options]="cities" [(ngModel)]="value9" optionLabel="name" class="ng-invalid ng-dirty"></p-dropdown>
-            </div>
-            <div class="field">
-                <label for="multiselect">MultiSelect</label>
-                <p-multiSelect inputId="multiselect" [options]="cities" [(ngModel)]="value10" optionLabel="name" [filter]="false" class="ng-invalid ng-dirty"></p-multiSelect>
-            </div>
-            <div class="field">
-                <label for="textarea">Textarea</label>
-                <textarea inputId="textarea" rows="3" cols="30" [(ngModel)]="value4" pInputTextarea class="ng-invalid ng-dirty"></textarea>
-            </div>
+        <div  style="text-align: center;">
+            <div class="col-12 lg:col-12 xl:col-12">
+                <h4 >DI 8</h4>
+                <div class="null led" *ngIf="!led8"></div>
+                <div class="blue led" *ngIf="led8"></div>
         </div>
+
+
+    </div>
+
+    </div>
+</div>
+<div class="card">
+    <h5>Output</h5>
+    <div class="grid p-fluid " >
+        <div class="col-12 md:col-1"  style="text-align: center;">
+
+            <div class="field">
+                <label class="switch switch-green">
+                    <input type="checkbox" class="switch-input" (change)="onCheckbox1Change($event)">
+                    <span class="switch-label" data-on="On" data-off="Off"></span>
+                    <span class="switch-handle"></span>
+                  </label>
+              </div>
+              <label>DO 1</label>
+        </div>
+        <div class="col-12 md:col-1" style="text-align: center;">
+
+            <div class="field">
+                <label class="switch switch-green">
+                    <input type="checkbox" class="switch-input" (change)="onCheckbox2Change($event)">
+                    <span class="switch-label" data-on="On" data-off="Off"></span>
+                    <span class="switch-handle"></span>
+                  </label>
+              </div>
+              <label>DO 2</label>
+        </div>
+        <div class="col-12 md:col-1" style="text-align: center;">
+
+            <div class="field">
+                <label class="switch switch-green">
+                    <input type="checkbox" class="switch-input" (change)="onCheckbox3Change($event)">
+                    <span class="switch-label" data-on="On" data-off="Off"></span>
+                    <span class="switch-handle"></span>
+                  </label>
+              </div>
+              <label>DO 3</label>
+        </div>
+        <div class="col-12 md:col-1" style="text-align: center;">
+
+            <div class="field">
+                <label class="switch switch-green">
+                    <input type="checkbox" class="switch-input" (change)="onCheckbox4Change($event)">
+                    <span class="switch-label" data-on="On" data-off="Off"></span>
+                    <span class="switch-handle"></span>
+                  </label>
+              </div>
+              <label>DO 4</label>
+        </div>
+        <div class="col-12 md:col-1" style="text-align: center;">
+
+            <div class="field">
+                <label class="switch switch-green">
+                    <input type="checkbox" class="switch-input" (change)="onCheckbox5Change($event)">
+                    <span class="switch-label" data-on="On" data-off="Off"></span>
+                    <span class="switch-handle"></span>
+                  </label>
+              </div>
+              <label>DO 5</label>
+        </div>
+        <div class="col-12 md:col-1" style="text-align: center;">
+
+            <div class="field">
+                <label class="switch switch-green">
+                    <input type="checkbox" class="switch-input" (change)="onCheckbox6Change($event)">
+                    <span class="switch-label" data-on="On" data-off="Off"></span>
+                    <span class="switch-handle"></span>
+                  </label>
+              </div>
+              <label>DO 6</label>
+        </div>
+        <div class="col-12 md:col-1" style="text-align: center;">
+
+            <div class="field">
+                <label class="switch switch-green">
+                    <input type="checkbox" class="switch-input" (change)="onCheckbox7Change($event)">
+                    <span class="switch-label" data-on="On" data-off="Off"></span>
+                    <span class="switch-handle"></span>
+                  </label>
+              </div>
+              <label>DO 7</label>
+        </div>
+        <div class="col-12 md:col-1" style="text-align: center;">
+
+            <div class="field">
+                <label class="switch switch-green">
+                    <input type="checkbox" class="switch-input" (change)="onCheckbox8Change($event)">
+                    <span class="switch-label" data-on="On" data-off="Off"></span>
+                    <span class="switch-handle"></span>
+                  </label>
+              </div>
+              <label>DO 8</label>
+        </div>
+
     </div>
 </div>
 

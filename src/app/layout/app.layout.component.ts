@@ -83,13 +83,14 @@ export class AppLayoutComponent implements OnDestroy , OnInit{
                             this.router.url.includes('/app/outlet/alert') ||
                             this.router.url.includes('/app/outlet/schedul') ||
                             this.router.url.includes('/app/outlet/report')||
+                            this.router.url.includes('/app/outlet/I-O')||
                             this.router.url.includes('/app/outlet/energy_billing')) {
                                 this.show_energy=true;
                                 this.show_dg=false;
                                 this.show_ups=false;
                                 this.items = [
                                     { label: 'Live', icon: 'pi pi-spin pi-fw pi-sync',routerLink: ['/app/outlet/energy'] , visible:this.show_energy},
-                                    // { label: 'Live', icon: 'pi pi-spin pi-fw pi-sync',routerLink: ['/app/outlet/DG'] , visible:this.show_dg },
+                                    { label: 'I/O', icon: 'pi pi-fw pi-arrow-right-arrow-left',routerLink: ['/app/outlet/I-O'] , visible:true },
                                     // { label: 'Live', icon: 'pi pi-spin pi-fw pi-sync',routerLink: ['/app/outlet/UPS'] , visible:this.show_ups },
                                     { label: 'device Info', icon: 'pi pi-fw pi-info-circle',routerLink: ['/app/outlet/energy_devInfo'] ,visible:this.show_energy },
                                     // { label: 'device Info', icon: 'pi pi-fw pi-info-circle',routerLink: ['/app/outlet/DG'] ,visible:this.show_dg },
