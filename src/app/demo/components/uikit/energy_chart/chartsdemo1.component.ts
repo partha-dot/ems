@@ -973,7 +973,7 @@ export class ChartsDemo1Component implements OnInit, OnDestroy {
                 ]
                 let date = [];
                 res.forEach(el =>{
-                    date.push(el.time);
+                    date.push(ev.code=='D'?el.time:el.date);
                     Object.keys(el).forEach(item =>{
                         arr = arr.filter(element =>{
                             if(element.filteredBy.toLowerCase().replace('-','_') === item.toLowerCase()){
@@ -1044,7 +1044,7 @@ export class ChartsDemo1Component implements OnInit, OnDestroy {
                     let date = [];
                     res.forEach(el =>{
                         // date.push(this.datePipe.transform(el.created_at,'hh:mm'));
-                        date.push(el.time);
+                        date.push(ev.code=='D'?el.time:el.date);
 
                         Object.keys(el).forEach(item =>{
                             arr = arr.filter(element =>{
@@ -1125,7 +1125,7 @@ export class ChartsDemo1Component implements OnInit, OnDestroy {
                     let date = [];
                     res.forEach(el =>{
                         // date.push(this.datePipe.transform(el.created_at,'hh:mm'));
-                        date.push(el.time);
+                        date.push(ev.code=='D'?el.time:el.date);
                         Object.keys(el).forEach(item =>{
                             arr = arr.filter(element =>{
                                 if(element.filteredBy.toLowerCase().replace('-','_') === item.toLowerCase()){
@@ -1193,7 +1193,7 @@ export class ChartsDemo1Component implements OnInit, OnDestroy {
                     ]
                     let date = [];
                     res.forEach(el =>{
-                        date.push(el.time);
+                        date.push(ev.code=='D'?el.time:el.date);
                         Object.keys(el).forEach(item =>{
                             arr = arr.filter(element =>{
                                 if(element.name.toLowerCase().replace('-','_') === item.toLowerCase()){
@@ -1252,6 +1252,9 @@ export class ChartsDemo1Component implements OnInit, OnDestroy {
     getEnergyUsedChartDataByFilter = (ev:Required<IFilterMenus>) =>{
             this.chartOptions2 = null;
             const payload = this.getPayload(ev);
+            debugger
+            console.log(this.getPayload(ev));
+
             this.api.call_api(1,api_name.ENERGY_USED,payload)
             .pipe(map((x: any) => x.data))
             .subscribe((res:Required<IEnergyUsed>[]) =>{
@@ -1264,8 +1267,10 @@ export class ChartsDemo1Component implements OnInit, OnDestroy {
                         {name:'Phase-2',data:[],filtered:'e2'},
                         {name:'Phase-3',data:[],filtered:'e3'}
                     ]
+                    debugger
                     res.forEach(el =>{
-                        date.push(el.date);
+                        date.push(ev.code=='D'?el.time:el.date);
+                        debugger
                         Object.keys(el).forEach(item =>{
                             arr = arr.filter(element =>{
                                 if(element.filtered === item){
@@ -1292,7 +1297,7 @@ export class ChartsDemo1Component implements OnInit, OnDestroy {
                         }
                     },
                     dataLabels: {
-                        enabled: true
+                        enabled: false
                     },
                     stroke: {
                         show: true,
@@ -1312,7 +1317,7 @@ export class ChartsDemo1Component implements OnInit, OnDestroy {
                     yaxis: {
                         labels: {
                         formatter: (val) => {
-                            return val / 100 + "kWh";
+                            return val + "kWh";
                         }
                         }
                     },
@@ -1322,7 +1327,7 @@ export class ChartsDemo1Component implements OnInit, OnDestroy {
                     tooltip: {
                         y: {
                         formatter: function(val) {
-                            return "" + val/100 + " kWh";
+                            return "" + val + " kWh";
                         }
                         }
                     }
@@ -1505,6 +1510,7 @@ getDeviceLiveData(name:any){
         this.getCurrentChartDataByFilter(this.graphical_view.value.current);
         this.getPowerChartDataByFilter(this.graphical_view.value.power);
         this.get_kVA_kW_kVAR_ChartDataByFilter(this.graphical_view.value.kvar_kw_kva)
+
     }
     filterDealer(event: any) {
         const filtered: any[] = [];
